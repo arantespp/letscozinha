@@ -1,3 +1,5 @@
+import { CMS_TOKEN, CMS_URL } from './config';
+
 type CMSResponse = {
   data: {
     id: number;
@@ -11,10 +13,10 @@ type CMSResponse = {
 
 export const getRecipes = async (query?: string) => {
   const response: CMSResponse = await fetch(
-    `http://localhost:1337/api/lets-cozinha-receitas?${query}`,
+    `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.CMS_TOKEN}`,
+        Authorization: `Bearer ${CMS_TOKEN}`,
       },
     }
   ).then((res) => res.json());

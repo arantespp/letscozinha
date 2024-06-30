@@ -1,4 +1,5 @@
 import qs from 'qs';
+import { CMS_TOKEN, CMS_URL } from './config';
 
 type CMSResponse = {
   data: {
@@ -14,10 +15,10 @@ type CMSResponse = {
 export const getRecipe = async (args: { id: string } | { slug: string }) => {
   if ('id' in args) {
     const response = await fetch(
-      `${process.env.CMS_URL}/api/lets-cozinha-receitas/${args.id}`,
+      `${CMS_URL}/api/lets-cozinha-receitas/${args.id}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.CMS_TOKEN}`,
+          Authorization: `Bearer ${CMS_TOKEN}`,
         },
       }
     );
@@ -36,10 +37,10 @@ export const getRecipe = async (args: { id: string } | { slug: string }) => {
   });
 
   const response: CMSResponse = await fetch(
-    `${process.env.CMS_URL}/api/lets-cozinha-receitas?${query}`,
+    `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.CMS_TOKEN}`,
+        Authorization: `Bearer ${CMS_TOKEN}`,
       },
     }
   ).then((res) => res.json());
