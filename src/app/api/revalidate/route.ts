@@ -10,8 +10,6 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
 
-  console.log('Revalidating paths:', body);
-
   for (const path of body.paths) {
     revalidatePath(path);
   }
