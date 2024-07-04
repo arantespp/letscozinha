@@ -1,6 +1,7 @@
 import { MeiliSearch } from 'meilisearch';
 import Link from 'next/link';
 import { getRecipes as getRecipesFromCMS } from 'src/cms/getRecipes';
+import qs from 'qs';
 
 const client = new MeiliSearch({
   host: process.env.MEILISEARCH_HOST || '',
@@ -25,17 +26,27 @@ function RecipesCard({ recipe }: { recipe: Recipe }) {
 }
 
 type RecipesListProps = {
+  search?: string;
   query?: string;
 };
 
-const getRecipes = async ({ query }: RecipesListProps): Promise<Recipe[]> => {
-  if (query) {
+const getRecipes = async ({
+  search,
+  query,
+}: RecipesListProps): Promise<Recipe[]> => {
+  if (search) {
     const index = client.index<Recipe>(process.env.MEILISEARCH_INDEX || '');
-    const recipes = await index.search(query);
+    const recipes = await index.search(search);
     return recipes.hits;
   }
 
-  const { data } = await getRecipesFromCMS();
+  const recipesQuery = qs.stringify({
+    sort: ['updatedAt:desc'],
+  });
+
+  const { data = [] } = await getRecipesFromCMS(query || recipesQuery);
+
+  console.log(query);
 
   return data.map((recipe) => ({
     nome: recipe.attributes.nome,
@@ -43,8 +54,8 @@ const getRecipes = async ({ query }: RecipesListProps): Promise<Recipe[]> => {
   }));
 };
 
-export async function RecipesList({ query }: RecipesListProps) {
-  const recipes = await getRecipes({ query });
+export async function RecipesList(props: RecipesListProps) {
+  const recipes = await getRecipes(props);
 
   return (
     <div>

@@ -1,15 +1,16 @@
 import { Search } from 'src/components/Search';
 import { RecipesList } from 'src/components/RecipesList';
+import { CategoriesList } from 'src/components/CategoriesList';
 
 export default async function Home({
   searchParams,
 }: {
   searchParams?: {
-    query?: string;
+    search?: string;
   };
 }) {
   return (
-    <main className="">
+    <main className="flex flex-col gap-4">
       <div className="">
         <h1 className="">Lets Cozinha</h1>
       </div>
@@ -17,8 +18,13 @@ export default async function Home({
         <Search />
       </div>
       <div>
+        <hr />
+        <CategoriesList />
+        <hr />
+      </div>
+      <div>
         <h2>Receitas</h2>
-        <RecipesList query={searchParams?.query} />
+        <RecipesList search={searchParams?.search} />
       </div>
     </main>
   );
