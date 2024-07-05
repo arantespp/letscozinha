@@ -7,6 +7,7 @@ export type CMSResponse = {
       nome: string;
       slug: string;
       receita: string;
+      updatedAt: string;
     };
   }[];
   meta: {

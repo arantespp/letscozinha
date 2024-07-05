@@ -6,6 +6,7 @@ type CMSResponse = {
     attributes: {
       nome: string;
       slug: string;
+      updatedAt: string;
     };
   }[];
 };
