@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   const contentHtml = processedContent.toString();
 
-  const image = recipe.attributes.imagens?.data[0]?.attributes.formats?.small;
+  const image = recipe.attributes.imagens?.data?.[0]?.attributes.formats?.small;
 
   return (
     <div className="flex flex-col gap-3">
