@@ -15,7 +15,7 @@ type CMSResponse = {
       slug: string;
       receita: string;
       imagens?: {
-        data: {
+        data?: {
           id: number;
           attributes: {
             url: string;

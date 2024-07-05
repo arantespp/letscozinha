@@ -14,7 +14,7 @@ type CMSResponse = {
       nome: string;
       slug: string;
       imagens?: {
-        data: {
+        data?: {
           id: number;
           attributes: {
             url: string;

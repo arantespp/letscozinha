@@ -17,7 +17,7 @@ export async function generateMetadata(
   const previousImages = (await parent).openGraph?.images || [];
 
   const imagesUrls =
-    category.attributes.imagens?.data.map(
+    category.attributes.imagens?.data?.map(
       (image) => image.attributes.formats.large.url
     ) || [];
 
