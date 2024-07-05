@@ -4,6 +4,11 @@ import { remark } from 'remark';
 import html from 'remark-html';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { Metadata, ResolvingMetadata } from 'next';
+
+type Props = {
+  params: { slug: string };
+};
 
 export async function generateStaticParams() {
   const { data } = await getRecipes();
@@ -13,7 +18,29 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const recipe = await getRecipe({ slug: params.slug });
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+
+  const imagesUrls =
+    recipe.attributes.imagens?.data.map(
+      (image) => image.attributes.formats.large.url
+    ) || [];
+
+  return {
+    title: recipe.attributes.nome,
+    openGraph: {
+      images: [...imagesUrls, ...previousImages],
+    },
+  };
+}
+
+export default async function Page({ params }: Props) {
   const recipe = await getRecipe({ slug: params.slug });
 
   // Use remark to convert markdown into HTML string
