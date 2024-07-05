@@ -31,7 +31,14 @@ export default async function Page({ params }: { params: { slug: string } }) {
         Home
       </Link>
       <h1>{recipe.attributes.nome}</h1>
-      <Image src={image.url} width={image.width} height={image.height} alt="" />
+      {image && (
+        <Image
+          src={image.url}
+          width={image.width}
+          height={image.height}
+          alt=""
+        />
+      )}
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
     </div>
   );
