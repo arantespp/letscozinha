@@ -4,6 +4,8 @@ import { getRecipes } from 'src/cms/getRecipes';
 import { getCategories } from 'src/cms/getCategories';
 import qs from 'qs';
 
+export const revalidate = 60 * 60 * 24;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const query = qs.stringify(
     {
