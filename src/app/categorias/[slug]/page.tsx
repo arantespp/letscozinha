@@ -15,17 +15,21 @@ export async function generateStaticParams() {
 export default async function Page({ params }: { params: { slug: string } }) {
   const category = await getCategory({ slug: params.slug });
 
-  // TODO
-  const recipesQuery = qs.stringify({
-    filter: {
-      categorias: {
-        id: {
-          $eq: category.id,
+  const recipesQuery = qs.stringify(
+    {
+      filters: {
+        categorias: {
+          id: {
+            $eq: category.id,
+          },
         },
       },
+      populate: ['categorias'],
     },
-    populate: ['categorias'],
-  });
+    {
+      encodeValuesOnly: true,
+    }
+  );
 
   return (
     <div className="flex flex-col gap-3">

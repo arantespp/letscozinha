@@ -3,6 +3,7 @@ import { getRecipe } from 'src/cms/getRecipe';
 import { remark } from 'remark';
 import html from 'remark-html';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export async function generateStaticParams() {
   const { data } = await getRecipes();
@@ -22,12 +23,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   const contentHtml = processedContent.toString();
 
+  const image = recipe.attributes.imagens?.data[0]?.attributes.formats?.small;
+
   return (
     <div className="flex flex-col gap-3">
       <Link href="/" className="underline">
         Home
       </Link>
       <h1>{recipe.attributes.nome}</h1>
+      <Image src={image.url} width={image.width} height={image.height} alt="" />
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
     </div>
   );

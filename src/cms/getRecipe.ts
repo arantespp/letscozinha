@@ -1,6 +1,12 @@
 import qs from 'qs';
 import { CMS_TOKEN, CMS_URL } from './config';
 
+type ImageFormat = {
+  url: string;
+  width: number;
+  height: number;
+};
+
 type CMSResponse = {
   data: {
     id: number;
@@ -8,32 +14,34 @@ type CMSResponse = {
       nome: string;
       slug: string;
       receita: string;
+      imagens: {
+        data: {
+          id: number;
+          attributes: {
+            url: string;
+            width: number;
+            height: number;
+            formats: {
+              large: ImageFormat;
+              medium: ImageFormat;
+              small: ImageFormat;
+              thumbnail: ImageFormat;
+            };
+          };
+        }[];
+      };
     };
   }[];
 };
 
-export const getRecipe = async (args: { id: string } | { slug: string }) => {
-  if ('id' in args) {
-    const response = await fetch(
-      `${CMS_URL}/api/lets-cozinha-receitas/${args.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${CMS_TOKEN}`,
-        },
-      }
-    );
-
-    const recipe = await response.json();
-
-    return recipe as CMSResponse['data'][number];
-  }
-
+export const getRecipe = async (args: { slug: string }) => {
   const query = qs.stringify({
     filters: {
       slug: {
         $eq: args.slug,
       },
     },
+    populate: ['imagens'],
   });
 
   const response: CMSResponse = await fetch(

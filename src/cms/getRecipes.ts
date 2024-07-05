@@ -1,6 +1,6 @@
 import { CMS_TOKEN, CMS_URL } from './config';
 
-type CMSResponse = {
+export type CMSResponse = {
   data: {
     id: number;
     attributes: {
@@ -9,6 +9,14 @@ type CMSResponse = {
       receita: string;
     };
   }[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
 };
 
 export const getRecipes = async (query?: string) => {
