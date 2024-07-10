@@ -10,10 +10,7 @@ export default async function Home({
   };
 }) {
   return (
-    <main className="flex flex-col gap-4">
-      <div className="">
-        <h1 className="">Lets Cozinha</h1>
-      </div>
+    <div className="flex flex-col gap-4">
       <div>
         <Search />
       </div>
@@ -26,6 +23,6 @@ export default async function Home({
         <h2>Receitas</h2>
         <RecipesList search={searchParams?.search} />
       </div>
-    </main>
+    </div>
   );
 }

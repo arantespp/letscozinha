@@ -2,3 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1 {
+    @apply font-heading;
+    @apply text-4xl;	
+  }
+  h2 {
+    @apply font-heading;
+    @apply text-3xl;
+  }
+  h3 {
+    @apply font-heading;
+    @apply text-2xl;
+  }
+  h4 {
+    @apply font-heading;
+    @apply text-xl;
+  }
+  h5 {
+    @apply font-heading;
+    @apply text-lg;
+  }
+  h6 {
+    @apply font-heading;
+    @apply text-base;
+  }
+  a {
+    @apply text-accent;
+    @apply hover:text-primary;
+    @apply font-body;
+    @apply underline;
+  }
+  ul { 
+    @apply list-inside;
+    @apply list-disc;
+    @apply leading-relaxed;
+  }
+  p {
+    @apply font-body;
+    @apply text-base;
+    @apply leading-relaxed;
+    @apply my-4;
+  }
+}
