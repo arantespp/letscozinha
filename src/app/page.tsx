@@ -12,14 +12,12 @@ export default async function Home({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <Search />
-      </div>
-      <div>
-        <hr />
         <CategoriesList />
-        <hr />
       </div>
       <div>
+        <div className="my-3">
+          <Search />
+        </div>
         <h2>Receitas</h2>
         <RecipesList search={searchParams?.search} />
       </div>

@@ -5,11 +5,13 @@
 @layer base {
   h1 {
     @apply font-heading;
-    @apply text-4xl;	
+    @apply text-4xl;
+    @apply mb-2;
   }
   h2 {
     @apply font-heading;
     @apply text-3xl;
+    @apply mb-2;
   }
   h3 {
     @apply font-heading;
