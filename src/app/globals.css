@@ -3,30 +3,28 @@
 @tailwind utilities;
 
 @layer base {
-  h1 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
+    @apply text-gray-900;
+  }
+  h1 {
     @apply text-4xl;
     @apply mb-2;
   }
   h2 {
-    @apply font-heading;
     @apply text-3xl;
     @apply mb-2;
   }
   h3 {
-    @apply font-heading;
     @apply text-2xl;
   }
   h4 {
-    @apply font-heading;
     @apply text-xl;
   }
   h5 {
-    @apply font-heading;
     @apply text-lg;
   }
   h6 {
-    @apply font-heading;
     @apply text-base;
   }
   a {

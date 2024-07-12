@@ -7,13 +7,20 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '1.5rem',
+    },
     extend: {
       colors: {
-        primary: '#E53935',
-        secondary: '#FFEB3B',
-        accent: '#689F38',
+        primary: '#FAB200',
+        secondary: '#D8110D',
+        accent: '#4CAF50',
         neutral: '#FFFFFF',
-        link: '#1976D2',
+        text: {
+          light: '#737373',
+          dark: '#333333',
+        },
       },
       fontFamily: {
         heading: ['var(--font-playfair-display)'],
@@ -21,7 +28,24 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addComponents }) {
+      addComponents({
+        '.container': {
+          maxWidth: '100%',
+          '@screen sm': {
+            maxWidth: '640px',
+          },
+          '@screen md': {
+            maxWidth: '768px',
+          },
+          '@screen lg': {
+            maxWidth: '60rem',
+          },
+        },
+      });
+    },
+  ],
 };
 
 export default config;

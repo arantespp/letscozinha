@@ -20,7 +20,7 @@ function RecipesCard({ recipe }: { recipe: Recipe }) {
   const href = `/receitas/${recipe.slug}`;
 
   return (
-    <div>
+    <div className="my-1">
       <Link href={href} className="underline">
         {recipe.nome}
       </Link>

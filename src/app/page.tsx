@@ -15,7 +15,7 @@ export default async function Home({
         <CategoriesList />
       </div>
       <div>
-        <div className="my-3">
+        <div className="pt-5 pb-7">
           <Search />
         </div>
         <h2>Receitas</h2>

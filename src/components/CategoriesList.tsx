@@ -10,11 +10,12 @@ export async function CategoriesList() {
   const { data } = await getCategories(query);
 
   return (
-    <div className="flex gap-4 flex-wrap">
+    <div className="flex justify-center flex-wrap">
       {data.map((category) => (
         <Link
           key={category.id}
           href={`/categorias/${category.attributes.slug}`}
+          className="mx-2 my-1"
         >
           {category.attributes.nome}
         </Link>
