@@ -29,7 +29,7 @@ const config: Config = {
     },
   },
   plugins: [
-    function ({ addComponents }) {
+    function ({ addComponents }: any) {
       addComponents({
         '.container': {
           maxWidth: '100%',
