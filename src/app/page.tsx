@@ -11,6 +11,9 @@ export default async function Home({
 }) {
   return (
     <div className="flex flex-col gap-4">
+      <h1 className="self-center">
+        Let&apos;s Cozinha - O Seu Site de Culinária
+      </h1>
       <div>
         <CategoriesList />
       </div>

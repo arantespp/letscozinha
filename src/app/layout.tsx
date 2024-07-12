@@ -15,8 +15,25 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: 'Lets Cozinha',
-  description: 'Receitas para você com a Lets Cozinha',
+  title: "Let's Cozinha | O Seu Site de Culinária",
+  description:
+    'Descubra receitas fáceis e rápidas de preparar. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
+  keywords:
+    'receitas fáceis, receitas rápidas, sobremesas, pratos principais, culinária',
+  openGraph: {
+    title: "Let's Cozinha | O Seu Site de Culinária",
+    description:
+      'Descubra receitas fáceis e rápidas de preparar. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
+    images: [
+      {
+        url: 'https://www.letscozinha.com.br/logo.png',
+        width: 1200,
+        height: 630,
+        alt: "Let's Cozinha | O Seu Site de Culinária",
+      },
+    ],
+    url: 'https://letscozinha.com.br',
+  },
 };
 
 export default function RootLayout({
@@ -31,12 +48,14 @@ export default function RootLayout({
     >
       <body className={`${lora.className} bg-neutral`}>
         <header className="flex items-center gap-4 px-6 py-4">
-          <Image src={logo} alt="Lets Cozinha" width={100} />
-          <h1>Lets Cozinha</h1>
+          <Image src={logo} alt="Let's Cozinha" width={100} />
+          <p className="text-4xl font-heading text-text-dark">
+            Let&apos;s Cozinha
+          </p>
         </header>
         <main className="container mb-10 text-text-dark">{children}</main>
         <footer className="bg-primary text-black p-5 flex justify-center">
-          <p>© 2024 Lets Cozinha</p>
+          <p>© 2024 Let&apos;s Cozinha</p>
         </footer>
       </body>
     </html>
