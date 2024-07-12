@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         alt: 'Lets Cozinha | O Seu Site de Culinária',
       },
     ],
-    url: 'https://letscozinha.com.br',
+    url: 'https://www.letscozinha.com.br',
   },
 };
 
