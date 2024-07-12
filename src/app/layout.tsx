@@ -31,7 +31,7 @@ export default function RootLayout({
         <header className="bg-primary text-neutral p-5">
           <h1>Lets Cozinha</h1>
         </header>
-        <main className="container mx-auto my-5">{children}</main>
+        <main className="container mx-auto my-5 px-4">{children}</main>
         <footer className="bg-primary text-neutral p-5">
           <p>© 2024 Lets Cozinha</p>
         </footer>
