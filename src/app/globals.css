@@ -33,7 +33,6 @@
   }
   a {
     @apply hover:text-primary;
-    @apply font-body;
     @apply underline;
   }
   ul { 
@@ -42,7 +41,6 @@
     @apply leading-relaxed;
   }
   p {
-    @apply font-body;
     @apply text-base;
     @apply leading-relaxed;
     @apply my-4;

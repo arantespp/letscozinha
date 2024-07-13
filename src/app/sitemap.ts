@@ -4,8 +4,6 @@ import { getRecipes } from 'src/cms/getRecipes';
 import { getCategories } from 'src/cms/getCategories';
 import qs from 'qs';
 
-export const revalidate = 60 * 60 * 24;
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const query = qs.stringify(
     {
@@ -48,12 +46,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ''
   );
 
+  const sortByUrl = (a: { url: string }, b: { url: string }) =>
+    a.url.localeCompare(b.url);
+
   return [
     {
       url: BASE_URL,
       lastModified,
     },
-    ...categoriesSitemap,
-    ...recipesSitemap,
+    ...categoriesSitemap.sort(sortByUrl),
+    ...recipesSitemap.sort(sortByUrl),
   ];
 }

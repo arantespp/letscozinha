@@ -2,13 +2,26 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Lora } from 'next/font/google';
 import './globals.css';
 import Image from 'next/image';
-import logo from '../../public/logo.png';
+import logoHeader from '../../public/logo-header.png';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { config } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import Link from 'next/link';
 
+config.autoAddCss = false;
+
+/**
+ * Headers
+ */
 const playfairDisplay = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair-display',
 });
 
+/**
+ * Body
+ */
 const lora = Lora({
   subsets: ['latin'],
   variable: '--font-lora',
@@ -42,16 +55,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="pt-br"
-      className={`${playfairDisplay.variable} ${lora.variable}`}
-    >
-      <body className={`${lora.className} bg-neutral`}>
-        <header className="flex items-center gap-4 px-6 py-4">
-          <Image src={logo} alt="Lets Cozinha" width={100} />
-          <p className="text-4xl font-heading text-text-dark">Lets Cozinha</p>
+    <html lang="pt-br" className={`${playfairDisplay.variable}`}>
+      <body className={`${lora.className} bg-neutral text-text-dark`}>
+        <header className="flex items-center justify-between gap-4 px-4 md:px-10 py-5 md:py-7">
+          <Link href="/">
+            <Image
+              src={logoHeader}
+              alt="Lets Cozinha"
+              height={70}
+              quality={100}
+            />
+          </Link>
+          <nav className="text-3xl md:text-4xl">
+            <Link
+              href="https://www.instagram.com/lets_cozinha/"
+              target="_blank"
+            >
+              <FontAwesomeIcon icon={faInstagram} />
+            </Link>
+          </nav>
         </header>
-        <main className="container mb-10 text-text-dark">{children}</main>
+        <main className="container mb-10">
+          <div className={lora.className}>{children}</div>
+        </main>
         <footer className="bg-primary text-black p-5 flex justify-center">
           <p>© 2024 Lets Cozinha</p>
         </footer>
