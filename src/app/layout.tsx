@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Lora } from 'next/font/google';
 import './globals.css';
 import Image from 'next/image';
-import logoHeader from '../../public/logo-header.png';
+import logo from '../../public/logo.png';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -57,14 +57,9 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className={`${playfairDisplay.variable}`}>
       <body className={`${lora.className} bg-neutral text-text-dark`}>
-        <header className="flex items-center justify-between gap-4 px-4 md:px-10 py-5 md:py-7">
+        <header className="flex items-center justify-between gap-4 px-4 md:px-10 py-5 md:py-6">
           <Link href="/">
-            <Image
-              src={logoHeader}
-              alt="Lets Cozinha"
-              height={70}
-              quality={100}
-            />
+            <Image src={logo} alt="Lets Cozinha" height={60} />
           </Link>
           <nav className="text-3xl md:text-4xl">
             <Link
