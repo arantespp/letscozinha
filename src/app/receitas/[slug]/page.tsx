@@ -5,6 +5,7 @@ import html from 'remark-html';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { BASE_URL } from 'src/constants';
 
 type Props = {
   params: { slug: string };
@@ -33,8 +34,15 @@ export async function generateMetadata(
     ) || [];
 
   return {
+    metadataBase: new URL(BASE_URL),
     title: recipe.attributes.nome,
+    description: recipe.attributes.metaDescricao,
+    keywords: recipe.attributes.keywords,
     openGraph: {
+      title: recipe.attributes.nome,
+      description: recipe.attributes.metaDescricao,
+      siteName: "Let's Cozinha",
+      url: `/receitas/${recipe.attributes.slug}`,
       images: [...imagesUrls, ...previousImages],
     },
   };
