@@ -6,7 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 export function Search() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const router = useRouter();
 
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
@@ -15,7 +15,7 @@ export function Search() {
     } else {
       params.delete('search');
     }
-    replace(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, 500);
 
   return (

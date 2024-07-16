@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 config.autoAddCss = false;
@@ -61,7 +62,10 @@ export default function RootLayout({
           <Link href="/">
             <Image src={logo} alt="Lets Cozinha" height={60} />
           </Link>
-          <nav className="text-3xl md:text-4xl">
+          <nav className="flex text-3xl md:text-3xl gap-5">
+            <Link href="/receitas">
+              <FontAwesomeIcon icon={faSearch} />
+            </Link>
             <Link
               href="https://www.instagram.com/lets_cozinha/"
               target="_blank"

@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { RecipesList } from 'src/components/RecipesList';
 import qs from 'qs';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { getRecipes } from 'src/cms/getRecipes';
+import { RECIPES_PAGE_SIZE } from 'src/cms/config';
+import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 type Props = { params: { slug: string } };
 
@@ -37,7 +40,15 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: {
+    page?: string;
+  };
+}) {
   const category = await getCategory({ slug: params.slug });
 
   const recipesQuery = qs.stringify(
@@ -49,20 +60,41 @@ export default async function Page({ params }: { params: { slug: string } }) {
           },
         },
       },
+      pagination: {
+        page: searchParams.page || '1',
+        pageSize: RECIPES_PAGE_SIZE,
+      },
       populate: ['categorias'],
+      sort: ['nome:asc'],
     },
     {
       encodeValuesOnly: true,
     }
   );
 
+  const { recipes, meta } = await getRecipes({ query: recipesQuery });
+
   return (
     <div className="flex flex-col gap-3">
-      <Link href="/" className="underline">
-        Home
-      </Link>
+      <Breadcrumbs
+        items={[
+          {
+            name: 'Home',
+            href: '/',
+          },
+          {
+            name: 'Categorias',
+            href: '/categorias',
+          },
+          {
+            name: category.attributes.nome,
+            href: `/categorias/${category.attributes.slug}`,
+            current: true,
+          },
+        ]}
+      />
       <h1>Categoria - {category.attributes.nome}</h1>
-      <RecipesList query={recipesQuery} />
+      <RecipesList recipes={recipes} pagination={meta?.pagination} />
     </div>
   );
 }

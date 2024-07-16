@@ -6,16 +6,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { BASE_URL } from 'src/constants';
+import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 type Props = {
   params: { slug: string };
 };
 
 export async function generateStaticParams() {
-  const { data } = await getRecipes();
+  const { recipes } = await getRecipes();
 
-  return data.map((recipe) => ({
-    slug: recipe.attributes.slug,
+  return recipes.map((recipe) => ({
+    slug: recipe.slug,
   }));
 }
 
@@ -62,9 +63,17 @@ export default async function Page({ params }: Props) {
 
   return (
     <div className="flex flex-col gap-3">
-      <Link href="/" className="underline">
-        Home
-      </Link>
+      <Breadcrumbs
+        items={[
+          { name: 'Home', href: '/' },
+          { name: 'Receitas', href: '/receitas' },
+          {
+            name: recipe.attributes.nome,
+            href: `/receitas/${recipe.attributes.slug}`,
+            current: true,
+          },
+        ]}
+      />
       <h1>{recipe.attributes.nome}</h1>
       {image && (
         <Image
