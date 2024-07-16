@@ -40,10 +40,9 @@ const fetchRecipes = async (query?: string) => {
   return response;
 };
 
-type Recipe = {
-  nome: string;
-  slug: string;
-};
+type MeiliRecipe = {
+  id: number;
+} & CMSResponse['data'][number]['attributes'];
 
 export const getRecipes = async ({
   search,
@@ -55,7 +54,7 @@ export const getRecipes = async ({
   page?: string;
 } = {}) => {
   if (search) {
-    const index = meiliClient.index<Recipe>(
+    const index = meiliClient.index<MeiliRecipe>(
       process.env.MEILISEARCH_INDEX || ''
     );
     const recipes = await index.search(search);

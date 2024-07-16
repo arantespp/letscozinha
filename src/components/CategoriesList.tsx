@@ -7,17 +7,17 @@ export async function CategoriesList() {
     sort: ['nome'],
   });
 
-  const { data } = await getCategories(query);
+  const { categories } = await getCategories({ query });
 
   return (
     <div className="flex justify-center flex-wrap">
-      {data.map((category) => (
+      {categories.map((category) => (
         <Link
           key={category.id}
-          href={`/categorias/${category.attributes.slug}`}
+          href={`/categorias/${category.slug}`}
           className="mx-2 my-1"
         >
-          {category.attributes.nome}
+          {category.nome}
         </Link>
       ))}
     </div>

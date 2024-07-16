@@ -11,7 +11,7 @@ type CMSResponse = {
   }[];
 };
 
-export const getCategories = async (query?: string) => {
+export const getCategories = async ({ query }: { query?: string } = {}) => {
   const response: CMSResponse = await fetch(
     `${CMS_URL}/api/lets-cozinha-categorias?${query}`,
     {
@@ -21,5 +21,12 @@ export const getCategories = async (query?: string) => {
     }
   ).then((res) => res.json());
 
-  return response;
+  return {
+    categories: response.data.map((d) => {
+      return {
+        id: d.id,
+        ...d.attributes,
+      };
+    }),
+  };
 };

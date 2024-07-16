@@ -17,34 +17,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   );
 
-  const recipes = await getRecipes(query);
+  const { recipes } = await getRecipes({ query });
 
-  const recipesSitemap = recipes.data.map((recipe) => ({
-    url: `${BASE_URL}/receitas/${recipe.attributes.slug}`,
-    lastModified: recipe.attributes.updatedAt,
+  const recipesSitemap = recipes.map((recipe) => ({
+    url: `${BASE_URL}/receitas/${recipe.slug}`,
+    lastModified: recipe.updatedAt,
   }));
 
-  const categories = await getCategories(query);
+  const { categories } = await getCategories({ query });
 
-  const categoriesSitemap = categories.data.map((category) => ({
-    url: `${BASE_URL}/categorias/${category.attributes.slug}`,
-    lastModified: category.attributes.updatedAt,
+  const categoriesSitemap = categories.map((category) => ({
+    url: `${BASE_URL}/categorias/${category.slug}`,
+    lastModified: category.updatedAt,
   }));
 
-  const lastModified = [...recipes.data, ...categories.data].reduce(
-    (acc, d) => {
-      if (!acc) {
-        return d.attributes.updatedAt;
-      }
+  const lastModified = [...recipes, ...categories].reduce((acc, d) => {
+    if (!acc) {
+      return d.updatedAt;
+    }
 
-      if (d.attributes.updatedAt > acc) {
-        return d.attributes.updatedAt;
-      }
+    if (d.updatedAt > acc) {
+      return d.updatedAt;
+    }
 
-      return acc;
-    },
-    ''
-  );
+    return acc;
+  }, '');
 
   const sortByUrl = (a: { url: string }, b: { url: string }) =>
     a.url.localeCompare(b.url);

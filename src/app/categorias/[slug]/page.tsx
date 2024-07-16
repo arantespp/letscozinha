@@ -1,6 +1,5 @@
 import { getCategories } from 'src/cms/getCategories';
 import { getCategory } from 'src/cms/getCategory';
-import Link from 'next/link';
 import { RecipesList } from 'src/components/RecipesList';
 import qs from 'qs';
 import type { Metadata, ResolvingMetadata } from 'next';
@@ -33,10 +32,10 @@ export async function generateMetadata(
 }
 
 export async function generateStaticParams() {
-  const { data } = await getCategories();
+  const { categories } = await getCategories();
 
-  return data.map((category) => ({
-    slug: category.attributes.slug,
+  return categories.map((category) => ({
+    slug: category.slug,
   }));
 }
 
