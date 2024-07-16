@@ -4,13 +4,15 @@ import './globals.css';
 import Image from 'next/image';
 import logo from '../../public/logo.png';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { config } from '@fortawesome/fontawesome-svg-core';
+import { config as fortawesomeConfig } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/react';
 
-config.autoAddCss = false;
+fortawesomeConfig.autoAddCss = false;
 
 /**
  * Headers
@@ -80,6 +82,8 @@ export default function RootLayout({
         <footer className="bg-primary text-black p-5 flex justify-center">
           <p>© 2024 Lets Cozinha</p>
         </footer>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
