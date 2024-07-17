@@ -10,6 +10,8 @@ type Props = {
   };
 };
 
+export const revalidate = 60;
+
 export default async function Page({ searchParams }: Props) {
   const { recipes, meta } = await getRecipes(searchParams);
 
