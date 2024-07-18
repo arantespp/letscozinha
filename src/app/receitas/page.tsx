@@ -2,6 +2,15 @@ import { Search } from 'src/components/Search';
 import { RecipesList } from 'src/components/RecipesList';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { getRecipes } from 'src/cms/getRecipes';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Todas as Receitas - Lets Cozinha | Busque e Descubra Novos Sabores',
+  description:
+    'Encontre todas as nossas receitas em um só lugar. Use nossa busca para filtrar por ingredientes, tempo de preparo e preferências dietéticas.',
+  keywords:
+    'todas as receitas, buscar receitas, receitas por ingredientes, receitas rápidas, receitas detalhadas, receitas favoritas',
+};
 
 type Props = {
   searchParams?: {

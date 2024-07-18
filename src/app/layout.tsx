@@ -31,13 +31,13 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: 'Lets Cozinha | O Seu Site de Culinária',
+  title: 'Bem-vindo ao Lets Cozinha - Receitas Deliciosas e Práticas',
   description:
     'Descubra receitas fáceis e rápidas de preparar. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
   keywords:
-    'receitas fáceis, receitas rápidas, sobremesas, pratos principais, culinária',
+    'receitas deliciosas, culinária prática, receitas rápidas, pratos gourmet, dicas de culinária, tutoriais de cozinha',
   openGraph: {
-    title: 'Lets Cozinha | O Seu Site de Culinária',
+    title: 'Bem-vindo ao Lets Cozinha - Receitas Deliciosas e Práticas',
     description:
       'Descubra receitas fáceis e rápidas de preparar. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
     images: [
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
         url: 'https://www.letscozinha.com.br/logo-og.jpg',
         width: 1200,
         height: 630,
-        alt: 'Lets Cozinha | O Seu Site de Culinária',
+        alt: 'Bem-vindo ao Lets Cozinha - Receitas Deliciosas e Práticas',
       },
     ],
     url: 'https://www.letscozinha.com.br',
