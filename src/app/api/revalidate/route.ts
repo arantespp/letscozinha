@@ -8,11 +8,29 @@ export async function POST(request: NextRequest) {
     return new NextResponse('Unauthorized', { status: 401 });
   }
 
-  const body = await request.json();
+  const { paths, type } = await request.json();
 
-  for (const path of body.paths) {
-    revalidatePath(path);
+  if (!paths) {
+    return NextResponse.json(
+      {
+        revalidated: false,
+        now: Date.now(),
+        message: 'Missing paths to revalidate',
+      },
+      {
+        status: 400,
+      }
+    );
   }
 
-  return new NextResponse(JSON.stringify({ success: true }), { status: 200 });
+  for (const path of paths) {
+    revalidatePath(path, type);
+  }
+
+  return new NextResponse(
+    JSON.stringify({ success: true, now: Date.now(), paths, type }),
+    {
+      status: 200,
+    }
+  );
 }
