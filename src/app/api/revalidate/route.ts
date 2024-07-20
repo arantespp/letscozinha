@@ -24,11 +24,7 @@ export async function POST(request: NextRequest) {
   }
 
   for (const path of paths) {
-    if (type) {
-      revalidatePath(path, type);
-    } else {
-      revalidatePath(path);
-    }
+    revalidatePath(path, type);
   }
 
   return new NextResponse(

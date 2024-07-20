@@ -4,6 +4,8 @@ import { getRecipes } from 'src/cms/getRecipes';
 import { getCategories } from 'src/cms/getCategories';
 import qs from 'qs';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const query = qs.stringify(
     {
