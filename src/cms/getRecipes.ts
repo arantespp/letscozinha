@@ -1,34 +1,24 @@
-import { CMS_TOKEN, CMS_URL, RECIPES_PAGE_SIZE } from './config';
+import { CMS_TOKEN, CMS_URL, RECIPES_PAGE_SIZE, API_MAX_LIMIT } from './config';
 import { MeiliSearch } from 'meilisearch';
 import qs from 'qs';
+import type { CMSResponse } from './types';
 
 const meiliClient = new MeiliSearch({
   host: process.env.MEILISEARCH_HOST || '',
   apiKey: process.env.MEILISEARCH_API_KEY || '',
 });
 
-type CMSResponse = {
-  data: {
-    id: number;
-    attributes: {
-      nome: string;
-      slug: string;
-      receita: string;
-      updatedAt: string;
-    };
-  }[];
-  meta: {
-    pagination: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
+type Attributes = {
+  nome: string;
+  slug: string;
+  receita: string;
+  updatedAt: string;
 };
 
+type Response = CMSResponse<Attributes>;
+
 const fetchRecipes = async (query?: string) => {
-  const response: CMSResponse = await fetch(
+  const response: Response = await fetch(
     `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
     {
       headers: {
@@ -42,7 +32,7 @@ const fetchRecipes = async (query?: string) => {
 
 type MeiliRecipe = {
   id: number;
-} & CMSResponse['data'][number]['attributes'];
+} & Attributes;
 
 export const getRecipes = async ({
   search,
@@ -78,4 +68,31 @@ export const getRecipes = async ({
     })),
     meta,
   };
+};
+
+export const getAllRecipes = async () => {
+  const recipes = [];
+  let page = 1;
+
+  while (true) {
+    const query = qs.stringify({
+      pagination: {
+        page,
+        pageSize: API_MAX_LIMIT,
+      },
+      sort: ['nome:asc'],
+    });
+
+    const { recipes: pageRecipes, meta } = await getRecipes({ query });
+
+    recipes.push(...pageRecipes);
+
+    if (meta?.pagination.pageCount === page) {
+      break;
+    }
+
+    page++;
+  }
+
+  return { recipes };
 };
