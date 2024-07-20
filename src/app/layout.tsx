@@ -82,7 +82,7 @@ export default function RootLayout({
         <footer className="bg-primary text-black p-5 flex justify-center">
           <p>© 2024 Lets Cozinha</p>
         </footer>
-        <Analytics />
+        <Analytics mode="production" />
         <SpeedInsights />
       </body>
     </html>

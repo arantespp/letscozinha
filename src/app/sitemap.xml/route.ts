@@ -4,9 +4,7 @@ import { getRecipes } from 'src/cms/getRecipes';
 import { getCategories } from 'src/cms/getCategories';
 import qs from 'qs';
 
-export const revalidate = 5; // 5 minutes
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const query = qs.stringify(
     {
       fields: ['slug', 'updatedAt'],
@@ -64,4 +62,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...recipesSitemap.sort(sortByUrl),
   ];
+}
+
+/**
+ * https://github.com/vercel/next.js/discussions/50419#discussioncomment-6189168
+ */
+export async function GET(): Promise<Response> {
+  const headers = new Headers();
+
+  headers.set('Content-Type', 'application/xml');
+
+  const sitemapAsJson = await sitemap();
+
+  const sitemapAsXml = sitemapAsJson
+    .map(
+      (entry) => `
+      <url>
+        <loc>${entry.url}</loc>
+        <lastmod>${entry.lastModified}</lastmod>
+      </url>
+    `
+    )
+    .join('');
+
+  return new Response(
+    `<?xml version="1.0" encoding="UTF-8" ?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        ${sitemapAsXml}
+      </urlset>
+    `,
+    {
+      headers,
+    }
+  );
 }
