@@ -9,27 +9,27 @@
   }
   h1 {
     @apply text-4xl;
-    @apply my-3;
+    @apply mb-4;
   }
   h2 {
     @apply text-3xl;
-    @apply my-3;
+    @apply mb-3;
   }
   h3 {
     @apply text-2xl;
-    @apply my-3;
+    @apply mb-3;
   }
   h4 {
     @apply text-xl;
-    @apply my-3;
+    @apply mb-3;
   }
   h5 {
     @apply text-lg;
-    @apply my-2;
+    @apply mb-2;
   }
   h6 {
     @apply text-base;
-    @apply my-2;
+    @apply mb-2;
   }
   a {
     @apply hover:text-primary;
@@ -39,10 +39,11 @@
     @apply list-inside;
     @apply list-disc;
     @apply leading-relaxed;
+    @apply mb-4;
   }
   p {
     @apply text-base;
     @apply leading-relaxed;
-    @apply my-4;
+    @apply mb-4;
   }
 }

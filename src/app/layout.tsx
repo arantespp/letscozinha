@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Playfair_Display, Lora } from 'next/font/google';
 import './globals.css';
 import Image from 'next/image';
@@ -31,25 +31,27 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: 'Bem-vindo ao Lets Cozinha - Receitas Deliciosas e Práticas',
+  title: 'Bem-vindo ao Lets Cozinha',
   description:
-    'Descubra receitas fáceis e rápidas de preparar. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
+    'Descubra todos os tipos de receitas. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
   keywords:
-    'receitas deliciosas, culinária prática, receitas rápidas, pratos gourmet, dicas de culinária, tutoriais de cozinha',
+    'receitas deliciosas, pratos gourmet, dicas de culinária, tutoriais de cozinha',
   openGraph: {
-    title: 'Bem-vindo ao Lets Cozinha - Receitas Deliciosas e Práticas',
-    description:
-      'Descubra receitas fáceis e rápidas de preparar. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
     images: [
       {
         url: 'https://www.letscozinha.com.br/logo-og.jpg',
         width: 1200,
         height: 630,
-        alt: 'Bem-vindo ao Lets Cozinha - Receitas Deliciosas e Práticas',
+        alt: 'Bem-vindo ao Lets Cozinha',
       },
     ],
     url: 'https://www.letscozinha.com.br',
   },
+};
+
+export const viewport: Viewport = {
+  initialScale: 1,
+  width: 'device-width',
 };
 
 export default function RootLayout({
