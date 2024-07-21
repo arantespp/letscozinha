@@ -60,16 +60,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br" className={`${playfairDisplay.variable}`}>
-      <body className={`${lora.className} bg-neutral text-text-dark`}>
-        <header className="flex items-center justify-between gap-4 px-4 md:px-10 py-5 md:py-6">
+    <html
+      lang="pt-br"
+      className={`${playfairDisplay.variable} ${lora.variable}`}
+    >
+      <body>
+        <header className="container py-md flex items-center justify-between">
           <Link href="/">
             <Image src={logo} alt="Lets Cozinha" height={60} />
           </Link>
-          <nav className="flex text-3xl md:text-3xl gap-5">
-            <Link href="/receitas">
-              <FontAwesomeIcon icon={faSearch} />
-            </Link>
+          <nav className="flex gap-sm text-xl [&>a]:no-underline">
+            <Link href="/">Home</Link>
+            <Link href="/receitas">Receitas</Link>
+            <Link href="/categorias">Categorias</Link>
+          </nav>
+          <nav className="flex text-3xl md:text-3xl gap-sm">
             <Link
               href="https://www.instagram.com/lets_cozinha/"
               target="_blank"
@@ -78,11 +83,11 @@ export default function RootLayout({
             </Link>
           </nav>
         </header>
-        <main className="container mb-10">
-          <div className={lora.className}>{children}</div>
-        </main>
-        <footer className="bg-primary text-black p-5 flex justify-center">
-          <p>© 2024 Lets Cozinha</p>
+        <main className="container py-md md:pb-xl">{children}</main>
+        <footer className="bg-primary py-lg">
+          <div className="container flex justify-center">
+            <p>© 2024 Lets Cozinha</p>
+          </div>
         </footer>
         <Analytics mode="production" />
         <SpeedInsights />

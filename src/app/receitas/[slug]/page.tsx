@@ -62,7 +62,7 @@ export default async function Page({ params }: Props) {
   const image = recipe.attributes.imagens?.data?.[0]?.attributes.formats?.small;
 
   return (
-    <div className="flex flex-col gap-3">
+    <article className="flex flex-col">
       <Breadcrumbs
         items={[
           { name: 'Home', href: '/' },
@@ -84,6 +84,6 @@ export default async function Page({ params }: Props) {
         />
       )}
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-    </div>
+    </article>
   );
 }

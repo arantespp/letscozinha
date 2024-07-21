@@ -74,7 +74,7 @@ export default async function Page({
   const { recipes, meta } = await getRecipes({ query: recipesQuery });
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col">
       <Breadcrumbs
         items={[
           {

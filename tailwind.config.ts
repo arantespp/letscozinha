@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 const config: Config = {
   content: [
@@ -7,9 +8,26 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    borderRadius: {
+      DEFAULT: '8px',
+    },
     container: {
       center: true,
-      padding: '1.5rem',
+      padding: '1rem',
+    },
+    fontFamily: {
+      heading: [
+        'var(--font-playfair-display)',
+        ...defaultTheme.fontFamily.serif,
+      ],
+      body: ['var(--font-lora)', ...defaultTheme.fontFamily.serif],
+    },
+    spacing: {
+      xs: '0.25rem',
+      sm: '1rem',
+      md: '1.5rem',
+      lg: '2rem',
+      xl: '4rem',
     },
     extend: {
       colors: {
@@ -22,25 +40,21 @@ const config: Config = {
           dark: '#333333',
         },
       },
-      fontFamily: {
-        heading: ['var(--font-playfair-display)'],
-        body: ['var(--font-lora)'],
-      },
     },
   },
   plugins: [
-    function ({ addComponents }: any) {
+    function ({ addComponents, theme }: any) {
       addComponents({
         '.container': {
           maxWidth: '100%',
           '@screen sm': {
-            maxWidth: '640px',
+            maxWidth: '40rem', // 640px
           },
           '@screen md': {
-            maxWidth: '768px',
+            maxWidth: '48rem', // 768px
           },
           '@screen lg': {
-            maxWidth: '60rem',
+            maxWidth: '60rem', // 960px
           },
         },
       });

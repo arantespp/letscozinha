@@ -9,7 +9,7 @@ export async function Breadcrumbs(props: {
   }[];
 }) {
   return (
-    <nav className="flex gap-1">
+    <nav className="flex gap-xs mb-sm md:mb-lg leading-none">
       {props.items.map((item, index) => (
         <React.Fragment key={item.href}>
           {item.current ? (

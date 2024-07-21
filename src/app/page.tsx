@@ -15,13 +15,15 @@ const Categories = async () => {
   const { categories } = await getCategories({ query });
 
   return (
-    <aside className="flex flex-col gap-1 p-6 rounded-md bg-[#F5F5F5]">
+    <aside className="flex flex-col rounded p-md bg-[#F5F5F5]">
       <h2 className="text-2xl">Categorias</h2>
-      {categories.map((category) => (
-        <div key={category.id}>
-          <Link href={`/categorias/${category.slug}`}>{category.nome}</Link>
-        </div>
-      ))}
+      <div className="flex flex-col gap-xs">
+        {categories.map((category) => (
+          <div key={category.id}>
+            <Link href={`/categorias/${category.slug}`}>{category.nome}</Link>
+          </div>
+        ))}
+      </div>
     </aside>
   );
 };
@@ -30,9 +32,9 @@ export default async function Home() {
   const { recipes } = await getRecipes();
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-4 md:gap-8">
+    <div className="flex flex-col-reverse md:flex-row gap-lg">
       <Categories />
-      <div className="flex flex-col md:gap-4 flex-1">
+      <div className="flex flex-col gap-md flex-1">
         <section>
           <h1 className="">Lets Cozinha</h1>
           <p className="text-text-light">

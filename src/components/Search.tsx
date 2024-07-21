@@ -24,7 +24,8 @@ export function Search() {
         Search
       </label>
       <input
-        className="w-full px-4 py-2 border border-primary rounded-lg placeholder-text-light"
+        autoFocus
+        className="w-full px-md py-xs border border-primary rounded placeholder-text-light"
         placeholder="Procurar receita"
         onChange={(e) => {
           handleSearch(e.target.value);

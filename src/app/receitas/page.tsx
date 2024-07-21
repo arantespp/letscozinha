@@ -23,7 +23,7 @@ export default async function Page({ searchParams }: Props) {
   const { recipes, meta } = await getRecipes(searchParams);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col">
       <Breadcrumbs
         items={[
           {
@@ -39,7 +39,7 @@ export default async function Page({ searchParams }: Props) {
       />
       <h1>Todas as receitas</h1>
       <div>
-        <div className="pt-5 pb-7">
+        <div className="my-sm">
           <Search />
         </div>
         <h2>Receitas</h2>

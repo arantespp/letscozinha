@@ -10,7 +10,7 @@ function RecipesCard({ recipe }: { recipe: Recipe }) {
   const href = `/receitas/${recipe.slug}`;
 
   return (
-    <div className="my-1">
+    <div className="my-xs">
       <Link href={href} className="underline">
         {recipe.nome}
       </Link>
@@ -31,7 +31,7 @@ export async function RecipesList(props: RecipesListProps) {
       {props.recipes.map((recipe: Recipe) => (
         <RecipesCard key={recipe.nome} recipe={recipe} />
       ))}
-      <div className="my-5">
+      <div className="my-md">
         {props.pagination && <Pagination pagination={props.pagination} />}
       </div>
     </div>

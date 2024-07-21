@@ -39,7 +39,7 @@ export function Pagination({ pagination }: Props) {
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-sm">
       <button
         disabled={currentPage === 1}
         onClick={() => {
