@@ -1,22 +1,6 @@
-import Link from 'next/link';
 import { Pagination } from './Pagination';
-
-type Recipe = {
-  nome: string;
-  slug: string;
-};
-
-function RecipesCard({ recipe }: { recipe: Recipe }) {
-  const href = `/receitas/${recipe.slug}`;
-
-  return (
-    <div className="my-xs">
-      <Link href={href} className="underline">
-        {recipe.nome}
-      </Link>
-    </div>
-  );
-}
+import RecipeCard from './RecipeCard';
+import type { Recipe } from 'src/cms/getRecipes';
 
 type RecipesListProps = {
   recipes: Recipe[];
@@ -27,9 +11,9 @@ type RecipesListProps = {
 
 export async function RecipesList(props: RecipesListProps) {
   return (
-    <div>
+    <div className="grid md:grid-cols-1 md:grid-cols-2 gap-md">
       {props.recipes.map((recipe: Recipe) => (
-        <RecipesCard key={recipe.nome} recipe={recipe} />
+        <RecipeCard key={recipe.id} recipe={recipe} />
       ))}
       <div className="my-md">
         {props.pagination && <Pagination pagination={props.pagination} />}

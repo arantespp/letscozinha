@@ -23,6 +23,7 @@ const config: Config = {
       body: ['var(--font-lora)', ...defaultTheme.fontFamily.serif],
     },
     spacing: {
+      none: '0',
       xs: '0.25rem',
       sm: '1rem',
       md: '1.5rem',
@@ -43,6 +44,7 @@ const config: Config = {
     },
   },
   plugins: [
+    require('@tailwindcss/line-clamp'),
     function ({ addComponents, theme }: any) {
       addComponents({
         '.container': {
@@ -54,7 +56,7 @@ const config: Config = {
             maxWidth: '48rem', // 768px
           },
           '@screen lg': {
-            maxWidth: '60rem', // 960px
+            maxWidth: '64rem', // 1024px
           },
         },
       });

@@ -10,12 +10,20 @@ const meiliClient = new MeiliSearch({
 
 type Attributes = {
   nome: string;
+  descricao: string;
   slug: string;
   receita: string;
   updatedAt: string;
+  imagens: {
+    url: string;
+  }[];
 };
 
 type Response = CMSResponse<Attributes>;
+
+export type Recipe = {
+  id: number;
+} & Attributes;
 
 const fetchRecipes = async (query?: string) => {
   const response: Response = await fetch(
