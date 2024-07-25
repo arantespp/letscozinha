@@ -32,8 +32,7 @@ export async function generateMetadata(
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
-  const imagesUrls =
-    recipe.imagens?.map((image) => image.formats.large.url) || [];
+  const imagesUrls = recipe.imagens?.map((image) => image.url) || [];
 
   return {
     metadataBase: new URL(BASE_URL),
@@ -62,7 +61,7 @@ export default async function Page({ params }: Props) {
 
   const contentHtml = processedContent.toString();
 
-  const image = recipe.imagens?.[0]?.formats?.small;
+  const image = recipe.imagens?.[0];
 
   return (
     <article className="flex flex-col">
