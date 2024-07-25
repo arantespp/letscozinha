@@ -1,21 +1,20 @@
-import { getRecipes } from 'src/cms/getRecipes';
-import { getRecipe } from 'src/cms/getRecipe';
+import { getAllRecipes, findRecipe } from 'src/cms/recipes';
 import { remark } from 'remark';
 import html from 'remark-html';
-import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { BASE_URL } from 'src/constants';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { notFound } from 'next/navigation';
 
 type Props = {
   params: { slug: string };
 };
 
 export async function generateStaticParams() {
-  const { recipes } = await getRecipes();
+  const { allRecipes } = await getAllRecipes();
 
-  return recipes.map((recipe) => ({
+  return allRecipes.map((recipe) => ({
     slug: recipe.slug,
   }));
 }
@@ -24,42 +23,46 @@ export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const recipe = await getRecipe({ slug: params.slug });
+  const recipe = await findRecipe({ slug: params.slug });
+
+  if (!recipe) {
+    notFound();
+  }
 
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
   const imagesUrls =
-    recipe.attributes.imagens?.data?.map(
-      (image) => image.attributes.formats.large.url
-    ) || [];
+    recipe.imagens?.map((image) => image.formats.large.url) || [];
 
   return {
     metadataBase: new URL(BASE_URL),
-    title: recipe.attributes.nome,
-    description: recipe.attributes.metaDescricao,
-    keywords: recipe.attributes.keywords,
+    title: recipe.nome,
+    description: recipe.meta_descricao,
+    keywords: recipe.keywords,
     openGraph: {
-      title: recipe.attributes.nome,
-      description: recipe.attributes.metaDescricao,
+      title: recipe.nome,
+      description: recipe.meta_descricao,
       siteName: "Let's Cozinha",
-      url: `/receitas/${recipe.attributes.slug}`,
+      url: `/receitas/${recipe.slug}`,
       images: [...imagesUrls, ...previousImages],
     },
   };
 }
 
 export default async function Page({ params }: Props) {
-  const recipe = await getRecipe({ slug: params.slug });
+  const recipe = await findRecipe({ slug: params.slug });
+
+  if (!recipe) {
+    notFound();
+  }
 
   // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(html)
-    .process(recipe.attributes.receita);
+  const processedContent = await remark().use(html).process(recipe.receita);
 
   const contentHtml = processedContent.toString();
 
-  const image = recipe.attributes.imagens?.data?.[0]?.attributes.formats?.small;
+  const image = recipe.imagens?.[0]?.formats?.small;
 
   return (
     <article className="flex flex-col">
@@ -68,13 +71,13 @@ export default async function Page({ params }: Props) {
           { name: 'Home', href: '/' },
           { name: 'Receitas', href: '/receitas' },
           {
-            name: recipe.attributes.nome,
-            href: `/receitas/${recipe.attributes.slug}`,
+            name: recipe.nome,
+            href: `/receitas/${recipe.slug}`,
             current: true,
           },
         ]}
       />
-      <h1>{recipe.attributes.nome}</h1>
+      <h1>{recipe.nome}</h1>
       {image && (
         <Image
           src={image.url}

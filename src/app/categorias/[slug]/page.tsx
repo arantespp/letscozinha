@@ -1,11 +1,9 @@
-import { getCategories } from 'src/cms/getCategories';
-import { getCategory } from 'src/cms/getCategory';
+import { findCategory, getAllCategories } from 'src/cms/categories';
 import { RecipesList } from 'src/components/RecipesList';
-import qs from 'qs';
 import type { Metadata, ResolvingMetadata } from 'next';
-import { getRecipes } from 'src/cms/getRecipes';
-import { RECIPES_PAGE_SIZE } from 'src/cms/config';
+import { getRecipes } from 'src/cms/recipes';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { notFound } from 'next/navigation';
 
 type Props = { params: { slug: string } };
 
@@ -13,18 +11,20 @@ export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const category = await getCategory({ slug: params.slug });
+  const category = await findCategory({ slug: params.slug });
+
+  if (!category) {
+    notFound();
+  }
 
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
   const imagesUrls =
-    category.attributes.imagens?.data?.map(
-      (image) => image.attributes.formats.large.url
-    ) || [];
+    category.imagens?.map((image) => image.formats.large.url) || [];
 
   return {
-    title: category.attributes.nome,
+    title: category.nome,
     openGraph: {
       images: [...imagesUrls, ...previousImages],
     },
@@ -32,9 +32,9 @@ export async function generateMetadata(
 }
 
 export async function generateStaticParams() {
-  const { categories } = await getCategories();
+  const { allCategories } = await getAllCategories();
 
-  return categories.map((category) => ({
+  return allCategories.map((category) => ({
     slug: category.slug,
   }));
 }
@@ -48,30 +48,16 @@ export default async function Page({
     page?: string;
   };
 }) {
-  const category = await getCategory({ slug: params.slug });
+  const category = await findCategory({ slug: params.slug });
 
-  const recipesQuery = qs.stringify(
-    {
-      filters: {
-        categorias: {
-          id: {
-            $eq: category.id,
-          },
-        },
-      },
-      pagination: {
-        page: searchParams.page || '1',
-        pageSize: RECIPES_PAGE_SIZE,
-      },
-      populate: ['categorias'],
-      sort: ['nome:asc'],
-    },
-    {
-      encodeValuesOnly: true,
-    }
-  );
+  if (!category) {
+    notFound();
+  }
 
-  const { recipes, meta } = await getRecipes({ query: recipesQuery });
+  const { recipes, meta } = await getRecipes({
+    filter: { categoryId: category.id },
+    page: searchParams.page,
+  });
 
   return (
     <div className="flex flex-col">
@@ -86,13 +72,13 @@ export default async function Page({
             href: '/categorias',
           },
           {
-            name: category.attributes.nome,
-            href: `/categorias/${category.attributes.slug}`,
+            name: category.nome,
+            href: `/categorias/${category.slug}`,
             current: true,
           },
         ]}
       />
-      <h1>Categoria - {category.attributes.nome}</h1>
+      <h1>Categoria - {category.nome}</h1>
       <RecipesList recipes={recipes} pagination={meta?.pagination} />
     </div>
   );

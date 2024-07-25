@@ -1,17 +1,12 @@
-import { getCategories } from 'src/cms/getCategories';
+import { getAllCategories } from 'src/cms/categories';
 import Link from 'next/link';
-import qs from 'qs';
 
 export async function CategoriesList() {
-  const query = qs.stringify({
-    sort: ['nome'],
-  });
-
-  const { categories } = await getCategories({ query });
+  const { allCategories } = await getAllCategories();
 
   return (
     <div className="flex flex-col">
-      {categories.map((category) => (
+      {allCategories.map((category) => (
         <Link
           key={category.id}
           href={`/categorias/${category.slug}`}

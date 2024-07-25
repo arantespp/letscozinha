@@ -4,7 +4,7 @@ import logo from '../../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import type { Recipe } from 'src/cms/getRecipes';
+import type { Recipe } from 'src/cms/recipes';
 
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const router = useRouter();

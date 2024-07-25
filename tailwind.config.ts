@@ -44,20 +44,10 @@ const config: Config = {
     },
   },
   plugins: [
-    require('@tailwindcss/line-clamp'),
     function ({ addComponents, theme }: any) {
       addComponents({
         '.container': {
-          maxWidth: '100%',
-          '@screen sm': {
-            maxWidth: '40rem', // 640px
-          },
-          '@screen md': {
-            maxWidth: '48rem', // 768px
-          },
-          '@screen lg': {
-            maxWidth: '64rem', // 1024px
-          },
+          maxWidth: '80rem',
         },
       });
     },

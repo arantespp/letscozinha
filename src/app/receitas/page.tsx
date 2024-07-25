@@ -1,7 +1,7 @@
 import { Search } from 'src/components/Search';
 import { RecipesList } from 'src/components/RecipesList';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { getRecipes } from 'src/cms/getRecipes';
+import { getRecipes, searchRecipes } from 'src/cms/recipes';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -20,7 +20,13 @@ type Props = {
 };
 
 export default async function Page({ searchParams }: Props) {
-  const { recipes, meta } = await getRecipes(searchParams);
+  const { recipes, meta } = await (async () => {
+    if (searchParams?.search) {
+      return searchRecipes({ search: searchParams.search });
+    }
+
+    return getRecipes({ page: searchParams?.page });
+  })();
 
   return (
     <div className="flex flex-col">
