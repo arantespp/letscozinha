@@ -8,6 +8,7 @@ type CategoryAttributes = {
   nome: string;
   slug: string;
   imagens?: CMSImages;
+  updatedAt: string;
 };
 
 export type CMSCategoriesResponse = CMSDataArrayResponse<CategoryAttributes>;

@@ -1,34 +1,37 @@
 import { MetadataRoute } from 'next';
 import { BASE_URL } from 'src/constants';
-import { getAllRecipes } from 'src/cms/getRecipes';
-import { getAllCategories } from 'src/cms/getCategories';
+import { getAllRecipes } from 'src/cms/recipes';
+import { getAllCategories } from 'src/cms/categories';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { recipes } = await getAllRecipes();
+  const { allRecipes } = await getAllRecipes();
 
-  const recipesSitemap = recipes.map((recipe) => ({
+  const recipesSitemap = allRecipes.map((recipe) => ({
     url: `${BASE_URL}/receitas/${recipe.slug}`,
     lastModified: recipe.updatedAt,
   }));
 
-  const { categories } = await getAllCategories();
+  const { allCategories } = await getAllCategories();
 
-  const categoriesSitemap = categories.map((category) => ({
+  const categoriesSitemap = allCategories.map((category) => ({
     url: `${BASE_URL}/categorias/${category.slug}`,
     lastModified: category.updatedAt,
   }));
 
-  const lastModified = [...recipes, ...categories].reduce((acc, d) => {
-    if (!acc) {
-      return d.updatedAt;
-    }
+  const lastModified = [...recipesSitemap, ...categoriesSitemap].reduce(
+    (acc, d) => {
+      if (!acc) {
+        return d.lastModified;
+      }
 
-    if (d.updatedAt > acc) {
-      return d.updatedAt;
-    }
+      if (d.lastModified > acc) {
+        return d.lastModified;
+      }
 
-    return acc;
-  }, '');
+      return acc;
+    },
+    ''
+  );
 
   const sortByUrl = (a: { url: string }, b: { url: string }) =>
     a.url.localeCompare(b.url);
