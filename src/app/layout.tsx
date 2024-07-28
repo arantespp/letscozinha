@@ -10,6 +10,7 @@ import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
+import { getAllCategories } from 'src/cms/categories';
 
 fortawesomeConfig.autoAddCss = false;
 
@@ -53,6 +54,39 @@ export const viewport: Viewport = {
   width: 'device-width',
 };
 
+const Aside = async () => {
+  const { allCategories } = await getAllCategories();
+
+  return (
+    <aside className="w-full md:w-60 flex flex-col rounded p-md bg-[#F5F5F5]">
+      <div className="flex flex-col gap-xs items-center">
+        <div className="size-image-sm relative">
+          <Image
+            className="size-image-sm rounded-full"
+            src={logo}
+            alt="Foto da Lets"
+            fill
+          />
+        </div>
+        <span className="font-heading text-xl">Quem é a Lets?</span>
+        <span className="text-text-light italic text-center leading-snug">
+          &quot;Cozinhar é a minha paixão, eu amo cozinhar e eu amo muito o amor
+          da minha vida, com quem eu quero viver pra sempre.&quot;
+        </span>
+      </div>
+      <hr className="my-md"></hr>
+      <h2 className="text-2xl">Receitas</h2>
+      <div className="flex flex-col gap-xs">
+        {allCategories.map((category) => (
+          <div key={category.id}>
+            <Link href={`/categorias/${category.slug}`}>{category.nome}</Link>
+          </div>
+        ))}
+      </div>
+    </aside>
+  );
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -68,7 +102,7 @@ export default function RootLayout({
           <Link href="/">
             <Image src={logo} alt="Lets Cozinha" height={60} />
           </Link>
-          <nav className="flex gap-sm text-xl [&>a]:no-underline">
+          <nav className="flex gap-sm text-md md:text-xl [&>a]:no-underline">
             <Link href="/">Home</Link>
             <Link href="/receitas">Receitas</Link>
             <Link href="/categorias">Categorias</Link>
@@ -82,7 +116,12 @@ export default function RootLayout({
             </Link>
           </nav>
         </header>
-        <main className="container py-md md:pb-xl">{children}</main>
+        <main className="container py-md md:pb-xl">
+          <div className="flex flex-col-reverse md:flex-row gap-lg">
+            <Aside />
+            <div className="flex-1">{children}</div>
+          </div>
+        </main>
         <footer className="bg-primary py-lg">
           <div className="container flex justify-center">
             <p>© 2024 Lets Cozinha</p>

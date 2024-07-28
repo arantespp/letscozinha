@@ -68,8 +68,8 @@ export default async function Page({
             href: '/',
           },
           {
-            name: 'Categorias',
-            href: '/categorias',
+            name: 'Receitas',
+            href: '/receitas',
           },
           {
             name: category.nome,
