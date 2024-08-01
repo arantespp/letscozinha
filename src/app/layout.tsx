@@ -10,6 +10,8 @@ import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
+import { getAllCategories } from 'src/cms/categories';
+import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 
 fortawesomeConfig.autoAddCss = false;
 
@@ -53,6 +55,71 @@ export const viewport: Viewport = {
   width: 'device-width',
 };
 
+const Header = () => {
+  return (
+    <header className="container py-md flex items-center justify-between">
+      <Link href="/">
+        <Image src={logo} alt="Lets Cozinha" height={60} />
+      </Link>
+      <nav className="flex gap-sm text-md md:text-xl [&>a]:no-underline">
+        <Link href="/">Home</Link>
+        <Link href="/receitas">Receitas</Link>
+      </nav>
+      <nav className="flex text-3xl md:text-3xl gap-sm">
+        <Link href="https://www.instagram.com/lets_cozinha/" target="_blank">
+          <FontAwesomeIcon icon={faInstagram} />
+        </Link>
+      </nav>
+    </header>
+  );
+};
+
+const Aside = async () => {
+  const { allCategories } = await getAllCategories();
+
+  const { letsCozinhaLets } = await getLetsCozinhaLets();
+
+  const summary = `"${letsCozinhaLets.resumo}"`;
+
+  return (
+    <aside className="w-full md:w-64 flex flex-col rounded p-md md:mt-lg bg-[#F5F5F5]">
+      <div className="flex flex-col gap-sm items-center">
+        <div className="size-image-sm relative">
+          <Image
+            className="size-image-sm rounded-full"
+            src={letsCozinhaLets.imagem.url}
+            alt="Foto da Lets"
+            fill
+          />
+        </div>
+        <span className="font-heading text-xl">Conheça a Lets</span>
+        <span className="text-text-light italic text-center leading-normal text-sm">
+          {summary}
+        </span>
+      </div>
+      <hr className="my-md"></hr>
+      <h2 className="text-2xl">Receitas</h2>
+      <div className="flex flex-col gap-xs">
+        {allCategories.map((category) => (
+          <div key={category.id}>
+            <Link href={`/categorias/${category.slug}`}>{category.nome}</Link>
+          </div>
+        ))}
+      </div>
+    </aside>
+  );
+};
+
+const Footer = () => {
+  return (
+    <footer className="bg-primary py-lg">
+      <div className="container flex justify-center">
+        <p>© 2024 Lets Cozinha</p>
+      </div>
+    </footer>
+  );
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -64,30 +131,14 @@ export default function RootLayout({
       className={`${playfairDisplay.variable} ${lora.variable}`}
     >
       <body>
-        <header className="container py-md flex items-center justify-between">
-          <Link href="/">
-            <Image src={logo} alt="Lets Cozinha" height={60} />
-          </Link>
-          <nav className="flex gap-sm text-xl [&>a]:no-underline">
-            <Link href="/">Home</Link>
-            <Link href="/receitas">Receitas</Link>
-            <Link href="/categorias">Categorias</Link>
-          </nav>
-          <nav className="flex text-3xl md:text-3xl gap-sm">
-            <Link
-              href="https://www.instagram.com/lets_cozinha/"
-              target="_blank"
-            >
-              <FontAwesomeIcon icon={faInstagram} />
-            </Link>
-          </nav>
-        </header>
-        <main className="container py-md md:pb-xl">{children}</main>
-        <footer className="bg-primary py-lg">
-          <div className="container flex justify-center">
-            <p>© 2024 Lets Cozinha</p>
+        <Header />
+        <main className="container py-md md:pb-xl">
+          <div className="flex flex-col md:flex-row gap-sm md:gap-xl">
+            <div className="flex-1">{children}</div>
+            <Aside />
           </div>
-        </footer>
+        </main>
+        <Footer />
         <Analytics mode="production" />
         <SpeedInsights />
       </body>

@@ -22,6 +22,10 @@ export type CMSImages = {
   data: CMSData<Image>[];
 };
 
+export type CMSImage = {
+  data: CMSData<Image>;
+};
+
 export type CMSMeta = {
   pagination: {
     page: number;

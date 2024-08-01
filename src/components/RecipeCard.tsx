@@ -24,7 +24,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
           }}
         />
       </div>
-      <h3 className="my-none">
+      <h3 className="my-none flex-1">
         <Link href={`/receitas/${recipe.slug}`}>{recipe.nome}</Link>
       </h3>
       <span className="text-text-light line-clamp-5 leading-snug">
