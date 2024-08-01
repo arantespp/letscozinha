@@ -1,5 +1,5 @@
 import { CMS_TOKEN, CMS_URL } from './config';
-import type { CMSSingleDataResponse } from './types';
+import type { CMSSingleDataResponse, CMSImage } from './types';
 import qs from 'qs';
 import {
   RECIPES_POPULATE,
@@ -8,7 +8,7 @@ import {
 } from './recipes';
 import { mapCMSData } from './mapCMSData';
 
-type CMSResponse = CMSSingleDataResponse<{
+type LetsCozinhaCMSResponse = CMSSingleDataResponse<{
   titulo: string;
   descricao?: string;
   receitas_favoritas_titulo: string;
@@ -24,7 +24,7 @@ export const getLetsCozinha = async () => {
     },
   });
 
-  const response: CMSResponse = await fetch(
+  const response: LetsCozinhaCMSResponse = await fetch(
     `${CMS_URL}/api/lets-cozinha?${query}`,
     {
       headers: {
@@ -42,4 +42,32 @@ export const getLetsCozinha = async () => {
   };
 
   return { letsCozinha };
+};
+
+type LetsCozinhaLetsCMSResponse = CMSSingleDataResponse<{
+  resumo: string;
+  texto_completo: string;
+  imagem: CMSImage;
+}>;
+
+export const getLetsCozinhaLets = async () => {
+  const query = qs.stringify({
+    populate: ['imagem'],
+  });
+
+  const response: LetsCozinhaLetsCMSResponse = await fetch(
+    `${CMS_URL}/api/lets-cozinha-lets?${query}`,
+    {
+      headers: {
+        Authorization: `Bearer ${CMS_TOKEN}`,
+      },
+    }
+  ).then((res) => res.json());
+
+  const letsCozinhaLets = {
+    ...mapCMSData(response.data),
+    imagem: mapCMSData(response.data.attributes.imagem.data),
+  };
+
+  return { letsCozinhaLets };
 };
