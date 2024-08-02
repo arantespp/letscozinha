@@ -15,6 +15,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
     <div className="flex flex-col gap-sm border rounded p-sm hover:shadow-md">
       <div className="aspect-square relative">
         <Image
+          className="rounded"
           src={image?.url || logo}
           alt={recipe.nome}
           fill

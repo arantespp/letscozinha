@@ -61,7 +61,7 @@ const Header = () => {
       <Link href="/">
         <Image src={logo} alt="Lets Cozinha" height={60} />
       </Link>
-      <nav className="flex gap-sm text-md md:text-xl [&>a]:no-underline">
+      <nav className="flex gap-sm text-md md:text-2xl [&>a]:no-underline">
         <Link href="/">Home</Link>
         <Link href="/receitas">Receitas</Link>
       </nav>
@@ -75,14 +75,15 @@ const Header = () => {
 };
 
 const Aside = async () => {
-  const { allCategories } = await getAllCategories();
-
-  const { letsCozinhaLets } = await getLetsCozinhaLets();
+  const [{ allCategories }, { letsCozinhaLets }] = await Promise.all([
+    getAllCategories(),
+    getLetsCozinhaLets(),
+  ]);
 
   const summary = `"${letsCozinhaLets.resumo}"`;
 
   return (
-    <aside className="w-full md:w-64 flex flex-col rounded p-md md:mt-lg bg-[#F5F5F5]">
+    <aside className="w-full md:w-64 flex flex-col rounded p-md md:mt-md bg-[#F5F5F5]">
       <div className="flex flex-col gap-sm items-center">
         <div className="size-image-sm relative">
           <Image
@@ -93,7 +94,7 @@ const Aside = async () => {
           />
         </div>
         <span className="font-heading text-xl">Conheça a Lets</span>
-        <span className="text-text-light italic text-center leading-normal text-sm">
+        <span className="italic text-center leading-normal text-sm">
           {summary}
         </span>
       </div>
@@ -122,8 +123,10 @@ const Footer = () => {
 
 export default function RootLayout({
   children,
+  hero,
 }: Readonly<{
   children: React.ReactNode;
+  hero?: React.ReactNode;
 }>) {
   return (
     <html
@@ -132,8 +135,9 @@ export default function RootLayout({
     >
       <body>
         <Header />
-        <main className="container py-md md:pb-xl">
-          <div className="flex flex-col md:flex-row gap-sm md:gap-xl">
+        <main className="md:pb-xl">
+          {hero}
+          <div className="container my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl">
             <div className="flex-1">{children}</div>
             <Aside />
           </div>
