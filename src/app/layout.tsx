@@ -126,7 +126,7 @@ export default function RootLayout({
   hero,
 }: Readonly<{
   children: React.ReactNode;
-  hero?: React.ReactNode;
+  hero: React.ReactNode;
 }>) {
   return (
     <html
