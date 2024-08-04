@@ -159,7 +159,7 @@ export default async function Page({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
       </article>
-      <hr className="my-lg" />
+      <hr className="my-md md:my-lg" />
       <RecipeShare recipe={recipe} />
     </div>
   );

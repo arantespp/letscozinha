@@ -84,7 +84,7 @@ const Aside = async () => {
   const summary = `"${letsCozinhaLets.resumo}"`;
 
   return (
-    <aside className="w-full md:w-64 flex flex-col rounded p-md md:mt-md bg-[#F5F5F5]">
+    <aside className="w-full md:w-64 flex flex-col rounded p-md mt-xl md:mt-md bg-[#F5F5F5]">
       <div className="flex flex-col gap-sm items-center">
         <div className="size-image-sm relative">
           <Image
