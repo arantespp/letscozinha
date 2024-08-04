@@ -55,7 +55,7 @@ export async function generateMetadata(
 const SeeRecipeOnInstagram = ({
   instagram_posts = [],
 }: {
-  instagram_posts: { url: string }[];
+  instagram_posts?: { url: string }[];
 }) => {
   if (!instagram_posts.length) {
     return null;
@@ -139,7 +139,7 @@ export default async function Page({ params }: Props) {
         <h1>{recipe.nome}</h1>
         <span className="text-text-light">{recipe.descricao}</span>
         <div className="flex gap-xs">
-          {recipe.categorias.map((categoria) => (
+          {recipe.categorias?.map((categoria) => (
             <CategoryTag
               key={categoria.slug}
               nome={categoria.nome}

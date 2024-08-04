@@ -23,10 +23,10 @@ type RecipeAttributes = {
   meta_descricao: string;
   keywords: string;
   imagens: CMSImages;
-  instagram_posts: {
+  instagram_posts?: {
     url: string;
   }[];
-  categorias: {
+  categorias?: {
     data: CMSData<{
       id: number;
       nome: string;
@@ -123,7 +123,7 @@ export const getRecipes = async ({
 
     if (filter.categoryId) {
       return allRecipes.filter((recipe) =>
-        recipe.categorias.some((category) => category.id === filter.categoryId)
+        recipe.categorias?.some((category) => category.id === filter.categoryId)
       );
     }
 
