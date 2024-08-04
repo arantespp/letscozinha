@@ -22,7 +22,7 @@ type RecipeAttributes = {
   updatedAt: string;
   meta_descricao: string;
   keywords: string;
-  imagens: CMSImages;
+  imagens?: CMSImages;
   instagram_posts?: {
     url: string;
   }[];
