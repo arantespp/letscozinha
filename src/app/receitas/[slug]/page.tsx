@@ -9,6 +9,7 @@ import { RecipeImages } from 'src/components/RecipeImages';
 import { CategoryTag } from 'src/components/CategoryTag';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { RecipeShare } from 'src/components/RecipeShare';
 
 type Props = {
   params: { slug: string };
@@ -123,39 +124,43 @@ export default async function Page({ params }: Props) {
     }) || [];
 
   return (
-    <article className="flex flex-col">
-      <Breadcrumbs
-        items={[
-          { name: 'Home', href: '/' },
-          { name: 'Receitas', href: '/receitas' },
-          {
-            name: recipe.nome,
-            href: `/receitas/${recipe.slug}`,
-            current: true,
-          },
-        ]}
-      />
-      <div className="flex flex-col gap-sm mt-sm">
-        <h1>{recipe.nome}</h1>
-        <span className="text-text-light">{recipe.descricao}</span>
-        <div className="flex gap-xs">
-          {recipe.categorias?.map((categoria) => (
-            <CategoryTag
-              key={categoria.slug}
-              nome={categoria.nome}
-              slug={categoria.slug}
-            />
-          ))}
+    <div>
+      <article className="flex flex-col">
+        <Breadcrumbs
+          items={[
+            { name: 'Home', href: '/' },
+            { name: 'Receitas', href: '/receitas' },
+            {
+              name: recipe.nome,
+              href: `/receitas/${recipe.slug}`,
+              current: true,
+            },
+          ]}
+        />
+        <div className="flex flex-col gap-sm mt-sm">
+          <h1>{recipe.nome}</h1>
+          <span className="text-text-light">{recipe.descricao}</span>
+          <div className="flex gap-xs">
+            {recipe.categorias?.map((categoria) => (
+              <CategoryTag
+                key={categoria.slug}
+                nome={categoria.nome}
+                slug={categoria.slug}
+              />
+            ))}
+          </div>
+          <SeeRecipeOnInstagram instagram_posts={recipe.instagram_posts} />
+          <div className="mt-sm mb-xl">
+            <RecipeImages images={images} />
+          </div>
         </div>
-        <SeeRecipeOnInstagram instagram_posts={recipe.instagram_posts} />
-        <div className="mt-sm mb-xl">
-          <RecipeImages images={images} />
-        </div>
-      </div>
-      <div
-        className="max-w-[800px] text-justify"
-        dangerouslySetInnerHTML={{ __html: contentHtml }}
-      />
-    </article>
+        <div
+          className="max-w-[800px] text-justify"
+          dangerouslySetInnerHTML={{ __html: contentHtml }}
+        />
+      </article>
+      <hr className="my-lg" />
+      <RecipeShare recipe={recipe} />
+    </div>
   );
 }
