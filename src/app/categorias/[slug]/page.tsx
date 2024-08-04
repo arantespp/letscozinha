@@ -20,8 +20,7 @@ export async function generateMetadata(
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
-  const imagesUrls =
-    category.imagens?.map((image) => image.formats.large.url) || [];
+  const imagesUrls = category.imagens?.map((image) => image.url) || [];
 
   return {
     title: category.nome,
