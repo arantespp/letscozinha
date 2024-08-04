@@ -12,7 +12,7 @@ import { MeiliSearch } from 'meilisearch';
 
 export const RECIPES_PAGE_SIZE = 21;
 
-export const RECIPES_POPULATE = ['categorias', 'imagens'];
+export const RECIPES_POPULATE = ['categorias', 'imagens', 'instagram_posts'];
 
 type RecipeAttributes = {
   nome: string;
@@ -23,6 +23,9 @@ type RecipeAttributes = {
   meta_descricao: string;
   keywords: string;
   imagens: CMSImages;
+  instagram_posts: {
+    url: string;
+  }[];
   categorias: {
     data: CMSData<{
       id: number;

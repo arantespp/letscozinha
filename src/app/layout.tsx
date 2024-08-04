@@ -12,6 +12,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import { getAllCategories } from 'src/cms/categories';
 import { getLetsCozinhaLets } from 'src/cms/singleTypes';
+import { CategoryTag } from 'src/components/CategoryTag';
 
 fortawesomeConfig.autoAddCss = false;
 
@@ -94,16 +95,14 @@ const Aside = async () => {
           />
         </div>
         <span className="font-heading text-xl">Conheça a Lets</span>
-        <span className="italic text-center leading-normal text-sm">
-          {summary}
-        </span>
+        <span className="italic text-center leading-normal">{summary}</span>
       </div>
       <hr className="my-md"></hr>
       <h2 className="text-2xl">Receitas</h2>
-      <div className="flex flex-col gap-xs">
+      <div className="flex flex-col gap-[14px]">
         {allCategories.map((category) => (
-          <div key={category.id}>
-            <Link href={`/categorias/${category.slug}`}>{category.nome}</Link>
+          <div key={category.id} className="">
+            <CategoryTag {...category} />
           </div>
         ))}
       </div>

@@ -1,11 +1,14 @@
 import { getAllRecipes, findRecipe } from 'src/cms/recipes';
 import { remark } from 'remark';
 import html from 'remark-html';
-import Image from 'next/image';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { BASE_URL } from 'src/constants';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
+import { RecipeImages } from 'src/components/RecipeImages';
+import { CategoryTag } from 'src/components/CategoryTag';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 
 type Props = {
   params: { slug: string };
@@ -49,6 +52,54 @@ export async function generateMetadata(
   };
 }
 
+const SeeRecipeOnInstagram = ({
+  instagram_posts = [],
+}: {
+  instagram_posts: { url: string }[];
+}) => {
+  if (!instagram_posts.length) {
+    return null;
+  }
+
+  const nodes = instagram_posts.map((post, index) => {
+    const hasComma =
+      instagram_posts.length > 1 && index < instagram_posts.length - 1;
+
+    if (index === 0) {
+      return (
+        <span key={post.url}>
+          <span className="text-[1.5em] mr-xs align-middle">
+            <FontAwesomeIcon icon={faInstagram} />
+          </span>{' '}
+          <a href={post.url} target="_blank" rel="noopener noreferrer">
+            Confira a receita no Instagram
+            {hasComma ? ',' : ''}
+          </a>
+        </span>
+      );
+    }
+
+    return (
+      <a
+        key={post.url}
+        href={post.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        post {index + 1}
+        {hasComma ? ',' : ''}
+      </a>
+    );
+  });
+
+  // add space between nodes
+  for (let i = 1; i < nodes.length; i += 2) {
+    nodes.splice(i, 0, <span> </span>);
+  }
+
+  return <span>{nodes}</span>;
+};
+
 export default async function Page({ params }: Props) {
   const recipe = await findRecipe({ slug: params.slug });
 
@@ -61,7 +112,15 @@ export default async function Page({ params }: Props) {
 
   const contentHtml = processedContent.toString();
 
-  const image = recipe.imagens?.[0];
+  const images =
+    recipe.imagens.map((cmsImage) => {
+      const image = cmsImage.formats.medium || cmsImage;
+
+      return {
+        ...image,
+        alt: image.alt || `Imagem de ${recipe.nome}`,
+      };
+    }) || [];
 
   return (
     <article className="flex flex-col">
@@ -76,16 +135,27 @@ export default async function Page({ params }: Props) {
           },
         ]}
       />
-      <h1>{recipe.nome}</h1>
-      {image && (
-        <Image
-          src={image.url}
-          width={image.width}
-          height={image.height}
-          alt=""
-        />
-      )}
-      <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      <div className="flex flex-col gap-sm mt-sm">
+        <h1>{recipe.nome}</h1>
+        <span className="text-text-light">{recipe.descricao}</span>
+        <div className="flex gap-xs">
+          {recipe.categorias.map((categoria) => (
+            <CategoryTag
+              key={categoria.slug}
+              nome={categoria.nome}
+              slug={categoria.slug}
+            />
+          ))}
+        </div>
+        <SeeRecipeOnInstagram instagram_posts={recipe.instagram_posts} />
+        <div className="mt-sm mb-xl">
+          <RecipeImages images={images} />
+        </div>
+      </div>
+      <div
+        className="max-w-[800px] text-justify"
+        dangerouslySetInnerHTML={{ __html: contentHtml }}
+      />
     </article>
   );
 }

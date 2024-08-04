@@ -1,28 +1,20 @@
-'use client';
-
 import logo from '../../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import type { Recipe } from 'src/cms/recipes';
 
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
-  const router = useRouter();
-
-  const image = recipe.imagens?.[0];
+  const image = recipe.imagens?.[0] || recipe.imagens?.[0].formats.medium;
 
   return (
-    <div className="flex flex-col gap-sm border rounded p-sm hover:shadow-md">
+    <div className="flex flex-col gap-sm border rounded p-md shadow-sm hover:shadow-md">
       <div className="aspect-square relative">
         <Image
-          className="rounded"
+          className="rounded object-cover object-center"
           src={image?.url || logo}
           alt={recipe.nome}
           fill
-          style={{
-            objectFit: 'cover',
-            objectPosition: 'center',
-          }}
+          quality={50}
         />
       </div>
       <h3 className="my-none flex-1">
@@ -31,12 +23,12 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       <span className="text-text-light line-clamp-5 leading-snug">
         {recipe.descricao}
       </span>
-      <button
-        className="bg-primary text-text-dark text-neutral rounded p-xs hover:bg-secondary"
-        onClick={() => router.push(`/receitas/${recipe.slug}`)}
+      <Link
+        href={`/receitas/${recipe.slug}`}
+        className="bg-primary text-text-dark hover:text-neutral rounded p-xs hover:bg-secondary text-center no-underline"
       >
         Ver Receita
-      </button>
+      </Link>
     </div>
   );
 }

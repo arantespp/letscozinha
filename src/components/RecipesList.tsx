@@ -11,8 +11,8 @@ type RecipesListProps = {
 
 export async function RecipesList(props: RecipesListProps) {
   return (
-    <section>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg my-md">
+    <section className="">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-md my-md">
         {props.recipes.map((recipe: Recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}

@@ -7,14 +7,15 @@ type ImageAttributes = {
   url: string;
   width: number;
   height: number;
+  alt?: string;
 };
 
 type Image = ImageAttributes & {
   formats: {
-    thumbnail: ImageAttributes;
-    small: ImageAttributes;
-    medium: ImageAttributes;
-    large: ImageAttributes;
+    thumbnail?: ImageAttributes;
+    small?: ImageAttributes;
+    medium?: ImageAttributes;
+    large?: ImageAttributes;
   };
 };
 
