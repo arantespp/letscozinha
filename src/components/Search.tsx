@@ -24,7 +24,6 @@ export function Search() {
         Search
       </label>
       <input
-        autoFocus
         className="w-full px-md py-xs border border-primary rounded placeholder-text-light"
         placeholder="Procurar receita"
         onChange={(e) => {
