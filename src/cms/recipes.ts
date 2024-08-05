@@ -184,19 +184,21 @@ export const searchRecipes = async ({ search }: { search: string }) => {
   return { recipes, meta };
 };
 
-export const searchSimilarRecipes = async ({ recipe }: { recipe: Recipe }) => {
-  try {
-    const id = `${process.env.MEILISEARCH_INDEX}-${recipe.id}`;
+export const searchSimilarRecipes = cache(
+  async ({ recipeId }: { recipeId: string }) => {
+    try {
+      const id = `${process.env.MEILISEARCH_INDEX}-${recipeId}`;
 
-    const searchResults = await meiliRecipesIndex.searchSimilarDocuments({
-      id,
-      limit: 3,
-    });
+      const searchResults = await meiliRecipesIndex.searchSimilarDocuments({
+        id,
+        limit: 3,
+      });
 
-    const recipes = await getRecipesFromMeiliHits(searchResults.hits);
+      const recipes = await getRecipesFromMeiliHits(searchResults.hits);
 
-    return recipes;
-  } catch {
-    return [];
+      return recipes;
+    } catch {
+      return [];
+    }
   }
-};
+);
