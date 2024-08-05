@@ -10,9 +10,8 @@ import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
-import { getAllCategories } from 'src/cms/categories';
-import { getLetsCozinhaLets } from 'src/cms/singleTypes';
-import { CategoryTag } from 'src/components/CategoryTag';
+import * as React from 'react';
+import { LayoutAside } from 'src/components/LayoutAside';
 
 fortawesomeConfig.autoAddCss = false;
 
@@ -33,7 +32,7 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: 'Bem-vindo ao Lets Cozinha',
+  title: 'Lets Cozinha',
   description:
     'Descubra todos os tipos de receitas. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
   keywords:
@@ -44,7 +43,7 @@ export const metadata: Metadata = {
         url: 'https://www.letscozinha.com.br/logo-og.jpg',
         width: 1200,
         height: 630,
-        alt: 'Bem-vindo ao Lets Cozinha',
+        alt: 'Lets Cozinha',
       },
     ],
     url: 'https://www.letscozinha.com.br',
@@ -75,41 +74,6 @@ const Header = () => {
   );
 };
 
-const Aside = async () => {
-  const [{ allCategories }, { letsCozinhaLets }] = await Promise.all([
-    getAllCategories(),
-    getLetsCozinhaLets(),
-  ]);
-
-  const summary = `"${letsCozinhaLets.resumo}"`;
-
-  return (
-    <aside className="w-full md:w-64 flex flex-col rounded p-md mt-xl md:mt-md bg-[#F5F5F5]">
-      <div className="flex flex-col gap-sm items-center">
-        <div className="size-image-sm relative">
-          <Image
-            className="size-image-sm rounded-full"
-            src={letsCozinhaLets.imagem.url}
-            alt="Foto da Lets"
-            fill
-          />
-        </div>
-        <span className="font-heading text-xl">Conheça a Lets</span>
-        <span className="italic text-center leading-normal">{summary}</span>
-      </div>
-      <hr className="my-md"></hr>
-      <h2 className="text-2xl">Receitas</h2>
-      <div className="flex flex-col gap-[14px]">
-        {allCategories.map((category) => (
-          <div key={category.id} className="">
-            <CategoryTag {...category} />
-          </div>
-        ))}
-      </div>
-    </aside>
-  );
-};
-
 const Footer = () => {
   return (
     <footer className="bg-primary py-lg">
@@ -135,10 +99,14 @@ export default function RootLayout({
       <body>
         <Header />
         <main className="md:pb-xl">
-          {hero}
+          <React.Suspense fallback={<div className="h-[200px]"></div>}>
+            {hero}
+          </React.Suspense>
           <div className="container my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl">
-            <div className="flex-1">{children}</div>
-            <Aside />
+            <div className="flex-1">
+              <React.Suspense fallback={null}>{children}</React.Suspense>
+            </div>
+            <LayoutAside />
           </div>
         </main>
         <Footer />

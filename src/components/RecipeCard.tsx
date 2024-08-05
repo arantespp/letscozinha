@@ -7,7 +7,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const image = recipe.imagens?.[0] || recipe.imagens?.[0].formats.medium;
 
   return (
-    <div className="flex flex-col gap-sm border rounded p-md shadow-sm hover:shadow-md">
+    <div className="flex flex-col gap-sm border rounded p-sm shadow-sm hover:shadow-md">
       <div className="aspect-square relative">
         <Image
           className="rounded object-cover object-center"
@@ -15,6 +15,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
           alt={recipe.nome}
           fill
           quality={50}
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
         />
       </div>
       <h3 className="my-none flex-1">

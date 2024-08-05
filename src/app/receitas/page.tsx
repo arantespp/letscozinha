@@ -3,6 +3,8 @@ import { RecipesList } from 'src/components/RecipesList';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { getRecipes, searchRecipes } from 'src/cms/recipes';
 import type { Metadata } from 'next';
+import * as React from 'react';
+import { Loading } from 'src/components/Loading';
 
 export const metadata: Metadata = {
   title: 'Todas as Receitas - Lets Cozinha | Busque e Descubra Novos Sabores',
@@ -19,7 +21,7 @@ type Props = {
   };
 };
 
-export default async function Page({ searchParams }: Props) {
+async function SearchResults({ searchParams }: Props) {
   const { recipes, meta } = await (async () => {
     if (searchParams?.search) {
       return searchRecipes({ search: searchParams.search });
@@ -28,6 +30,10 @@ export default async function Page({ searchParams }: Props) {
     return getRecipes({ page: searchParams?.page });
   })();
 
+  return <RecipesList recipes={recipes} pagination={meta?.pagination} />;
+}
+
+export default async function Page({ searchParams }: Props) {
   return (
     <div className="flex flex-col">
       <Breadcrumbs
@@ -49,7 +55,9 @@ export default async function Page({ searchParams }: Props) {
           <Search />
         </div>
         <h2>Receitas</h2>
-        <RecipesList recipes={recipes} pagination={meta?.pagination} />
+        <React.Suspense fallback={<Loading />}>
+          <SearchResults searchParams={searchParams} />
+        </React.Suspense>
       </div>
     </div>
   );

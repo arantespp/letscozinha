@@ -1,4 +1,9 @@
-import { getAllRecipes, findRecipe } from 'src/cms/recipes';
+import {
+  getAllRecipes,
+  findRecipe,
+  searchSimilarRecipes,
+  Recipe,
+} from 'src/cms/recipes';
 import { remark } from 'remark';
 import html from 'remark-html';
 import type { Metadata, ResolvingMetadata } from 'next';
@@ -10,6 +15,8 @@ import { CategoryTag } from 'src/components/CategoryTag';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RecipeShare } from 'src/components/RecipeShare';
+import { RecipesList } from 'src/components/RecipesList';
+import * as React from 'react';
 
 type Props = {
   params: { slug: string };
@@ -101,6 +108,17 @@ const SeeRecipeOnInstagram = ({
   return <span>{nodes}</span>;
 };
 
+async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
+  const similarRecipes = await searchSimilarRecipes({ recipe });
+
+  return (
+    <div>
+      <h2>Confira também</h2>
+      <RecipesList recipes={similarRecipes} />
+    </div>
+  );
+}
+
 export default async function Page({ params }: Props) {
   const recipe = await findRecipe({ slug: params.slug });
 
@@ -124,7 +142,7 @@ export default async function Page({ params }: Props) {
     }) || [];
 
   return (
-    <div>
+    <div className="flex flex-col gap-lg">
       <article className="flex flex-col">
         <Breadcrumbs
           items={[
@@ -159,7 +177,9 @@ export default async function Page({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
       </article>
-      <hr className="my-md md:my-lg" />
+      <React.Suspense fallback={null}>
+        <SimilarRecipes recipe={recipe} />
+      </React.Suspense>
       <RecipeShare recipe={recipe} />
     </div>
   );

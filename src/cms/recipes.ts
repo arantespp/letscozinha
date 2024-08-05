@@ -157,23 +157,20 @@ type MeiliRecipe = {
   id: number;
 } & RecipeAttributes;
 
-export const searchRecipes = async ({ search }: { search: string }) => {
-  const index = meiliClient.index<MeiliRecipe>(
-    process.env.MEILISEARCH_INDEX || ''
-  );
+const meiliRecipesIndex = meiliClient.index<MeiliRecipe>(
+  process.env.MEILISEARCH_INDEX || ''
+);
 
-  const searchResults = await index.search(search, {
+const getRecipesFromMeiliHits = async (hits: MeiliRecipe[]) => {
+  return hits as Recipe[];
+};
+
+export const searchRecipes = async ({ search }: { search: string }) => {
+  const searchResults = await meiliRecipesIndex.search(search, {
     limit: RECIPES_PAGE_SIZE,
   });
 
-  const recipes = (
-    await Promise.all(
-      searchResults.hits.map(async (hit) => {
-        const recipe = await findRecipe({ id: hit.id });
-        return recipe;
-      })
-    )
-  ).filter(Boolean) as Recipe[];
+  const recipes = await getRecipesFromMeiliHits(searchResults.hits);
 
   const meta: CMSMeta = {
     pagination: {
@@ -185,4 +182,21 @@ export const searchRecipes = async ({ search }: { search: string }) => {
   };
 
   return { recipes, meta };
+};
+
+export const searchSimilarRecipes = async ({ recipe }: { recipe: Recipe }) => {
+  try {
+    const id = `${process.env.MEILISEARCH_INDEX}-${recipe.id}`;
+
+    const searchResults = await meiliRecipesIndex.searchSimilarDocuments({
+      id,
+      limit: 3,
+    });
+
+    const recipes = await getRecipesFromMeiliHits(searchResults.hits);
+
+    return recipes;
+  } catch {
+    return [];
+  }
 };

@@ -32,7 +32,11 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
   return (
     <div>
       <h2>Compartilhe esta receita</h2>
-      <div className="flex gap-sm">
+      <p className="text-text-light">
+        Compartilhe esta receita de {recipe.nome} com seus amigos e familiares
+        para que eles possam experimentar também!
+      </p>
+      <div className="flex gap-sm mt-md">
         <FacebookShareButton {...commonProps} hashtag="#letscozinha">
           <FacebookIcon {...iconProps} />
         </FacebookShareButton>
