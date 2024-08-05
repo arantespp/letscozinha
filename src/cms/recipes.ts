@@ -185,7 +185,7 @@ export const searchRecipes = async ({ search }: { search: string }) => {
 };
 
 export const searchSimilarRecipes = cache(
-  async ({ recipeId }: { recipeId: string }) => {
+  async ({ recipeId }: { recipeId: number }) => {
     try {
       const id = `${process.env.MEILISEARCH_INDEX}-${recipeId}`;
 

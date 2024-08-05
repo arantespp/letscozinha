@@ -109,7 +109,7 @@ const SeeRecipeOnInstagram = ({
 };
 
 async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
-  const similarRecipes = await searchSimilarRecipes({ recipe });
+  const similarRecipes = await searchSimilarRecipes({ recipeId: recipe.id });
 
   return (
     <div>
