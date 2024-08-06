@@ -17,6 +17,7 @@ import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
 import * as React from 'react';
+import { Recipe as RecipeSchema, WithContext } from 'schema-dts';
 
 type Props = {
   params: { slug: string };
@@ -126,7 +127,23 @@ export default async function Page({ params }: Props) {
     notFound();
   }
 
-  // Use remark to convert markdown into HTML string
+  /**
+   * https://developers.google.com/search/docs/appearance/structured-data/recipe
+   */
+  const jsonLd: WithContext<RecipeSchema> = {
+    '@context': 'https://schema.org',
+    '@type': 'Recipe',
+    name: recipe.nome,
+    image: recipe.imagens?.map((image) => image.url),
+    author: {
+      '@type': 'Person',
+      name: 'Leticia Ferreira',
+    },
+    datePublished: recipe.updatedAt,
+    description: recipe.descricao,
+    keywords: recipe.keywords,
+  };
+
   const processedContent = await remark().use(html).process(recipe.receita);
 
   const contentHtml = processedContent.toString();
@@ -143,7 +160,11 @@ export default async function Page({ params }: Props) {
 
   return (
     <div className="flex flex-col gap-lg">
-      <article className="flex flex-col">
+      <section className="flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <Breadcrumbs
           items={[
             { name: 'Home', href: '/' },
@@ -176,7 +197,7 @@ export default async function Page({ params }: Props) {
           className="max-w-[800px] text-justify"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
-      </article>
+      </section>
       <React.Suspense fallback={null}>
         <SimilarRecipes recipe={recipe} />
       </React.Suspense>
