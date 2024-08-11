@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: '1rem',
+      padding: '1.5rem',
     },
     fontFamily: {
       heading: [
@@ -21,7 +21,7 @@ const config: Config = {
     },
     extend: {
       borderRadius: {
-        DEFAULT: '8px',
+        DEFAULT: '4px',
       },
       colors: {
         primary: '#FAB200',
@@ -42,6 +42,7 @@ const config: Config = {
         xl: '4rem',
         'image-sm': '8rem',
         'image-lg': '42rem',
+        article: '800px',
       },
     },
   },

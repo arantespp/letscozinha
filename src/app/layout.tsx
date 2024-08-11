@@ -1,17 +1,13 @@
 import type { Metadata, Viewport } from 'next';
 import { Playfair_Display, Lora } from 'next/font/google';
 import './globals.css';
-import Image from 'next/image';
-import logo from '../../public/logo.png';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config as fortawesomeConfig } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram } from '@fortawesome/free-brands-svg-icons';
-import Link from 'next/link';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import * as React from 'react';
 import { LayoutAside } from 'src/components/LayoutAside';
+import { Header } from 'src/components/Header';
 
 fortawesomeConfig.autoAddCss = false;
 
@@ -53,25 +49,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   initialScale: 1,
   width: 'device-width',
-};
-
-const Header = () => {
-  return (
-    <header className="container py-md flex items-center justify-between">
-      <Link href="/">
-        <Image src={logo} alt="Lets Cozinha" height={60} />
-      </Link>
-      <nav className="flex gap-sm text-md md:text-2xl [&>a]:no-underline">
-        <Link href="/">Home</Link>
-        <Link href="/receitas">Receitas</Link>
-      </nav>
-      <nav className="flex text-3xl md:text-3xl gap-sm">
-        <Link href="https://www.instagram.com/lets_cozinha/" target="_blank">
-          <FontAwesomeIcon icon={faInstagram} />
-        </Link>
-      </nav>
-    </header>
-  );
 };
 
 const Footer = () => {

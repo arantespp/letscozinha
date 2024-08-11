@@ -77,7 +77,7 @@ export default async function Page({
           },
         ]}
       />
-      <h1>Categoria - {category.nome}</h1>
+      <h1>Receitas - {category.nome}</h1>
       <RecipesList recipes={recipes} pagination={meta?.pagination} />
     </div>
   );

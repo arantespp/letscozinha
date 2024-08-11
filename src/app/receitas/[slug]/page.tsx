@@ -4,8 +4,6 @@ import {
   searchSimilarRecipes,
   Recipe,
 } from 'src/cms/recipes';
-import { remark } from 'remark';
-import html from 'remark-html';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { BASE_URL } from 'src/constants';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
@@ -18,6 +16,7 @@ import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
 import * as React from 'react';
 import { Recipe as RecipeSchema, WithContext } from 'schema-dts';
+import { Markdown } from 'src/components/Markdown';
 
 type Props = {
   params: { slug: string };
@@ -144,10 +143,6 @@ export default async function Page({ params }: Props) {
     keywords: recipe.keywords,
   };
 
-  const processedContent = await remark().use(html).process(recipe.receita);
-
-  const contentHtml = processedContent.toString();
-
   const images =
     recipe.imagens?.map((cmsImage) => {
       const image = cmsImage.formats.medium || cmsImage;
@@ -160,7 +155,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <div className="flex flex-col gap-lg">
-      <section className="flex flex-col">
+      <article className="flex flex-col">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -176,7 +171,7 @@ export default async function Page({ params }: Props) {
             },
           ]}
         />
-        <div className="flex flex-col gap-sm mt-sm">
+        <section className="flex flex-col gap-sm mt-sm">
           <h1>{recipe.nome}</h1>
           <span className="text-text-light">{recipe.descricao}</span>
           <div className="flex gap-xs">
@@ -192,12 +187,9 @@ export default async function Page({ params }: Props) {
           <div className="mt-sm mb-xl">
             <RecipeImages images={images} />
           </div>
-        </div>
-        <div
-          className="max-w-[800px] text-justify"
-          dangerouslySetInnerHTML={{ __html: contentHtml }}
-        />
-      </section>
+        </section>
+        <Markdown source={recipe.receita} />
+      </article>
       <React.Suspense fallback={null}>
         <SimilarRecipes recipe={recipe} />
       </React.Suspense>
