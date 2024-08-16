@@ -62,6 +62,8 @@ const Footer = () => {
   );
 };
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default function RootLayout({
   children,
   hero,
@@ -89,9 +91,9 @@ export default function RootLayout({
         </main>
         <Footer />
         <Analytics mode="production" />
-        <SpeedInsights />
+        {isProduction && <SpeedInsights />}
       </body>
-      <GoogleAnalytics gaId="G-KBBBK8ZDJG" />
+      {isProduction && <GoogleAnalytics gaId="G-KBBBK8ZDJG" />}
     </html>
   );
 }
