@@ -8,6 +8,7 @@ import { Analytics } from '@vercel/analytics/react';
 import * as React from 'react';
 import { LayoutAside } from 'src/components/LayoutAside';
 import { Header } from 'src/components/Header';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 fortawesomeConfig.autoAddCss = false;
 
@@ -90,6 +91,7 @@ export default function RootLayout({
         <Analytics mode="production" />
         <SpeedInsights />
       </body>
+      <GoogleAnalytics gaId="G-KBBBK8ZDJG" />
     </html>
   );
 }
