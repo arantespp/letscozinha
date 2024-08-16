@@ -190,10 +190,10 @@ export default async function Page({ params }: Props) {
         </section>
         <Markdown source={recipe.receita} />
       </article>
+      <RecipeShare recipe={recipe} />
       <React.Suspense fallback={null}>
         <SimilarRecipes recipe={recipe} />
       </React.Suspense>
-      <RecipeShare recipe={recipe} />
     </div>
   );
 }
