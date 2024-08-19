@@ -30,10 +30,23 @@ async function SearchResults({ searchParams }: Props) {
     return getRecipes({ page: searchParams?.page });
   })();
 
-  return <RecipesList recipes={recipes} pagination={meta?.pagination} />;
+  const recipesQuantity = recipes.length;
+
+  const subtitle = searchParams?.search
+    ? `Encontramos ${recipesQuantity} receitas da sua busca por "${searchParams.search}"`
+    : `Mostrando ${recipesQuantity} receitas`;
+
+  return (
+    <React.Fragment>
+      <span className="text-sm text-text-light">{subtitle}</span>
+      <RecipesList recipes={recipes} pagination={meta?.pagination} />
+    </React.Fragment>
+  );
 }
 
 export default async function Page({ searchParams }: Props) {
+  const searchTitle = searchParams?.search ? 'Resultados da busca' : 'Receitas';
+
   return (
     <div className="flex flex-col">
       <Breadcrumbs
@@ -54,7 +67,7 @@ export default async function Page({ searchParams }: Props) {
         <div className="my-lg">
           <Search />
         </div>
-        <h2>Receitas</h2>
+        <h2>{searchTitle}</h2>
         <React.Suspense fallback={<Loading />}>
           <SearchResults searchParams={searchParams} />
         </React.Suspense>

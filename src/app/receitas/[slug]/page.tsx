@@ -17,6 +17,7 @@ import { RecipesList } from 'src/components/RecipesList';
 import * as React from 'react';
 import { Recipe as RecipeSchema, WithContext } from 'schema-dts';
 import { Markdown } from 'src/components/Markdown';
+import { RecipeInstagramLinks } from 'src/components/RecipeInstagramLinks';
 
 type Props = {
   params: { slug: string };
@@ -154,12 +155,14 @@ export default async function Page({ params }: Props) {
     }) || [];
 
   return (
-    <div className="flex flex-col gap-lg">
+    <div>
       <article className="flex flex-col">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        {jsonLd.image && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        )}
         <Breadcrumbs
           items={[
             { name: 'Home', href: '/' },
@@ -183,17 +186,23 @@ export default async function Page({ params }: Props) {
               />
             ))}
           </div>
-          <SeeRecipeOnInstagram instagram_posts={recipe.instagram_posts} />
+          <RecipeInstagramLinks
+            instagram_posts={recipe.instagram_posts}
+            slug={recipe.slug}
+          />
           <div className="mt-sm mb-xl">
             <RecipeImages images={images} />
           </div>
         </section>
         <Markdown source={recipe.receita} />
+        <hr className="my-lg" />
       </article>
-      <RecipeShare recipe={recipe} />
-      <React.Suspense fallback={null}>
-        <SimilarRecipes recipe={recipe} />
-      </React.Suspense>
+      <div className="flex flex-col gap-xl">
+        <RecipeShare recipe={recipe} />
+        <React.Suspense fallback={null}>
+          <SimilarRecipes recipe={recipe} />
+        </React.Suspense>
+      </div>
     </div>
   );
 }

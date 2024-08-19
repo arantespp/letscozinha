@@ -1,7 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { sendGAEvent } from '@next/third-parties/google';
 
 const navs = [
   {
@@ -15,6 +18,9 @@ const navs = [
   {
     href: 'https://www.instagram.com/lets_cozinha/',
     label: <FontAwesomeIcon className="text-[1.25em]" icon={faInstagram} />,
+    onClick: () => {
+      sendGAEvent('event', 'instagram_click', { value: '@lets_cozinha' });
+    },
   },
 ];
 
@@ -35,6 +41,7 @@ export function HeaderNav({ isColumn }: { isColumn?: boolean }) {
               href={nav.href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={nav.onClick}
             >
               {nav.label}
             </a>
