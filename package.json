@@ -19,12 +19,12 @@
     "meilisearch": "^0.41.0",
     "next": "14.2.5",
     "next-mdx-remote": "^5.0.0",
-    "qs": "^6.12.3",
+    "qs": "^6.13.0",
     "react": "^18",
     "react-dom": "^18",
     "react-share": "^5.1.0",
     "schema-dts": "^1.1.2",
-    "use-debounce": "^10.0.1"
+    "use-debounce": "^10.0.3"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -34,7 +34,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
-    "tailwindcss": "^3.4.7",
+    "tailwindcss": "^3.4.10",
     "typescript": "^5"
   }
 }
