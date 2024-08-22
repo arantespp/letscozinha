@@ -51,6 +51,7 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
             alt={image.alt}
             fill
             sizes={sizes}
+            priority
           />
         </div>
       ))}
