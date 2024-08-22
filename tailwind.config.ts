@@ -40,6 +40,7 @@ const config: Config = {
         md: '1.5rem',
         lg: '2rem',
         xl: '4rem',
+        '2xl': '8rem',
         'image-sm': '8rem',
         'image-lg': '42rem',
         article: '800px',

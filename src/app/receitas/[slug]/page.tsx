@@ -61,59 +61,11 @@ export async function generateMetadata(
   };
 }
 
-const SeeRecipeOnInstagram = ({
-  instagram_posts = [],
-}: {
-  instagram_posts?: { url: string }[];
-}) => {
-  if (!instagram_posts.length) {
-    return null;
-  }
-
-  const nodes = instagram_posts.map((post, index) => {
-    const hasComma =
-      instagram_posts.length > 1 && index < instagram_posts.length - 1;
-
-    if (index === 0) {
-      return (
-        <span key={post.url}>
-          <span className="text-[1.5em] mr-xs align-middle">
-            <FontAwesomeIcon icon={faInstagram} />
-          </span>{' '}
-          <a href={post.url} target="_blank" rel="noopener noreferrer">
-            Confira a receita no Instagram
-            {hasComma ? ',' : ''}
-          </a>
-        </span>
-      );
-    }
-
-    return (
-      <a
-        key={post.url}
-        href={post.url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        post {index + 1}
-        {hasComma ? ',' : ''}
-      </a>
-    );
-  });
-
-  // add space between nodes
-  for (let i = 1; i < nodes.length; i += 2) {
-    nodes.splice(i, 0, <span> </span>);
-  }
-
-  return <span>{nodes}</span>;
-};
-
 async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
   const similarRecipes = await searchSimilarRecipes({ recipeId: recipe.id });
 
   return (
-    <div>
+    <div className="md:mt-lg">
       <h2>Confira também</h2>
       <RecipesList recipes={similarRecipes} />
     </div>
@@ -195,7 +147,7 @@ export default async function Page({ params }: Props) {
           </div>
         </section>
         <Markdown source={recipe.receita} />
-        <hr className="my-lg" />
+        <hr className="my-lg md:my-xl" />
       </article>
       <div className="flex flex-col gap-xl">
         <RecipeShare recipe={recipe} />
