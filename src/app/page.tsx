@@ -9,7 +9,10 @@ export default async function Home() {
       <section>
         <div>
           <h2>Receitas Favoritas</h2>
-          <RecipesList recipes={letsCozinha.receitas_favoritas} />
+          <RecipesList
+            recipes={letsCozinha.receitas_favoritas}
+            firstRecipePriority
+          />
         </div>
       </section>
     </div>

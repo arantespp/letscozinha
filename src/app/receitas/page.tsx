@@ -39,7 +39,11 @@ async function SearchResults({ searchParams }: Props) {
   return (
     <React.Fragment>
       <span className="text-sm text-text-light">{subtitle}</span>
-      <RecipesList recipes={recipes} pagination={meta?.pagination} />
+      <RecipesList
+        recipes={recipes}
+        pagination={meta?.pagination}
+        firstRecipePriority
+      />
     </React.Fragment>
   );
 }

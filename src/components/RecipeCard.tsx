@@ -3,7 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Recipe } from 'src/cms/recipes';
 
-export default function RecipeCard({ recipe }: { recipe: Recipe }) {
+export default function RecipeCard({
+  recipe,
+  priority,
+}: {
+  recipe: Recipe;
+  priority?: boolean;
+}) {
   const image = recipe.imagens?.[0] || recipe.imagens?.[0].formats.medium;
 
   const href = `/receitas/${recipe.slug}`;
@@ -19,6 +25,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
             fill
             quality={50}
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            priority={priority}
           />
         </div>
       </Link>
