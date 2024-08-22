@@ -18,6 +18,7 @@ const navs = [
   {
     href: 'https://www.instagram.com/lets_cozinha/',
     label: <FontAwesomeIcon className="text-[1.25em]" icon={faInstagram} />,
+    'aria-label': 'Instagram',
     onClick: () => {
       sendGAEvent('event', 'instagram_click', { value: '@lets_cozinha' });
     },
@@ -39,6 +40,7 @@ export function HeaderNav({ isColumn }: { isColumn?: boolean }) {
             <a
               key={nav.href}
               href={nav.href}
+              aria-label={nav['aria-label']}
               target="_blank"
               rel="noopener noreferrer"
               onClick={nav.onClick}

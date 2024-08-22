@@ -37,13 +37,25 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
         amigos e familiares para que eles possam experimentar também!
       </p>
       <div className="flex gap-sm mt-md">
-        <FacebookShareButton {...commonProps} hashtag="#letscozinha">
+        <FacebookShareButton
+          {...commonProps}
+          hashtag="#letscozinha"
+          aria-label="Compartilhar no Facebook"
+        >
           <FacebookIcon {...iconProps} />
         </FacebookShareButton>
-        <WhatsappShareButton {...commonProps} title={title}>
+        <WhatsappShareButton
+          {...commonProps}
+          title={title}
+          aria-label="Compartilhar no Whatsapp"
+        >
           <WhatsappIcon {...iconProps} />
         </WhatsappShareButton>
-        <TwitterShareButton {...commonProps} title={title}>
+        <TwitterShareButton
+          {...commonProps}
+          title={title}
+          aria-label="Compartilhar no Twitter"
+        >
           <XIcon {...iconProps} />
         </TwitterShareButton>
         {image && (
@@ -51,6 +63,7 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
             {...commonProps}
             media={image}
             description={description}
+            aria-label="Compartilhar no Pinterest"
           >
             <PinterestIcon {...iconProps} />
           </PinterestShareButton>
