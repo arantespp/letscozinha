@@ -1,3 +1,3 @@
-export async function Loading() {
+export function Loading() {
   return <div>Carregando...</div>;
 }

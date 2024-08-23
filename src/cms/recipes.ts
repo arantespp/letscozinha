@@ -10,7 +10,7 @@ import qs from 'qs';
 import { mapCMSData } from './mapCMSData';
 import { MeiliSearch } from 'meilisearch';
 
-export const RECIPES_PAGE_SIZE = 21;
+export const RECIPES_PAGE_SIZE = 15;
 
 export const RECIPES_POPULATE = ['categorias', 'imagens', 'instagram_posts'];
 
@@ -69,7 +69,7 @@ export const getAllRecipes = cache(async () => {
         pageSize: API_MAX_LIMIT,
       },
       populate: RECIPES_POPULATE,
-      sort: ['nome:asc'],
+      sort: ['updatedAt:desc'],
     });
 
     const { data, meta } = await fetchRecipes(query);

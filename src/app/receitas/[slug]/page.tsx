@@ -32,11 +32,11 @@ export async function generateStaticParams() {
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
-): Promise<Metadata> {
+) {
   const recipe = await findRecipe({ slug: params.slug });
 
   if (!recipe) {
-    notFound();
+    return;
   }
 
   // optionally access and extend (rather than replace) parent metadata
@@ -56,7 +56,7 @@ export async function generateMetadata(
       url: `/receitas/${recipe.slug}`,
       images: [...imagesUrls, ...previousImages],
     },
-  };
+  } as Metadata;
 }
 
 async function SimilarRecipes({ recipe }: { recipe: Recipe }) {

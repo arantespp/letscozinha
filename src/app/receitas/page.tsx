@@ -4,7 +4,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { getRecipes, searchRecipes } from 'src/cms/recipes';
 import type { Metadata } from 'next';
 import * as React from 'react';
-import { Loading } from 'src/components/Loading';
+import { SearchLoading } from './SearchLoading';
 
 export const metadata: Metadata = {
   title: 'Todas as Receitas - Lets Cozinha | Busque e Descubra Novos Sabores',
@@ -33,12 +33,12 @@ async function SearchResults({ searchParams }: Props) {
   const recipesQuantity = recipes.length;
 
   const subtitle = searchParams?.search
-    ? `Encontramos ${recipesQuantity} receitas da sua busca por "${searchParams.search}"`
-    : `Mostrando ${recipesQuantity} receitas`;
+    ? `Mostrando ${recipesQuantity} receitas da sua busca por "${searchParams.search}":`
+    : `Confira as nossas receitas mais recentes:`;
 
   return (
     <React.Fragment>
-      <span className="text-sm text-text-light">{subtitle}</span>
+      <span className="text-text-light">{subtitle}</span>
       <RecipesList
         recipes={recipes}
         pagination={meta?.pagination}
@@ -50,6 +50,11 @@ async function SearchResults({ searchParams }: Props) {
 
 export default async function Page({ searchParams }: Props) {
   const searchTitle = searchParams?.search ? 'Resultados da busca' : 'Receitas';
+
+  /**
+   * https://github.com/vercel/next.js/issues/49297#issuecomment-1568557317
+   */
+  const suspenseKey = JSON.stringify(searchParams);
 
   return (
     <div className="flex flex-col">
@@ -72,7 +77,7 @@ export default async function Page({ searchParams }: Props) {
           <Search />
         </div>
         <h2>{searchTitle}</h2>
-        <React.Suspense fallback={<Loading />}>
+        <React.Suspense key={suspenseKey} fallback={<SearchLoading />}>
           <SearchResults searchParams={searchParams} />
         </React.Suspense>
       </div>

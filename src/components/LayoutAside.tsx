@@ -46,7 +46,7 @@ async function Categories() {
 
 export async function LayoutAside() {
   return (
-    <aside className="w-full md:w-72 flex flex-col rounded p-md mt-xl md:mt-md bg-[#F5F5F5]">
+    <aside className="w-full md:w-72 flex flex-col rounded p-md mt-xl md:mt-md bg-muted">
       <React.Suspense fallback={null}>
         <WhoIsLets />
       </React.Suspense>

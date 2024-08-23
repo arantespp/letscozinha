@@ -2,7 +2,7 @@
 
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebounce } from 'use-debounce';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 
@@ -15,15 +15,20 @@ export function Search() {
 
   const [debouncedTerm] = useDebounce(term, 1000);
 
+  const params = React.useMemo(() => {
+    return new URLSearchParams(searchParams);
+  }, [searchParams]);
+
+  const isSearching = params.get('isSearching');
+
   const handleSearch = React.useCallback(() => {
-    const params = new URLSearchParams(searchParams);
     if (term) {
       params.set('search', term);
     } else {
       params.delete('search');
     }
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [pathname, router, searchParams, term]);
+  }, [params, pathname, router, term]);
 
   React.useEffect(() => {
     handleSearch();
@@ -55,7 +60,11 @@ export function Search() {
             handleSearch();
           }}
         >
-          <FontAwesomeIcon icon={faSearch} />
+          {isSearching ? (
+            <FontAwesomeIcon icon={faSpinner} spin />
+          ) : (
+            <FontAwesomeIcon icon={faSearch} />
+          )}
         </button>
       </div>
     </div>
