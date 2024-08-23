@@ -8,7 +8,7 @@ export const revalidate = 0;
 export default async function ReceitasIncompletas() {
   const { allRecipes } = await getAllRecipes();
 
-  const incompleteRecipes = allRecipes
+  const recipesWithStatus = allRecipes
     .map((recipe) => {
       const status = {
         noImages: false,
@@ -42,7 +42,10 @@ export default async function ReceitasIncompletas() {
     })
     .map((recipe) => {
       const cmsUrl = `${process.env.CMS_URL}/admin/content-manager/collection-types/api::lets-cozinha-receita.lets-cozinha-receita/${recipe.id}`;
-      return { ...recipe, cmsUrl };
+      const isComplete = Object.values(recipe.status).every((value) => {
+        return !value;
+      });
+      return { ...recipe, cmsUrl, isComplete };
     })
     .sort((a, b) => {
       return a.nome.localeCompare(b.nome);
@@ -50,13 +53,15 @@ export default async function ReceitasIncompletas() {
 
   const allRecipesCount = allRecipes.length;
 
-  const incompleteRecipesCount = incompleteRecipes.length;
+  const incompleteRecipesCount = recipesWithStatus.reduce((acc, recipe) => {
+    return acc + (recipe.isComplete ? 0 : 1);
+  }, 0);
 
   const completeRecipesPercentage = Math.round(
     ((allRecipesCount - incompleteRecipesCount) / allRecipesCount) * 100
   );
 
-  const incompleteItemsCount = incompleteRecipes.reduce((acc, recipe) => {
+  const incompleteItemsCount = recipesWithStatus.reduce((acc, recipe) => {
     return (
       acc +
       Object.values(recipe.status).reduce((acc, value) => {
@@ -66,7 +71,7 @@ export default async function ReceitasIncompletas() {
   }, 0);
 
   const totalItemsCount =
-    allRecipesCount * Object.values(incompleteRecipes[0].status).length;
+    allRecipesCount * Object.values(recipesWithStatus[0].status).length;
 
   const completeItemsPercentage = Math.round(
     ((totalItemsCount - incompleteItemsCount) / totalItemsCount) * 100
@@ -121,16 +126,12 @@ export default async function ReceitasIncompletas() {
           </tr>
         </thead>
         <tbody>
-          {incompleteRecipes.map((recipe) => {
-            const isComplete = Object.values(recipe.status).every((value) => {
-              return !value;
-            });
-
+          {recipesWithStatus.map((recipe) => {
             return (
               <tr key={recipe.id} className="hover:bg-muted">
                 <td>
                   <Link href={`/receitas/${recipe.slug}`} target="_blank">
-                    {isComplete ? '✅' : ''} {recipe.nome}
+                    {recipe.isComplete ? '✅' : ''} {recipe.nome}
                   </Link>
                 </td>
                 <td className="text-center">
