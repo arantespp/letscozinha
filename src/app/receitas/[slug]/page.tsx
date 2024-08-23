@@ -10,8 +10,6 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import { RecipeImages } from 'src/components/RecipeImages';
 import { CategoryTag } from 'src/components/CategoryTag';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
 import * as React from 'react';
@@ -89,7 +87,7 @@ export default async function Page({ params }: Props) {
     image: recipe.imagens?.map((image) => image.url),
     author: {
       '@type': 'Person',
-      name: 'Leticia Ferreira',
+      name: 'Letícia Ferreira',
     },
     datePublished: recipe.updatedAt,
     description: recipe.descricao,

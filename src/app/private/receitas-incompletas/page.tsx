@@ -54,9 +54,19 @@ export default async function ReceitasIncompletas() {
 
   const incompleteRecipesCount = incompleteRecipes.length;
 
+  const incompleteItemsCount = incompleteRecipes.reduce((acc, recipe) => {
+    return (
+      acc +
+      Object.values(recipe.status).reduce((acc, value) => {
+        return acc + (value ? 1 : 0);
+      }, 0)
+    );
+  }, 0);
+
   return (
     <div>
       <h2>Receitas Incompletas ({incompleteRecipesCount})</h2>
+      <p>Total de itens incompletos: {incompleteItemsCount}</p>
       <ul>
         {incompleteRecipes.map((recipe) => {
           return (
