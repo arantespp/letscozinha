@@ -1,8 +1,6 @@
 import { getAllRecipes } from 'src/cms/recipes';
 
-export const dynamic = 'force-dynamic';
-
-export const revalidate = 10;
+export const revalidate = 0;
 
 export const metadata = {
   robots: {
