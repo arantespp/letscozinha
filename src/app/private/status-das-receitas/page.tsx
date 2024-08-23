@@ -110,7 +110,7 @@ export default async function ReceitasIncompletas() {
 
       <table className="border-separate border-spacing-xs">
         <thead>
-          <tr>
+          <tr className="sticky top-0 bg-white">
             <th>Receita</th>
             <th>Imagens</th>
             <th>Formatação</th>
