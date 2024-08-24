@@ -65,14 +65,23 @@ export async function GET(request: Request, context: { params: Params }) {
 
     return new ImageResponse(
       (
-        <img
-          src={imageUrl}
+        <div
           style={{
-            objectFit: 'contain',
+            display: 'flex',
             width: '100%',
             height: '100%',
+            backgroundColor: 'white',
           }}
-        />
+        >
+          <img
+            src={imageUrl}
+            style={{
+              objectFit: 'contain',
+              width: '100%',
+              height: '100%',
+            }}
+          />
+        </div>
       ),
       {
         width: 1200,
