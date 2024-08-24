@@ -22,7 +22,7 @@ export default async function ReceitasIncompletas() {
         status.noImages = true;
       }
 
-      if (!recipe.receita.includes('##')) {
+      if (!recipe.receita.includes('##') && recipe.receita.includes('**')) {
         status.noFormatted = true;
       }
 

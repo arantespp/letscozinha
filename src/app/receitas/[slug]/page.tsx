@@ -42,7 +42,9 @@ export async function generateMetadata(
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [];
 
-  const imagesUrls = recipe.imagens?.map((image) => image.url) || [];
+  const ogUrl = new URL(`/receitas/${recipe.slug}/og`, BASE_URL);
+
+  const url = new URL(`/receitas/${recipe.slug}`, BASE_URL);
 
   return {
     metadataBase: new URL(BASE_URL),
@@ -52,9 +54,10 @@ export async function generateMetadata(
     openGraph: {
       title: recipe.nome,
       description: recipe.meta_descricao,
+      type: 'website',
       siteName: "Let's Cozinha",
-      url: `/receitas/${recipe.slug}`,
-      images: [...imagesUrls, ...previousImages],
+      url,
+      images: [ogUrl, ...previousImages],
     },
   } as Metadata;
 }
@@ -84,7 +87,20 @@ export default async function Page({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'Recipe',
     name: recipe.nome,
-    image: recipe.imagens?.map((image) => image.url),
+    image: recipe.imagens?.map((image) => {
+      return {
+        '@type': 'ImageObject',
+        url: image.url,
+        width: {
+          '@type': 'QuantitativeValue',
+          value: image.width,
+        },
+        height: {
+          '@type': 'QuantitativeValue',
+          value: image.height,
+        },
+      };
+    }),
     author: {
       '@type': 'Person',
       name: 'Letícia Ferreira',
@@ -107,7 +123,7 @@ export default async function Page({ params }: Props) {
   return (
     <div>
       <article className="flex flex-col">
-        {jsonLd.image && (
+        {images.length > 0 && (
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
