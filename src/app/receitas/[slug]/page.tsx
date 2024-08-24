@@ -29,18 +29,12 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-) {
+export async function generateMetadata({ params }: Props) {
   const recipe = await findRecipe({ slug: params.slug });
 
   if (!recipe) {
     return;
   }
-
-  // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || [];
 
   const ogUrl = new URL(`/receitas/${recipe.slug}/og`, BASE_URL);
 
@@ -57,7 +51,7 @@ export async function generateMetadata(
       type: 'website',
       siteName: "Let's Cozinha",
       url,
-      images: [ogUrl, ...previousImages],
+      images: ogUrl,
     },
   } as Metadata;
 }
