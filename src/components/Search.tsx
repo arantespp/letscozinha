@@ -21,6 +21,8 @@ export function Search() {
 
   const isSearching = params.get('isSearching');
 
+  const [debouncedIsSearching] = useDebounce(isSearching, 500);
+
   const handleSearch = React.useCallback(() => {
     if (term) {
       params.set('search', term);
@@ -60,7 +62,7 @@ export function Search() {
             handleSearch();
           }}
         >
-          {isSearching ? (
+          {debouncedIsSearching ? (
             <FontAwesomeIcon icon={faSpinner} spin />
           ) : (
             <FontAwesomeIcon icon={faSearch} />

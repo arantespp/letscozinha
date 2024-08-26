@@ -5,6 +5,8 @@ import { getRecipes, searchRecipes } from 'src/cms/recipes';
 import type { Metadata } from 'next';
 import * as React from 'react';
 import { SearchLoading } from './SearchLoading';
+import { ItemList, WithContext } from 'schema-dts';
+import { BASE_URL } from 'src/constants';
 
 export const metadata: Metadata = {
   title: 'Todas as Receitas - Lets Cozinha | Busque e Descubra Novos Sabores',
@@ -30,6 +32,23 @@ async function SearchResults({ searchParams }: Props) {
     return getRecipes({ page: searchParams?.page });
   })();
 
+  /**
+   * https://developers.google.com/search/docs/appearance/structured-data/recipe
+   */
+  const jsonLd: WithContext<ItemList> = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: recipes.map((recipe, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Recipe',
+        name: recipe.nome,
+        url: new URL(`/receitas/${recipe.slug}`, BASE_URL).href,
+      },
+    })),
+  };
+
   const recipesQuantity = recipes.length;
 
   const subtitle = searchParams?.search
@@ -38,6 +57,10 @@ async function SearchResults({ searchParams }: Props) {
 
   return (
     <React.Fragment>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <span className="text-text-light">{subtitle}</span>
       <RecipesList
         recipes={recipes}
@@ -54,7 +77,7 @@ export default async function Page({ searchParams }: Props) {
   /**
    * https://github.com/vercel/next.js/issues/49297#issuecomment-1568557317
    */
-  const suspenseKey = JSON.stringify(searchParams);
+  const suspenseKey = JSON.stringify(searchParams?.search);
 
   return (
     <div className="flex flex-col">
@@ -77,7 +100,10 @@ export default async function Page({ searchParams }: Props) {
           <Search />
         </div>
         <h2>{searchTitle}</h2>
-        <React.Suspense key={suspenseKey} fallback={<SearchLoading />}>
+        <React.Suspense
+          key={suspenseKey}
+          fallback={<SearchLoading key={suspenseKey} />}
+        >
           <SearchResults searchParams={searchParams} />
         </React.Suspense>
       </div>

@@ -20,8 +20,10 @@ export function SearchLoading() {
     }
 
     return () => {
-      params.delete('isSearching');
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      if (hasAlreadySearched) {
+        params.delete('isSearching');
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      }
     };
   }, [pathname, router, searchParams]);
 

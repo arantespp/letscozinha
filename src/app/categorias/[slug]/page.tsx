@@ -14,7 +14,7 @@ export async function generateMetadata(
   const category = await findCategory({ slug: params.slug });
 
   if (!category) {
-    notFound();
+    return {};
   }
 
   // optionally access and extend (rather than replace) parent metadata

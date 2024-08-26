@@ -4,7 +4,7 @@ import {
   searchSimilarRecipes,
   Recipe,
 } from 'src/cms/recipes';
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 import { BASE_URL } from 'src/constants';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
@@ -29,11 +29,11 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const recipe = await findRecipe({ slug: params.slug });
 
   if (!recipe) {
-    return;
+    return {};
   }
 
   const ogUrl = new URL(`/receitas/${recipe.slug}/og`, BASE_URL);
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: Props) {
       url,
       images: ogUrl,
     },
-  } as Metadata;
+  };
 }
 
 async function SimilarRecipes({ recipe }: { recipe: Recipe }) {

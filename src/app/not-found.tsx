@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { HeaderNav } from 'src/components/HeaderNav';
 
 export default function NotFound() {
