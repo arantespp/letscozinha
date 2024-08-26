@@ -28,8 +28,8 @@ export default async function Home() {
         urlTemplate: new URL('/receitas?search={search_term_string}', BASE_URL)
           .href,
       },
-      'query-input': 'required name=search_term_string' as any,
-    },
+      'query-input': 'required name=search_term_string',
+    } as any,
   };
 
   return (
