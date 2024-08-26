@@ -1,7 +1,7 @@
 import { RecipesList } from 'src/components/RecipesList';
 import { getLetsCozinha } from 'src/cms/singleTypes';
-import type { ItemList, WithContext, WebSite } from 'schema-dts';
-import { BASE_URL } from 'src/constants';
+import type { WebSite } from 'schema-dts';
+import { BASE_URL, WEBSITE_NAME } from 'src/constants';
 import { getRecipesListSchema } from 'src/methods/getRecipesListSchema';
 import { JsonLd } from 'src/components/JsonLd';
 
@@ -21,6 +21,7 @@ export default async function Home() {
   const websiteSchema: WebSite = {
     '@type': 'WebSite',
     url: BASE_URL,
+    name: WEBSITE_NAME,
     potentialAction: {
       '@type': 'SearchAction',
       target: {

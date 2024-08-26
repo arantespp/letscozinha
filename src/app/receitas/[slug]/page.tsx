@@ -4,8 +4,8 @@ import {
   searchSimilarRecipes,
   Recipe,
 } from 'src/cms/recipes';
-import type { Metadata } from 'next';
-import { BASE_URL } from 'src/constants';
+import type { Metadata, ResolvingMetadata } from 'next';
+import { BASE_URL, WEBSITE_NAME } from 'src/constants';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import { RecipeImages } from 'src/components/RecipeImages';
@@ -13,7 +13,6 @@ import { CategoryTag } from 'src/components/CategoryTag';
 import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
 import * as React from 'react';
-import { Recipe as RecipeSchema, WithContext } from 'schema-dts';
 import { Markdown } from 'src/components/Markdown';
 import { RecipeInstagramLinks } from 'src/components/RecipeInstagramLinks';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
@@ -31,7 +30,10 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const recipe = await findRecipe({ slug: params.slug });
 
   if (!recipe) {
@@ -42,18 +44,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const url = new URL(`/receitas/${recipe.slug}`, BASE_URL);
 
+  const parentMetadata = await parent;
+
+  const title = `${recipe.nome} - ${WEBSITE_NAME}`;
+
   return {
     metadataBase: new URL(BASE_URL),
-    title: recipe.nome,
+    title,
     description: recipe.meta_descricao,
     keywords: recipe.keywords,
     openGraph: {
-      title: recipe.nome,
+      ...parentMetadata.openGraph,
+      title,
       description: recipe.meta_descricao,
-      type: 'website',
-      siteName: "Let's Cozinha",
-      url,
       images: ogUrl,
+      url,
     },
   };
 }

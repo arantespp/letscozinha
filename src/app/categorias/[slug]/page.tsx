@@ -6,6 +6,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
 import { getRecipesListSchema } from 'src/methods/getRecipesListSchema';
 import { JsonLd } from 'src/components/JsonLd';
+import { WEBSITE_NAME } from 'src/constants';
 
 type Props = { params: { slug: string } };
 
@@ -24,9 +25,12 @@ export async function generateMetadata(
 
   const imagesUrls = category.imagens?.map((image) => image.url) || [];
 
+  const title = `${category.nome} - ${WEBSITE_NAME}`;
+
   return {
-    title: category.nome,
+    title,
     openGraph: {
+      title,
       images: [...imagesUrls, ...previousImages],
     },
   };

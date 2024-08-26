@@ -9,6 +9,7 @@ import * as React from 'react';
 import { LayoutAside } from 'src/components/LayoutAside';
 import { Header } from 'src/components/Header';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { WEBSITE_NAME, BASE_URL } from 'src/constants';
 
 fortawesomeConfig.autoAddCss = false;
 
@@ -29,7 +30,10 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: 'Lets Cozinha',
+  /**
+   * https://developers.google.com/search/docs/appearance/title-link
+   */
+  title: `${WEBSITE_NAME} - Receitas deliciosas para todas as ocasiões`,
   description:
     'Descubra todos os tipos de receitas. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
   keywords:
@@ -40,10 +44,12 @@ export const metadata: Metadata = {
         url: 'https://www.letscozinha.com.br/logo-og.jpg',
         width: 1200,
         height: 630,
-        alt: 'Lets Cozinha',
+        alt: 'Lets Cozinha logo',
       },
     ],
-    url: 'https://www.letscozinha.com.br',
+    url: BASE_URL,
+    siteName: WEBSITE_NAME,
+    type: 'website',
   },
 };
 
