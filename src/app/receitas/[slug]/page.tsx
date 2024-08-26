@@ -16,6 +16,8 @@ import * as React from 'react';
 import { Recipe as RecipeSchema, WithContext } from 'schema-dts';
 import { Markdown } from 'src/components/Markdown';
 import { RecipeInstagramLinks } from 'src/components/RecipeInstagramLinks';
+import { getRecipeSchema } from 'src/methods/getRecipeSchema';
+import { JsonLd } from 'src/components/JsonLd';
 
 type Props = {
   params: { slug: string };
@@ -77,32 +79,7 @@ export default async function Page({ params }: Props) {
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/recipe
    */
-  const jsonLd: WithContext<RecipeSchema> = {
-    '@context': 'https://schema.org',
-    '@type': 'Recipe',
-    name: recipe.nome,
-    image: recipe.imagens?.map((image) => {
-      return {
-        '@type': 'ImageObject',
-        url: image.url,
-        width: {
-          '@type': 'QuantitativeValue',
-          value: image.width,
-        },
-        height: {
-          '@type': 'QuantitativeValue',
-          value: image.height,
-        },
-      };
-    }),
-    author: {
-      '@type': 'Person',
-      name: 'Letícia Ferreira',
-    },
-    datePublished: recipe.updatedAt,
-    description: recipe.descricao,
-    keywords: recipe.keywords,
-  };
+  const recipeSchema = getRecipeSchema(recipe);
 
   const images =
     recipe.imagens?.map((cmsImage) => {
@@ -116,13 +93,8 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
+      <JsonLd schema={recipeSchema} />
       <article className="flex flex-col">
-        {images.length > 0 && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-          />
-        )}
         <Breadcrumbs
           items={[
             { name: 'Home', href: '/' },

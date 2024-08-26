@@ -5,8 +5,8 @@ import { getRecipes, searchRecipes } from 'src/cms/recipes';
 import type { Metadata } from 'next';
 import * as React from 'react';
 import { SearchLoading } from './SearchLoading';
-import { ItemList, WithContext } from 'schema-dts';
-import { BASE_URL } from 'src/constants';
+import { JsonLd } from 'src/components/JsonLd';
+import { getRecipesListSchema } from 'src/methods/getRecipesListSchema';
 
 export const metadata: Metadata = {
   title: 'Todas as Receitas - Lets Cozinha | Busque e Descubra Novos Sabores',
@@ -35,19 +35,7 @@ async function SearchResults({ searchParams }: Props) {
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/recipe
    */
-  const jsonLd: WithContext<ItemList> = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    itemListElement: recipes.map((recipe, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Recipe',
-        name: recipe.nome,
-        url: new URL(`/receitas/${recipe.slug}`, BASE_URL).href,
-      },
-    })),
-  };
+  const recipesListSchema = getRecipesListSchema(recipes);
 
   const recipesQuantity = recipes.length;
 
@@ -57,10 +45,7 @@ async function SearchResults({ searchParams }: Props) {
 
   return (
     <React.Fragment>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd schema={recipesListSchema} />
       <span className="text-text-light">{subtitle}</span>
       <RecipesList
         recipes={recipes}

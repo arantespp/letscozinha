@@ -4,6 +4,8 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { getRecipes } from 'src/cms/recipes';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { notFound } from 'next/navigation';
+import { getRecipesListSchema } from 'src/methods/getRecipesListSchema';
+import { JsonLd } from 'src/components/JsonLd';
 
 type Props = { params: { slug: string } };
 
@@ -58,8 +60,11 @@ export default async function Page({
     page: searchParams.page,
   });
 
+  const recipesListSchema = getRecipesListSchema(recipes);
+
   return (
     <div className="flex flex-col">
+      <JsonLd schema={recipesListSchema} />
       <Breadcrumbs
         items={[
           {
