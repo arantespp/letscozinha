@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import * as React from 'react';
+import { JsonLd } from './JsonLd';
+import type { ListItem, BreadcrumbList } from 'schema-dts';
+import { getUrl } from '../methods/getUrl';
 
 export async function Breadcrumbs(props: {
   items: {
@@ -8,8 +11,32 @@ export async function Breadcrumbs(props: {
     current?: boolean;
   }[];
 }) {
+  /**
+   * https://developers.google.com/search/docs/appearance/structured-data/breadcrumb
+   */
+  const itemListElement = props.items.reduce<ListItem[]>((acc, item, index) => {
+    if (item.href === '/') {
+      return acc;
+    }
+
+    const listItem: ListItem = {
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: getUrl(item.href),
+    };
+
+    return [...acc, listItem];
+  }, []);
+
+  const breadcrumbList: BreadcrumbList = {
+    '@type': 'BreadcrumbList',
+    itemListElement,
+  };
+
   return (
     <nav className="flex gap-xs mb-sm md:mb-lg leading-none">
+      <JsonLd schema={breadcrumbList} />
       {props.items.map((item, index) => (
         <React.Fragment key={item.href}>
           {item.current ? (

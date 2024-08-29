@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import { Playfair_Display, Lora } from 'next/font/google';
-import './globals.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import * as React from 'react';
@@ -8,6 +7,8 @@ import { LayoutAside } from 'src/components/LayoutAside';
 import { Header } from 'src/components/Header';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { WEBSITE_NAME, BASE_URL } from 'src/constants';
+import './fa.css';
+import './globals.css';
 
 /**
  * Headers
