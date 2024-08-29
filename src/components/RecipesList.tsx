@@ -6,6 +6,7 @@ import { JsonLd } from './JsonLd';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 
 type RecipesListProps = {
+  notAddCarouselSchema?: boolean;
   firstRecipePriority?: boolean;
   recipes: Recipe[];
   pagination?: {
@@ -37,9 +38,11 @@ export async function RecipesList(props: RecipesListProps) {
     }, []),
   };
 
+  const addCarouselSchema = !props.notAddCarouselSchema;
+
   return (
     <section className="">
-      <JsonLd schema={recipesCarouselSchema} />
+      {addCarouselSchema && <JsonLd schema={recipesCarouselSchema} />}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-md my-md">
         {props.recipes.map((recipe: Recipe, index) => {
           const priority = index === 0 && props.firstRecipePriority;

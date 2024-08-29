@@ -69,7 +69,7 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
   return (
     <div className="md:mt-lg">
       <h2>Confira também</h2>
-      <RecipesList recipes={similarRecipes} />
+      <RecipesList recipes={similarRecipes} notAddCarouselSchema />
     </div>
   );
 }
