@@ -5,8 +5,6 @@ import { getRecipes, searchRecipes } from 'src/cms/recipes';
 import type { Metadata } from 'next';
 import * as React from 'react';
 import { SearchLoading } from './SearchLoading';
-import { JsonLd } from 'src/components/JsonLd';
-import { getRecipesListSchema } from 'src/methods/getRecipesListSchema';
 
 export const metadata: Metadata = {
   title: 'Todas as Receitas - Lets Cozinha | Busque e Descubra Novos Sabores',
@@ -32,11 +30,6 @@ async function SearchResults({ searchParams }: Props) {
     return getRecipes({ page: searchParams?.page });
   })();
 
-  /**
-   * https://developers.google.com/search/docs/appearance/structured-data/recipe
-   */
-  const recipesListSchema = getRecipesListSchema(recipes);
-
   const recipesQuantity = recipes.length;
 
   const subtitle = searchParams?.search
@@ -45,7 +38,6 @@ async function SearchResults({ searchParams }: Props) {
 
   return (
     <React.Fragment>
-      <JsonLd schema={recipesListSchema} />
       <span className="text-text-light">{subtitle}</span>
       <RecipesList
         recipes={recipes}

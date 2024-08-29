@@ -6,13 +6,13 @@ import { getRecipeSchema } from './getRecipeSchema';
  * https://developers.google.com/search/docs/appearance/structured-data/recipe
  */
 export function getRecipesListSchema(recipes: Recipe[]): ItemList {
-  const itemListElement = recipes.reduce<ListItem[]>((acc, recipe, index) => {
+  const itemListElement = recipes.reduce<ListItem[]>((acc, recipe) => {
     const item = getRecipeSchema(recipe);
 
     if (item) {
       acc.push({
         '@type': 'ListItem',
-        position: index + 1,
+        position: acc.length + 1,
         item,
       });
     }
