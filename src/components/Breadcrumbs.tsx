@@ -14,14 +14,14 @@ export async function Breadcrumbs(props: {
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/breadcrumb
    */
-  const itemListElement = props.items.reduce<ListItem[]>((acc, item, index) => {
+  const itemListElement = props.items.reduce<ListItem[]>((acc, item) => {
     if (item.href === '/') {
       return acc;
     }
 
     const listItem: ListItem = {
       '@type': 'ListItem',
-      position: index + 1,
+      position: acc.length + 1,
       name: item.name,
       item: getUrl(item.href),
     };
