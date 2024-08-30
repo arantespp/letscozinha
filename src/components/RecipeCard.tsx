@@ -2,6 +2,7 @@ import logo from '../../public/logo.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Recipe } from 'src/cms/recipes';
+import { CategoryTag } from './CategoryTag';
 
 export default function RecipeCard({
   recipe,
@@ -32,6 +33,9 @@ export default function RecipeCard({
       <h3 className="my-none flex-1">
         <Link href={href}>{recipe.nome}</Link>
       </h3>
+      {(recipe.categorias || []).map((category) => (
+        <CategoryTag key={category.id} {...category} isSmall />
+      ))}
       <span className="text-text-light line-clamp-5 leading-snug">
         {recipe.descricao}
       </span>

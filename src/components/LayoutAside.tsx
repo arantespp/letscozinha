@@ -3,6 +3,7 @@ import { getAllCategories } from 'src/cms/categories';
 import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { CategoryTag } from 'src/components/CategoryTag';
 import * as React from 'react';
+import { CategoriesList } from './CategoriesList';
 
 async function WhoIsLets() {
   const { letsCozinhaLets } = await getLetsCozinhaLets();
@@ -27,23 +28,6 @@ async function WhoIsLets() {
   );
 }
 
-async function Categories() {
-  const { allCategories } = await getAllCategories();
-
-  return (
-    <React.Fragment>
-      <h2 className="text-2xl">Receitas</h2>
-      <div className="flex flex-col gap-[14px]">
-        {allCategories.map((category) => (
-          <div key={category.id} className="">
-            <CategoryTag {...category} />
-          </div>
-        ))}
-      </div>
-    </React.Fragment>
-  );
-}
-
 export async function LayoutAside() {
   return (
     <aside className="w-full md:w-72 flex flex-col rounded p-md mt-xl md:mt-md bg-muted">
@@ -52,7 +36,7 @@ export async function LayoutAside() {
       </React.Suspense>
       <hr className="my-md"></hr>
       <React.Suspense fallback={null}>
-        <Categories />
+        <CategoriesList />
       </React.Suspense>
     </aside>
   );

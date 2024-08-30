@@ -1,19 +1,27 @@
 import { getAllCategories } from 'src/cms/categories';
-import Link from 'next/link';
+import { CategoryTag } from 'src/components/CategoryTag';
 
-export async function CategoriesList() {
+export async function CategoriesList({
+  direction = 'column',
+}: {
+  direction?: 'row' | 'column';
+}) {
   const { allCategories } = await getAllCategories();
 
+  const className = (() => {
+    if (direction === 'column') {
+      return 'flex flex-col gap-[14px]';
+    }
+
+    return 'flex flex-row flex-wrap gap-lg';
+  })();
+
   return (
-    <div className="flex flex-col">
+    <div className={className}>
       {allCategories.map((category) => (
-        <Link
-          key={category.id}
-          href={`/categorias/${category.slug}`}
-          className="mb-xs"
-        >
-          {category.nome}
-        </Link>
+        <div key={category.id}>
+          <CategoryTag {...category} />
+        </div>
       ))}
     </div>
   );
