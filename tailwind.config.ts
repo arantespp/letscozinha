@@ -52,7 +52,7 @@ const config: Config = {
     function ({ addComponents, theme }: any) {
       addComponents({
         '.container': {
-          maxWidth: '80rem',
+          maxWidth: '80rem', // 1280px
         },
       });
     },
