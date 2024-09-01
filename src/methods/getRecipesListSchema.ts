@@ -5,20 +5,22 @@ import { getRecipeSchema } from './getRecipeSchema';
 /**
  * https://developers.google.com/search/docs/appearance/structured-data/recipe
  */
-export function getRecipesListSchema(recipes: Recipe[]): ItemList {
-  const itemListElement = recipes.reduce<ListItem[]>((acc, recipe) => {
-    const item = getRecipeSchema(recipe);
+export async function getRecipesListSchema(
+  recipes: Recipe[]
+): Promise<ItemList> {
+  const itemListElement: ListItem[] = [];
+
+  for (const recipe of recipes) {
+    const item = await getRecipeSchema(recipe);
 
     if (item) {
-      acc.push({
+      itemListElement.push({
         '@type': 'ListItem',
-        position: acc.length + 1,
+        position: itemListElement.length + 1,
         item,
       });
     }
-
-    return acc;
-  }, []);
+  }
 
   return {
     '@type': 'ItemList',

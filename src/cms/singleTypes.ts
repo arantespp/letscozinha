@@ -45,6 +45,7 @@ export const getLetsCozinha = async () => {
 };
 
 type LetsCozinhaLetsCMSResponse = CMSSingleDataResponse<{
+  nome: string;
   resumo: string;
   texto_completo: string;
   imagem: CMSImage;

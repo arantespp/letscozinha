@@ -84,7 +84,7 @@ export default async function Page({ params }: Props) {
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/recipe
    */
-  const recipeSchema = getRecipeSchema(recipe);
+  const recipeSchema = await getRecipeSchema(recipe);
 
   const images =
     recipe.imagens?.map((cmsImage) => {

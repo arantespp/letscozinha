@@ -1,11 +1,14 @@
 import type { Recipe } from 'src/cms/recipes';
 import { Recipe as RecipeSchema } from 'schema-dts';
 import { getRecipeUrl } from './getRecipeUrl';
+import { getLetsSchema } from './getLetsSchema';
 
 /**
  * https://developers.google.com/search/docs/appearance/structured-data/recipe
  */
-export function getRecipeSchema(recipe: Recipe): RecipeSchema | null {
+export async function getRecipeSchema(
+  recipe: Recipe
+): Promise<RecipeSchema | null> {
   if (!recipe.imagens) {
     return null;
   }
@@ -28,10 +31,7 @@ export function getRecipeSchema(recipe: Recipe): RecipeSchema | null {
         },
       };
     }),
-    author: {
-      '@type': 'Person',
-      name: 'Letícia Ferreira',
-    },
+    author: await getLetsSchema(),
     datePublished: recipe.updatedAt,
     description: recipe.descricao,
     keywords: recipe.keywords,

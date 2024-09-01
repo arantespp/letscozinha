@@ -18,7 +18,9 @@ export async function RecipesList(props: RecipesListProps) {
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/carousel
    */
-  const recipesCarouselSchema: ItemList = getRecipesListSchema(props.recipes);
+  const recipesCarouselSchema: ItemList = await getRecipesListSchema(
+    props.recipes
+  );
 
   const addCarouselSchema = !props.notAddCarouselSchema;
 

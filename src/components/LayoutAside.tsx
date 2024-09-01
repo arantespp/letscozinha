@@ -1,9 +1,8 @@
 import Image from 'next/image';
-import { getAllCategories } from 'src/cms/categories';
 import { getLetsCozinhaLets } from 'src/cms/singleTypes';
-import { CategoryTag } from 'src/components/CategoryTag';
 import * as React from 'react';
 import { CategoriesList } from './CategoriesList';
+import Link from 'next/link';
 
 async function WhoIsLets() {
   const { letsCozinhaLets } = await getLetsCozinhaLets();
@@ -20,7 +19,9 @@ async function WhoIsLets() {
           fill
         />
       </div>
-      <span className="font-heading text-xl">Conheça a Lets</span>
+      <Link href="/conheca-a-lets">
+        <span className="font-heading text-xl">Conheça a Lets</span>
+      </Link>
       <span className="italic text-center whitespace-pre-line leading-normal">
         {summary}
       </span>

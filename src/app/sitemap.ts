@@ -41,6 +41,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: BASE_URL,
       lastModified,
     },
+    {
+      url: `${BASE_URL}/conheca-a-lets`,
+      lastModified,
+    },
+    {
+      url: `${BASE_URL}/categorias`,
+      lastModified,
+    },
     ...categoriesSitemap.sort(sortByUrl),
     {
       url: `${BASE_URL}/receitas`,
