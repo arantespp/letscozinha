@@ -6,6 +6,7 @@ import { getLetsSchema } from 'src/methods/getLetsSchema';
 import { JsonLd } from 'src/components/JsonLd';
 import type { Metadata } from 'next';
 import { getUrl } from 'src/methods/getUrl';
+import { WEBSITE_NAME } from 'src/constants';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { letsCozinhaLets } = await getLetsCozinhaLets();
@@ -14,11 +15,13 @@ export async function generateMetadata(): Promise<Metadata> {
     return {};
   }
 
+  const title = `${letsCozinhaLets.nome} - ${WEBSITE_NAME}`;
+
   return {
-    title: 'Conheça a Lets',
+    title,
     description: letsCozinhaLets.resumo,
     openGraph: {
-      title: 'Conheça a Lets',
+      title,
       description: letsCozinhaLets.resumo,
       images: letsCozinhaLets.imagem.url,
       url: getUrl('/conheca-a-lets'),

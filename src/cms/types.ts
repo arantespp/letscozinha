@@ -3,7 +3,7 @@ export type CMSData<Attributes> = {
   attributes: Attributes;
 };
 
-type ImageAttributes = {
+export type ImageAttributes = {
   url: string;
   width: number;
   height: number;
