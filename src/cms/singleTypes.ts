@@ -7,6 +7,7 @@ import {
   mapRecipe,
 } from './recipes';
 import { mapCMSData } from './mapCMSData';
+import { cache } from 'react';
 
 type LetsCozinhaCMSResponse = CMSSingleDataResponse<{
   titulo: string;
@@ -15,7 +16,7 @@ type LetsCozinhaCMSResponse = CMSSingleDataResponse<{
   receitas_favoritas: CMSRecipesResponse;
 }>;
 
-export const getLetsCozinha = async () => {
+export const getLetsCozinha = cache(async () => {
   const query = qs.stringify({
     populate: {
       receitas_favoritas: {
@@ -42,7 +43,7 @@ export const getLetsCozinha = async () => {
   };
 
   return { letsCozinha };
-};
+});
 
 type LetsCozinhaLetsCMSResponse = CMSSingleDataResponse<{
   nome: string;
@@ -51,7 +52,7 @@ type LetsCozinhaLetsCMSResponse = CMSSingleDataResponse<{
   imagem: CMSImage;
 }>;
 
-export const getLetsCozinhaLets = async () => {
+export const getLetsCozinhaLets = cache(async () => {
   const query = qs.stringify({
     populate: ['imagem'],
   });
@@ -71,4 +72,4 @@ export const getLetsCozinhaLets = async () => {
   };
 
   return { letsCozinhaLets };
-};
+});
