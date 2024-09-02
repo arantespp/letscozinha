@@ -16,6 +16,10 @@ const navs = [
     label: 'Receitas',
   },
   {
+    href: '/conheca-a-lets',
+    label: 'Conheça a Lets',
+  },
+  {
     href: 'https://www.instagram.com/lets_cozinha/',
     label: <FontAwesomeIcon className="text-[1.25em]" icon={faInstagram} />,
     'aria-label': 'Instagram',

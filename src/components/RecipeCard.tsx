@@ -33,9 +33,13 @@ export default function RecipeCard({
       <h3 className="my-none flex-1">
         <Link href={href}>{recipe.nome}</Link>
       </h3>
-      {(recipe.categorias || []).map((category) => (
-        <CategoryTag key={category.id} {...category} isSmall />
-      ))}
+      <div className="flex flex-row flex-wrap gap-xs">
+        {(recipe.categorias || []).map((category) => (
+          <div key={category.id} className="p-xs">
+            <CategoryTag {...category} isSmall />
+          </div>
+        ))}
+      </div>
       <span className="text-text-light line-clamp-5 leading-snug">
         {recipe.descricao}
       </span>

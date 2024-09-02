@@ -11,14 +11,16 @@ async function WhoIsLets() {
 
   return (
     <div className="flex flex-col gap-sm items-center">
-      <div className="size-image-sm relative">
-        <Image
-          className="size-image-sm rounded-full"
-          src={letsCozinhaLets.imagem.url}
-          alt="Foto da Lets"
-          fill
-        />
-      </div>
+      <Link href="/conheca-a-lets">
+        <div className="size-image-sm relative">
+          <Image
+            className="size-image-sm rounded-full"
+            src={letsCozinhaLets.imagem.url}
+            alt="Foto da Lets"
+            fill
+          />
+        </div>
+      </Link>
       <Link href="/conheca-a-lets">
         <span className="font-heading text-xl">Conheça a Lets</span>
       </Link>

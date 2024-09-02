@@ -1,11 +1,12 @@
 import { getAllRecipes } from 'src/cms/recipes';
+import { getAllCategories } from 'src/cms/categories';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 export const revalidate = 0;
 
-export default async function ReceitasIncompletas() {
+export default async function StatusDasReceitas() {
   const { allRecipes } = await getAllRecipes();
 
   const recipesWithStatus = allRecipes
@@ -77,11 +78,54 @@ export default async function ReceitasIncompletas() {
     ((totalItemsCount - incompleteItemsCount) / totalItemsCount) * 100
   );
 
+  const { allCategories } = await getAllCategories();
+
+  const categoriesWithStatus = allCategories
+    .map((category) => {
+      const status = {
+        slugEndsWithNumber: false,
+        noRecipes: false,
+      };
+
+      if (/\d$/.test(category.slug)) {
+        status.slugEndsWithNumber = true;
+      }
+
+      const recipes = allRecipes.filter((recipe) => {
+        return recipe.categorias?.some((cat) => cat.id === category.id);
+      });
+
+      if (recipes.length === 0) {
+        status.noRecipes = true;
+      }
+
+      return { ...category, status };
+    })
+    .map((category) => {
+      const cmsUrl = `${process.env.CMS_URL}/admin/content-manager/collection-types/api::lets-cozinha-categoria.lets-cozinha-categoria/${category.id}`;
+      const isComplete = Object.values(category.status).every((value) => {
+        return !value;
+      });
+      return { ...category, cmsUrl, isComplete };
+    });
+
+  const allCategoriesCount = allCategories.length;
+
+  const incompleteCategoriesCount = categoriesWithStatus.reduce(
+    (acc, category) => {
+      return acc + (category.isComplete ? 0 : 1);
+    },
+    0
+  );
+
+  const tableClasses = 'border-separate border-spacing-xs my-lg';
+
   return (
     <div>
       <h2>Status das Receitas</h2>
 
-      <table className="border-separate border-spacing-xs my-lg">
+      <h3>Geral</h3>
+      <table className={tableClasses}>
         <thead>
           <tr>
             <th></th>
@@ -110,10 +154,63 @@ export default async function ReceitasIncompletas() {
             <td className="text-center">{totalItemsCount}</td>
             <td className="text-center">{completeItemsPercentage}%</td>
           </tr>
+          <tr>
+            <td>Categorias</td>
+            <td className="text-center">{incompleteCategoriesCount}</td>
+            <td className="text-center">
+              {allCategoriesCount - incompleteCategoriesCount}
+            </td>
+            <td className="text-center">{allCategoriesCount}</td>
+            <td className="text-center">
+              {Math.round(
+                ((allCategoriesCount - incompleteCategoriesCount) /
+                  allCategoriesCount) *
+                  100
+              )}
+              %
+            </td>
+          </tr>
         </tbody>
       </table>
 
-      <table className="border-separate border-spacing-xs">
+      <h3>Categorias</h3>
+      <table className={tableClasses}>
+        <thead>
+          <tr>
+            <th>Categoria</th>
+            <th>Slug</th>
+            <th>Tem Receitas?</th>
+            <th>CMS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {categoriesWithStatus.map((category) => {
+            return (
+              <tr key={category.id} className="hover:bg-muted">
+                <td>
+                  <Link href={`/categorias/${category.slug}`} target="_blank">
+                    {category.isComplete ? '✅' : ''} {category.nome}
+                  </Link>
+                </td>
+                <td className="text-center">
+                  {category.status.slugEndsWithNumber ? '❌' : '✅'}
+                </td>
+                <td className="text-center">
+                  {category.status.noRecipes ? '❌' : '✅'}
+                </td>
+                <td className="text-center">
+                  <a href={category.cmsUrl} target="_blank">
+                    <FontAwesomeIcon icon={faLink} />
+                  </a>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      <h3>Receitas</h3>
+      <table className={tableClasses}>
         <thead>
           <tr className="sticky top-0 bg-white">
             <th>Receita</th>
