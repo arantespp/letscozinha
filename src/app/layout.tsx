@@ -48,9 +48,6 @@ export const metadata: Metadata = {
     siteName: WEBSITE_NAME,
     type: 'website',
   },
-  alternates: {
-    canonical: './',
-  },
 };
 
 export const viewport: Viewport = {

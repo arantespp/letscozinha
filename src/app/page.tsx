@@ -3,6 +3,13 @@ import { getLetsCozinha } from 'src/cms/singleTypes';
 import type { WebSite } from 'schema-dts';
 import { BASE_URL, WEBSITE_NAME } from 'src/constants';
 import { JsonLd } from 'src/components/JsonLd';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: BASE_URL,
+  },
+};
 
 export default async function Home() {
   const { letsCozinha } = await getLetsCozinha();
