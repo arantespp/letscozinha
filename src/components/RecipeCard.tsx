@@ -31,7 +31,9 @@ export default function RecipeCard({
         </div>
       </Link>
       <h3 className="my-none flex-1">
-        <Link href={href}>{recipe.nome}</Link>
+        <Link href={href} className="no-underline">
+          {recipe.nome}
+        </Link>
       </h3>
       <div className="flex flex-row flex-wrap gap-xs">
         {(recipe.categorias || []).map((category) => (

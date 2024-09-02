@@ -23,9 +23,6 @@ export function RecipeInstagramLinks({
     if (index === 0) {
       return (
         <span key={post.url}>
-          <span className="text-[1.5em] mr-xs align-middle">
-            <FontAwesomeIcon icon={faInstagram} />
-          </span>{' '}
           <a
             href={post.url}
             target="_blank"
@@ -33,7 +30,11 @@ export function RecipeInstagramLinks({
             onClick={() => {
               sendGAEvent('event', 'instagram_click', { value: slug });
             }}
+            className="no-underline"
           >
+            <span className="text-[1.5em] mr-xs align-[-3px]">
+              <FontAwesomeIcon icon={faInstagram} />
+            </span>{' '}
             Confira a receita no Instagram
             {hasComma ? ',' : ''}
           </a>
