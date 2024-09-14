@@ -14,6 +14,8 @@ export const metadata: Metadata = {
 export default async function Home() {
   const { letsCozinha } = await getLetsCozinha();
 
+  console.log(JSON.stringify(letsCozinha.receitas_favoritas, null, 2));
+
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/sitelinks-searchbox
    */
