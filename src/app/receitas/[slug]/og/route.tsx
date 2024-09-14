@@ -35,6 +35,7 @@ export async function GET(request: Request, context: { params: Params }) {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
+              backgroundColor: 'white',
             }}
           >
             <img width="500" src="https://letscozinha.com.br/logo-texto.png" />
