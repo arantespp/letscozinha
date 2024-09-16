@@ -5,6 +5,7 @@ import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { sendGAEvent } from '@next/third-parties/google';
+import { INSTAGRAM_USERNAME } from 'src/constants';
 
 const navs = [
   {
@@ -20,7 +21,11 @@ const navs = [
     label: 'Conheça a Lets',
   },
   {
-    href: 'https://www.instagram.com/lets_cozinha/',
+    href: '/contato',
+    label: 'Contato',
+  },
+  {
+    href: `https://www.instagram.com/${INSTAGRAM_USERNAME}/`,
     label: <FontAwesomeIcon className="text-[1.25em]" icon={faInstagram} />,
     'aria-label': 'Instagram',
     onClick: () => {
