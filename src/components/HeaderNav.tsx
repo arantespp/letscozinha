@@ -37,7 +37,7 @@ const navs = [
 export function HeaderNav({ isColumn }: { isColumn?: boolean }) {
   return (
     <nav
-      className={`flex gap-sm md:gap-lg text-2xl [&>a]:no-underline ${
+      className={`flex gap-sm md:gap-lg text-xl [&>a]:no-underline ${
         isColumn ? 'flex-col' : ''
       }`}
     >

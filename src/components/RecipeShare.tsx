@@ -42,7 +42,7 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
         Compartilhe esta receita de <strong>{recipe.nome}</strong> com seus
         amigos e familiares para que eles possam experimentar também!
       </p>
-      <div className="flex gap-sm mt-md items-center">
+      <div className="flex flex-wrap gap-sm mt-md items-center">
         <FacebookShareButton
           {...commonProps}
           hashtag="#letscozinha"

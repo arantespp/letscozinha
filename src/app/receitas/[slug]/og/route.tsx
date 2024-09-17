@@ -90,7 +90,7 @@ export async function GET(request: Request, context: { params: Params }) {
       }
     );
   } catch (e: any) {
-    console.log(`${e.message}`);
+    console.error(`${e.message}`);
     return new Response(`Failed to generate the image`, {
       status: 500,
     });

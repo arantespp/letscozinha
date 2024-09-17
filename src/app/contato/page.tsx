@@ -37,7 +37,7 @@ const links = [
 
 export default async function Contact() {
   return (
-    <div className="container">
+    <div className="">
       <h1>Contato</h1>
       <p>
         Se você tiver alguma dúvida, sugestão ou quiser falar conosco, entre em
@@ -51,12 +51,12 @@ export default async function Contact() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={link.text}
-            className="flex items-center gap-md no-underline"
+            className="flex items-center gap-sm no-underline"
           >
-            <span className="text-3xl">
+            <span className="text-2xl">
               <FontAwesomeIcon icon={link.icon} />
             </span>
-            <span className="text-lg">{link.text}</span>
+            <span className="">{link.text}</span>
           </a>
         ))}
       </div>
