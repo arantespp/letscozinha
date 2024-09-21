@@ -7,6 +7,7 @@ import { LayoutAside } from 'src/components/LayoutAside';
 import { Header } from 'src/components/Header';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { WEBSITE_NAME, BASE_URL } from 'src/constants';
+import { Footer } from 'src/components/Footer';
 import './fa.css';
 import './globals.css';
 
@@ -55,16 +56,6 @@ export const viewport: Viewport = {
   width: 'device-width',
 };
 
-const Footer = () => {
-  return (
-    <footer className="bg-primary py-lg">
-      <div className="container flex justify-center">
-        <p>© 2024 Lets Cozinha</p>
-      </div>
-    </footer>
-  );
-};
-
 const isProduction = process.env.NODE_ENV === 'production';
 
 export default function RootLayout({
@@ -81,7 +72,7 @@ export default function RootLayout({
     >
       <body>
         <Header />
-        <main className="md:pb-xl">
+        <main className="pb-xl md:pb-2xl">
           <React.Suspense fallback={<div className="h-[200px]"></div>}>
             {hero}
           </React.Suspense>

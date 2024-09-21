@@ -35,10 +35,12 @@
 
   h5 {
     @apply text-lg;
+    @apply mb-xs;
   }
 
   h6 {
     @apply text-base;
+    @apply mb-xs;
   }
 
   a {

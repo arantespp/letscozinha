@@ -9,7 +9,7 @@ export default async function Hero() {
   const descricao = letsCozinha.descricao;
 
   return (
-    <div className="relative flex flex-col justify-center items-center min-h-[250px]">
+    <div className="relative flex flex-col justify-center items-center min-h-[250px] lg:h-[350px]">
       {/* <Image
         src={}
         alt="Foto da Lets"

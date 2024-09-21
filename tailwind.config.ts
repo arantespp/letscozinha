@@ -28,7 +28,7 @@ const config: Config = {
         secondary: '#D8110D',
         accent: '#4CAF50',
         neutral: '#FFFFFF',
-        muted: '#F5F5F5',
+        muted: 'rgb(243 244 246)',
         text: {
           light: '#737373',
           dark: '#333333',
