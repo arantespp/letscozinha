@@ -22,35 +22,47 @@ type Props = {
 };
 
 async function SearchResults({ searchParams }: Props) {
-  const { recipes, meta } = await (async () => {
-    if (searchParams?.search) {
-      return searchRecipes({ search: searchParams.search });
-    }
+  const searchTitle = searchParams?.search ? 'Resultados da busca' : 'Receitas';
 
-    return getRecipes({ page: searchParams?.page });
-  })();
+  try {
+    const { recipes, meta } = await (async () => {
+      if (searchParams?.search) {
+        return searchRecipes({ search: searchParams.search });
+      }
 
-  const recipesQuantity = recipes.length;
+      return getRecipes({ page: searchParams?.page });
+    })();
 
-  const subtitle = searchParams?.search
-    ? `Mostrando ${recipesQuantity} receitas da sua busca por "${searchParams.search}":`
-    : `Confira as nossas receitas mais recentes:`;
+    const recipesQuantity = recipes.length;
 
-  return (
-    <React.Fragment>
-      <span className="text-text-light">{subtitle}</span>
-      <RecipesList
-        recipes={recipes}
-        pagination={meta?.pagination}
-        firstRecipePriority
-      />
-    </React.Fragment>
-  );
+    const subtitle = searchParams?.search
+      ? `Mostrando ${recipesQuantity} receitas da sua busca por "${searchParams.search}":`
+      : `Confira as nossas receitas mais recentes:`;
+
+    return (
+      <React.Fragment>
+        <h2>{searchTitle}</h2>
+        <span className="text-text-light">{subtitle}</span>
+        <RecipesList
+          recipes={recipes}
+          pagination={meta?.pagination}
+          firstRecipePriority
+        />
+      </React.Fragment>
+    );
+  } catch (error) {
+    console.error(error);
+    return (
+      <div>
+        <h2>Ops!</h2>
+        <p>Não encontramos as receitas que você está procurando.</p>
+        <p>Por favor, tente novamente mais tarde.</p>
+      </div>
+    );
+  }
 }
 
 export default async function Page({ searchParams }: Props) {
-  const searchTitle = searchParams?.search ? 'Resultados da busca' : 'Receitas';
-
   /**
    * https://github.com/vercel/next.js/issues/49297#issuecomment-1568557317
    */
@@ -76,7 +88,6 @@ export default async function Page({ searchParams }: Props) {
         <div className="my-lg">
           <Search />
         </div>
-        <h2>{searchTitle}</h2>
         <React.Suspense
           key={suspenseKey}
           fallback={<SearchLoading key={suspenseKey} />}

@@ -11,7 +11,7 @@ const ImageSection = async () => {
   const descricao = letsCozinha.descricao;
 
   return (
-    <section className="flex flex-col items-center gap-sm">
+    <section className="flex flex-col items-center gap-sm self-center">
       <Link href="/">
         <Image src={logo} alt="Lets Cozinha" height={60} quality={100} />
       </Link>
@@ -22,16 +22,16 @@ const ImageSection = async () => {
 
 const PageNavSection = () => {
   return (
-    <section className="flex flex-col items-center md:items-start">
+    <section className="flex flex-col items-center lg:items-start">
       <h4>Navegue</h4>
-      <PagesNav className="flex flex-col gap-xs items-center md:items-start" />
+      <PagesNav className="flex flex-col gap-xs items-center lg:items-start" />
     </section>
   );
 };
 
 const SocialNavSection = () => {
   return (
-    <section className="flex flex-col items-center md:items-start">
+    <section className="flex flex-col items-center lg:items-start">
       <h4>Conecte-se</h4>
       <SocialNav
         className="flex flex-row gap-md text-2xl md:text-2xl"
@@ -46,12 +46,12 @@ export async function Footer() {
 
   return (
     <footer className="bg-muted">
-      <div className="container flex flex-col md:flex-row items-center md:items-start justify-evenly gap-lg py-lg md:py-xl">
+      <div className="container py-lg md:py-xl gap-lg flex flex-col items-center lg:grid lg:grid-cols-3 lg:justify-items-center lg:items-start">
         <ImageSection />
         <PageNavSection />
         <SocialNavSection />
       </div>
-      <div className="flex flex-col items-center py-md gap-sm bg-primary">
+      <div className="flex flex-col items-center py-sm gap-xs bg-primary">
         <div className="flex gap-sm md:gap-md">
           <Link
             className="hover:no-underline hover:text-text-dark"
