@@ -15,7 +15,7 @@ const ImageSection = async () => {
       <Link href="/">
         <Image src={logo} alt="Lets Cozinha" height={60} quality={100} />
       </Link>
-      <p className="w-[300px] text-center italic ">{descricao}</p>
+      <p className="w-[320px] text-center italic ">{descricao}</p>
     </section>
   );
 };
@@ -32,7 +32,7 @@ const PageNavSection = () => {
 const SocialNavSection = () => {
   return (
     <section className="flex flex-col items-center md:items-start">
-      <h4>Siga-nos</h4>
+      <h4>Conecte-se</h4>
       <SocialNav
         className="flex flex-row gap-md text-2xl md:text-2xl"
         noLabel
@@ -51,7 +51,21 @@ export async function Footer() {
         <PageNavSection />
         <SocialNavSection />
       </div>
-      <div className="flex justify-center py-sm bg-primary">
+      <div className="flex flex-col items-center py-md gap-sm bg-primary">
+        <div className="flex gap-sm md:gap-md">
+          <Link
+            className="hover:no-underline hover:text-text-dark"
+            href="/politica-de-privacidade"
+          >
+            Política de Privacidade
+          </Link>
+          <Link
+            className="hover:no-underline hover:text-text-dark"
+            href="/termos-de-uso"
+          >
+            Termos de Uso
+          </Link>
+        </div>
         <span>© {currentYear} Lets Cozinha</span>
       </div>
     </footer>

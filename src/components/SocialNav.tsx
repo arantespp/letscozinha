@@ -5,6 +5,7 @@ import {
   FACEBOOK_USERNAME,
   INSTAGRAM_USERNAME,
   EMAIL,
+  PINTEREST_USERNAME,
   TIKTOK_USERNAME,
 } from 'src/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +13,7 @@ import {
   faFacebook,
   faInstagram,
   faTiktok,
+  faPinterest,
 } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
@@ -36,6 +38,13 @@ const socialNavs = [
     href: `https://www.tiktok.com/${TIKTOK_USERNAME}`,
     'aria-label': 'TikTok',
     event: 'tiktok_click',
+  },
+  {
+    icon: faPinterest,
+    label: `/${PINTEREST_USERNAME}`,
+    href: `https://www.pinterest.com/${PINTEREST_USERNAME}`,
+    'aria-label': 'Pinterest',
+    event: 'pinterest_click',
   },
   {
     icon: faEnvelope,

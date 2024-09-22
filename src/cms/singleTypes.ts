@@ -73,3 +73,23 @@ export const getLetsCozinhaLets = cache(async () => {
 
   return { letsCozinhaLets };
 });
+
+type LetsCozinhaPoliticasCMSResponse = CMSSingleDataResponse<{
+  politica_de_privacidade: string;
+  termos_de_uso: string;
+}>;
+
+export const getLetsCozinhaPoliticas = cache(async () => {
+  const response: LetsCozinhaPoliticasCMSResponse = await fetch(
+    `${CMS_URL}/api/lets-cozinha-politicas`,
+    {
+      headers: {
+        Authorization: `Bearer ${CMS_TOKEN}`,
+      },
+    }
+  ).then((res) => res.json());
+
+  const letsCozinhaPoliticas = mapCMSData(response.data);
+
+  return { letsCozinhaPoliticas };
+});
