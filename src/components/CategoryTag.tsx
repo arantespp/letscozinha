@@ -14,15 +14,15 @@ export function CategoryTag({
   const padding = isSmall ? 'leading-tight px-xs' : 'px-sm';
 
   return (
-    <div
-      className={`w-fit	bg-gray-200 text-text-dark hover:text-neutral rounded hover:bg-primary no-underline ${padding}`}
+    <Link
+      href={`/categorias/${slug}`}
+      className={`hover:text-neutral no-underline ${fontSize}`}
     >
-      <Link
-        href={`/categorias/${slug}`}
-        className={`hover:text-neutral no-underline ${fontSize}`}
+      <div
+        className={`w-fit	bg-gray-200 text-text-dark hover:text-neutral rounded hover:bg-primary no-underline ${padding}`}
       >
         {nome}
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }

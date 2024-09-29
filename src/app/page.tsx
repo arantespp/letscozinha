@@ -28,6 +28,7 @@ async function FavoriteRecipes() {
         <Link href="/conheca-a-lets">Lets</Link>. Experimente fazer você também!
       </p>
       <RecipesList
+        addCarouselSchema
         recipes={letsCozinha.receitas_favoritas}
         firstRecipePriority
       />

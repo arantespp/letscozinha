@@ -47,6 +47,7 @@ async function SearchResults({ searchParams }: Props) {
           recipes={recipes}
           pagination={meta?.pagination}
           firstRecipePriority
+          addCarouselSchema
         />
       </React.Fragment>
     );

@@ -82,7 +82,11 @@ export default async function Page({
         ]}
       />
       <h1>Receitas - {category.nome}</h1>
-      <RecipesList recipes={recipes} pagination={meta?.pagination} />
+      <RecipesList
+        addCarouselSchema
+        recipes={recipes}
+        pagination={meta?.pagination}
+      />
     </div>
   );
 }

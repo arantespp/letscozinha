@@ -35,9 +35,9 @@ export default async function ConhecaALets() {
 
   const letsSchema = await getLetsSchema();
 
-  // const width = Math.min(letsCozinhaLets.imagem.width, 500);
+  const width = Math.min(letsCozinhaLets.imagem.width, 500);
 
-  // const height = Math.min(letsCozinhaLets.imagem.height, 500);
+  const height = Math.min(letsCozinhaLets.imagem.height, 500);
 
   return (
     <div className="flex flex-col gap-md md:gap-lg flex-1">
@@ -46,8 +46,8 @@ export default async function ConhecaALets() {
       <Image
         src={letsCozinhaLets.imagem.url}
         alt={`Foto da ${letsCozinhaLets.nome}`}
-        width={200}
-        height={200}
+        width={width}
+        height={height}
       />
       <Markdown source={letsCozinhaLets.texto_completo} />
       <div>

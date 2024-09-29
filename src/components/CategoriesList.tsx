@@ -1,5 +1,6 @@
 import { getAllCategories } from 'src/cms/categories';
 import { CategoryTag } from 'src/components/CategoryTag';
+import { getAllRecipes } from 'src/cms/recipes';
 
 export async function CategoriesList({
   direction = 'column',
@@ -7,6 +8,13 @@ export async function CategoriesList({
   direction?: 'row' | 'column';
 }) {
   const { allCategories } = await getAllCategories();
+  const { allRecipes } = await getAllRecipes();
+
+  const allCategoriesThatHaveRecipes = allCategories.filter((category) => {
+    return allRecipes.some((recipe) =>
+      recipe.categorias?.map((categoria) => categoria.id).includes(category.id)
+    );
+  });
 
   const className = (() => {
     if (direction === 'column') {
@@ -18,7 +26,7 @@ export async function CategoriesList({
 
   return (
     <div className={className}>
-      {allCategories.map((category) => (
+      {allCategoriesThatHaveRecipes.map((category) => (
         <div key={category.id}>
           <CategoryTag {...category} />
         </div>
