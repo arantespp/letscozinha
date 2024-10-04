@@ -3,9 +3,13 @@ import { unstable_cache } from 'next/cache';
 
 const REVALIDATE_1_DAY = 60 * 60 * 24;
 
-const credentials = JSON.parse(
-  Buffer.from(process.env.GOOGLE_SERVICE_KEY || '', 'base64').toString('ascii')
-);
+const credentials = process.env.GOOGLE_SERVICE_KEY
+  ? JSON.parse(
+      Buffer.from(process.env.GOOGLE_SERVICE_KEY || '{}', 'base64').toString(
+        'ascii'
+      )
+    )
+  : {};
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
   credentials,

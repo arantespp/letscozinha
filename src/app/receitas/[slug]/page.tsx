@@ -1,22 +1,23 @@
-import {
-  getAllRecipes,
-  findRecipe,
-  searchSimilarRecipes,
-  Recipe,
-} from 'src/cms/recipes';
-import type { Metadata, ResolvingMetadata } from 'next';
-import { BASE_URL, WEBSITE_NAME } from 'src/constants';
+import * as React from 'react';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { notFound } from 'next/navigation';
-import { RecipeImages } from 'src/components/RecipeImages';
 import { CategoryTag } from 'src/components/CategoryTag';
+import { JsonLd } from 'src/components/JsonLd';
+import { Markdown } from 'src/components/Markdown';
+import {
+  Recipe,
+  findRecipe,
+  getAllRecipes,
+  searchSimilarRecipes,
+} from 'src/cms/recipes';
+import { RecipeImages } from 'src/components/RecipeImages';
+import { RecipeInstagramLinks } from 'src/components/RecipeInstagramLinks';
 import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
-import * as React from 'react';
-import { Markdown } from 'src/components/Markdown';
-import { RecipeInstagramLinks } from 'src/components/RecipeInstagramLinks';
+import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
-import { JsonLd } from 'src/components/JsonLd';
+import { getUrl } from 'src/methods/getUrl';
+import { notFound } from 'next/navigation';
+import type { Metadata, ResolvingMetadata } from 'next';
 
 type Props = {
   params: { slug: string };
@@ -40,16 +41,15 @@ export async function generateMetadata(
     return {};
   }
 
-  const ogUrl = new URL(`/receitas/${recipe.slug}/og`, BASE_URL);
+  const ogImageUrl = getUrl(`/receitas/${recipe.slug}/og`);
 
-  const url = new URL(`/receitas/${recipe.slug}`, BASE_URL);
+  const url = getUrl(`/receitas/${recipe.slug}`);
 
   const parentMetadata = await parent;
 
-  const title = `${recipe.nome} - ${WEBSITE_NAME}`;
+  const title = getPageTitle(recipe.nome);
 
   return {
-    metadataBase: new URL(BASE_URL),
     title,
     description: recipe.meta_descricao,
     keywords: recipe.keywords,
@@ -57,7 +57,7 @@ export async function generateMetadata(
       ...parentMetadata.openGraph,
       title,
       description: recipe.meta_descricao,
-      images: ogUrl,
+      images: ogImageUrl,
       url,
     },
   };

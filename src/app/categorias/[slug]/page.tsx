@@ -1,10 +1,11 @@
-import { findCategory, getAllCategories } from 'src/cms/categories';
-import { RecipesList } from 'src/components/RecipesList';
-import type { Metadata, ResolvingMetadata } from 'next';
-import { getRecipes } from 'src/cms/recipes';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { RecipesList } from 'src/components/RecipesList';
+import { findCategory, getAllCategories } from 'src/cms/categories';
+import { getPageTitle } from 'src/methods/getPageTitle';
+import { getRecipes } from 'src/cms/recipes';
+import { getUrl } from 'src/methods/getUrl';
 import { notFound } from 'next/navigation';
-import { WEBSITE_NAME } from 'src/constants';
+import type { Metadata, ResolvingMetadata } from 'next';
 
 type Props = { params: { slug: string } };
 
@@ -18,18 +19,33 @@ export async function generateMetadata(
     return {};
   }
 
-  // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || [];
+  const { recipes } = await getRecipes({
+    filter: { categoryId: category.id },
+  });
 
-  const imagesUrls = category.imagens?.map((image) => image.url) || [];
+  const categoryImagesUrls = category.imagens?.map((image) => image.url) || [];
 
-  const title = `${category.nome} - ${WEBSITE_NAME}`;
+  const recipeImagesUrls =
+    recipes.flatMap((recipe) => recipe.imagens?.map((image) => image.url)) ||
+    [];
+
+  const ogImages = [...categoryImagesUrls, ...recipeImagesUrls].filter(
+    (url): url is string => !!url
+  );
+
+  const firstImageUrl = ogImages[0];
+
+  const title = getPageTitle(`Receitas de ${category.nome} Deliciosas`);
+
+  const description = `Encontre as melhores receitas de ${category.nome} para todas as ocasiões. Receitas saborosas que você pode preparar em casa. Explore opções tradicionais, saudáveis e irresistíveis no Lets Cozinha.`;
 
   return {
     title,
+    description,
     openGraph: {
       title,
-      images: [...imagesUrls, ...previousImages],
+      url: getUrl(`/categorias/${category.slug}`),
+      images: firstImageUrl,
     },
   };
 }
@@ -81,7 +97,7 @@ export default async function Page({
           },
         ]}
       />
-      <h1>Receitas - {category.nome}</h1>
+      <h1>Receitas de {category.nome} Deliciosas</h1>
       <RecipesList
         addCarouselSchema
         recipes={recipes}

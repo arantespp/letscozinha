@@ -1,5 +1,6 @@
 User-Agent: *
 Allow: /
 Disallow: /private/
+Disallow: /og
 
 Sitemap: https://www.letscozinha.com.br/sitemap.xml

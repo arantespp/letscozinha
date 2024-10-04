@@ -1,15 +1,16 @@
-import type { Metadata, Viewport } from 'next';
-import { Playfair_Display, Lora } from 'next/font/google';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/react';
 import * as React from 'react';
-import { LayoutAside } from 'src/components/LayoutAside';
-import { Header } from 'src/components/Header';
-import { GoogleAnalytics } from '@next/third-parties/google';
-import { WEBSITE_NAME, BASE_URL } from 'src/constants';
+import { Analytics } from '@vercel/analytics/react';
+import { BASE_URL, WEBSITE_NAME } from 'src/constants';
 import { Footer } from 'src/components/Footer';
+import { GoogleAnalytics } from '@next/third-parties/google';
+import { Header } from 'src/components/Header';
+import { LayoutAside } from 'src/components/LayoutAside';
+import { Lora, Playfair_Display } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { getPageTitle } from 'src/methods/getPageTitle';
 import './fa.css';
 import './globals.css';
+import type { Metadata, Viewport } from 'next';
 
 /**
  * Headers
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   /**
    * https://developers.google.com/search/docs/appearance/title-link
    */
-  title: `${WEBSITE_NAME} - Receitas deliciosas para todas as ocasiões`,
+  title: getPageTitle('Receitas deliciosas para todas as ocasiões'),
   description:
     'Descubra todos os tipos de receitas. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
   keywords:

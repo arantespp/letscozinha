@@ -1,12 +1,12 @@
-import { getLetsCozinhaLets, getLetsCozinha } from 'src/cms/singleTypes';
-import Image from 'next/image';
+import { JsonLd } from 'src/components/JsonLd';
 import { Markdown } from 'src/components/Markdown';
 import { RecipesList } from 'src/components/RecipesList';
+import { getLetsCozinha, getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { getLetsSchema } from 'src/methods/getLetsSchema';
-import { JsonLd } from 'src/components/JsonLd';
-import type { Metadata } from 'next';
+import { getPageTitle } from 'src/methods/getPageTitle';
 import { getUrl } from 'src/methods/getUrl';
-import { WEBSITE_NAME } from 'src/constants';
+import Image from 'next/image';
+import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { letsCozinhaLets } = await getLetsCozinhaLets();
@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     return {};
   }
 
-  const title = `${letsCozinhaLets.nome} - ${WEBSITE_NAME}`;
+  const title = getPageTitle(letsCozinhaLets.nome);
 
   return {
     title,

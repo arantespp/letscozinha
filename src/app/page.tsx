@@ -1,15 +1,15 @@
-import { RecipesList } from 'src/components/RecipesList';
-import { getLetsCozinha } from 'src/cms/singleTypes';
-import type { WebSite } from 'schema-dts';
+import * as React from 'react';
 import { BASE_URL, WEBSITE_NAME } from 'src/constants';
 import { JsonLd } from 'src/components/JsonLd';
-import type { Metadata } from 'next';
 import { Loading } from 'src/components/Loading';
-import * as React from 'react';
-import { getMostVisitedPages } from 'src/ga4/getMostVisitedPages';
+import { RecipesList } from 'src/components/RecipesList';
 import { getAllRecipes } from 'src/cms/recipes';
-import type { Recipe } from 'src/cms/recipes';
+import { getLetsCozinha } from 'src/cms/singleTypes';
+import { getMostVisitedPages } from 'src/ga4/getMostVisitedPages';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+import type { Recipe } from 'src/cms/recipes';
+import type { WebSite } from 'schema-dts';
 
 export const metadata: Metadata = {
   alternates: {
@@ -18,62 +18,73 @@ export const metadata: Metadata = {
 };
 
 async function FavoriteRecipes() {
-  const { letsCozinha } = await getLetsCozinha();
+  try {
+    const { letsCozinha } = await getLetsCozinha();
 
-  return (
-    <section>
-      <h2>Receitas Favoritas</h2>
-      <p>
-        Confira as receitas favoritas da{' '}
-        <Link href="/conheca-a-lets">Lets</Link>. Experimente fazer você também!
-      </p>
-      <RecipesList
-        addCarouselSchema
-        recipes={letsCozinha.receitas_favoritas}
-        firstRecipePriority
-      />
-    </section>
-  );
+    return (
+      <section>
+        <h2>Receitas Favoritas</h2>
+        <p>
+          Confira as receitas favoritas da{' '}
+          <Link href="/conheca-a-lets">Lets</Link>. Experimente fazer você
+          também!
+        </p>
+        <RecipesList
+          addCarouselSchema
+          recipes={letsCozinha.receitas_favoritas}
+          firstRecipePriority
+        />
+      </section>
+    );
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 async function MostVisitedRecipes() {
-  const mostVisitedPages = await getMostVisitedPages();
-  const { allRecipes } = await getAllRecipes();
+  try {
+    const mostVisitedPages = await getMostVisitedPages();
+    const { allRecipes } = await getAllRecipes();
 
-  if (!mostVisitedPages || mostVisitedPages.length === 0) {
+    if (!mostVisitedPages || mostVisitedPages.length === 0) {
+      return null;
+    }
+
+    const mostVisitedRecipes = mostVisitedPages
+      .filter((page) => page.path?.startsWith('/receitas/'))
+      .sort((a, b) => Number(b.views) - Number(a.views))
+      .map((page) => {
+        const recipe = allRecipes.find((recipe) =>
+          recipe.slug.startsWith(page.path.replace('/receitas/', ''))
+        );
+
+        return {
+          ...recipe,
+          views: page.views,
+        };
+      })
+      .filter(Boolean)
+      .slice(0, 6) as Recipe[];
+
+    if (mostVisitedRecipes.length === 0) {
+      return null;
+    }
+
+    return (
+      <section>
+        <h2>Receitas mais acessadas</h2>
+        <p>
+          Confira as receitas mais acessadas nos últimos dias. Experimente fazer
+          você também!
+        </p>
+        <RecipesList recipes={mostVisitedRecipes} />
+      </section>
+    );
+  } catch (error) {
+    console.error(error);
     return null;
   }
-
-  const mostVisitedRecipes = mostVisitedPages
-    .filter((page) => page.path?.startsWith('/receitas/'))
-    .sort((a, b) => Number(b.views) - Number(a.views))
-    .map((page) => {
-      const recipe = allRecipes.find((recipe) =>
-        recipe.slug.startsWith(page.path.replace('/receitas/', ''))
-      );
-
-      return {
-        ...recipe,
-        views: page.views,
-      };
-    })
-    .filter(Boolean)
-    .slice(0, 6) as Recipe[];
-
-  if (mostVisitedRecipes.length === 0) {
-    return null;
-  }
-
-  return (
-    <section>
-      <h2>Receitas mais acessadas</h2>
-      <p>
-        Confira as receitas mais acessadas nos últimos dias. Experimente fazer
-        você também!
-      </p>
-      <RecipesList recipes={mostVisitedRecipes} />
-    </section>
-  );
 }
 
 export default async function Home() {

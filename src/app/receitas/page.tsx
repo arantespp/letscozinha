@@ -1,17 +1,27 @@
-import { Search } from 'src/components/Search';
-import { RecipesList } from 'src/components/RecipesList';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { getRecipes, searchRecipes } from 'src/cms/recipes';
-import type { Metadata } from 'next';
 import * as React from 'react';
+import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { RecipesList } from 'src/components/RecipesList';
+import { Search } from 'src/components/Search';
 import { SearchLoading } from './SearchLoading';
+import { getPageTitle } from 'src/methods/getPageTitle';
+import { getRecipes, searchRecipes } from 'src/cms/recipes';
+import { getUrl } from 'src/methods/getUrl';
+import type { Metadata } from 'next';
+
+const title = getPageTitle('Busque e Descubra Novos Sabores');
+
+const description =
+  'Encontre todas as nossas receitas em um só lugar. Use nossa busca para filtrar por ingredientes, tempo de preparo e preferências dietéticas.';
 
 export const metadata: Metadata = {
-  title: 'Todas as Receitas - Lets Cozinha | Busque e Descubra Novos Sabores',
-  description:
-    'Encontre todas as nossas receitas em um só lugar. Use nossa busca para filtrar por ingredientes, tempo de preparo e preferências dietéticas.',
+  title,
+  description,
   keywords:
     'todas as receitas, buscar receitas, receitas por ingredientes, receitas rápidas, receitas detalhadas, receitas favoritas',
+  openGraph: {
+    url: getUrl('/receitas'),
+    type: 'website',
+  },
 };
 
 type Props = {
