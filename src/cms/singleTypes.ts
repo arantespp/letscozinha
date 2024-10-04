@@ -1,13 +1,13 @@
-import { CMS_TOKEN, CMS_URL } from './config';
-import type { CMSSingleDataResponse, CMSImage } from './types';
-import qs from 'qs';
 import {
-  RECIPES_POPULATE,
   type CMSRecipesResponse,
+  RECIPES_POPULATE,
   mapRecipe,
 } from './recipes';
-import { mapCMSData } from './mapCMSData';
+import { CMS_TOKEN, CMS_URL } from './config';
 import { cache } from 'react';
+import { mapCMSData } from './mapCMSData';
+import qs from 'qs';
+import type { CMSImage, CMSSingleDataResponse } from './types';
 
 type LetsCozinhaCMSResponse = CMSSingleDataResponse<{
   titulo: string;

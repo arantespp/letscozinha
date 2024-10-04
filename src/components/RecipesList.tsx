@@ -1,9 +1,9 @@
-import { Pagination } from './Pagination';
-import RecipeCard from './RecipeCard';
-import type { Recipe } from 'src/cms/recipes';
 import { ItemList } from 'schema-dts';
 import { JsonLd } from './JsonLd';
+import { Pagination } from './Pagination';
 import { getRecipesListSchema } from 'src/methods/getRecipesListSchema';
+import RecipeCard from './RecipeCard';
+import type { Recipe } from 'src/cms/recipes';
 
 type RecipesListProps = {
   addCarouselSchema?: boolean;

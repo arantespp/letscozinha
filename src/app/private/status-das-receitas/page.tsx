@@ -1,7 +1,7 @@
-import { getAllRecipes } from 'src/cms/recipes';
-import { getAllCategories } from 'src/cms/categories';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { getAllCategories } from 'src/cms/categories';
+import { getAllRecipes } from 'src/cms/recipes';
 import Link from 'next/link';
 
 export const revalidate = 0;

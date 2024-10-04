@@ -1,6 +1,6 @@
 import { HeaderNav } from 'src/components/HeaderNav';
-import { getLetsCozinha } from 'src/cms/singleTypes';
 import { RecipesList } from 'src/components/RecipesList';
+import { getLetsCozinha } from 'src/cms/singleTypes';
 
 export default async function NotFound() {
   const { letsCozinha } = await getLetsCozinha();

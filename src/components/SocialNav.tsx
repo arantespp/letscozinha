@@ -1,21 +1,21 @@
 'use client';
 
-import { sendGAEvent } from '@next/third-parties/google';
 import {
+  EMAIL,
   FACEBOOK_USERNAME,
   INSTAGRAM_USERNAME,
-  EMAIL,
   PINTEREST_USERNAME,
   TIKTOK_USERNAME,
 } from 'src/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import {
   faFacebook,
   faInstagram,
-  faTiktok,
   faPinterest,
+  faTiktok,
 } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { sendGAEvent } from '@next/third-parties/google';
 
 const socialNavs = [
   {

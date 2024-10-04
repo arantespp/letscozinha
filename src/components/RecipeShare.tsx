@@ -1,21 +1,21 @@
 'use client';
 
+import * as React from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
-  FacebookShareButton,
   FacebookIcon,
-  PinterestShareButton,
+  FacebookShareButton,
   PinterestIcon,
-  WhatsappShareButton,
-  WhatsappIcon,
+  PinterestShareButton,
   TwitterShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
   XIcon,
 } from 'react-share';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import type { Recipe } from '../cms/recipes';
-import { getRecipeUrl } from 'src/methods/getRecipeUrl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import * as React from 'react';
+import { getRecipeUrl } from 'src/methods/getRecipeUrl';
+import type { Recipe } from '../cms/recipes';
 
 const size = 42;
 

@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 import * as React from 'react';
 import { CategoriesList } from './CategoriesList';
+import { getLetsCozinhaLets } from 'src/cms/singleTypes';
+import Image from 'next/image';
 import Link from 'next/link';
 
 async function WhoIsLets() {

@@ -1,9 +1,9 @@
-import logo from 'public/logo-texto.png';
-import Image from 'next/image';
-import Link from 'next/link';
-import { getLetsCozinha } from 'src/cms/singleTypes';
 import { PagesNav } from './PagesNav';
 import { SocialNav } from './SocialNav';
+import { getLetsCozinha } from 'src/cms/singleTypes';
+import Image from 'next/image';
+import Link from 'next/link';
+import logo from 'public/logo-texto.png';
 
 const ImageSection = async () => {
   const { letsCozinha } = await getLetsCozinha();

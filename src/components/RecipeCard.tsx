@@ -1,8 +1,8 @@
-import logo from '../../public/logo.png';
+import { CategoryTag } from './CategoryTag';
 import Image from 'next/image';
 import Link from 'next/link';
+import logo from '../../public/logo.png';
 import type { Recipe } from 'src/cms/recipes';
-import { CategoryTag } from './CategoryTag';
 
 export default function RecipeCard({
   recipe,

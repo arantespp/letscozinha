@@ -1,8 +1,8 @@
-import { CMS_TOKEN, CMS_URL, API_MAX_LIMIT } from './config';
-import type { CMSDataArrayResponse, CMSImages, CMSMeta } from './types';
+import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
 import { cache } from 'react';
-import qs from 'qs';
 import { mapCMSData } from './mapCMSData';
+import qs from 'qs';
+import type { CMSDataArrayResponse, CMSImages, CMSMeta } from './types';
 
 type CategoryAttributes = {
   nome: string;

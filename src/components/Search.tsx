@@ -1,10 +1,10 @@
 'use client';
 
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { useDebounce } from 'use-debounce';
-import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useDebounce } from 'use-debounce';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export function Search() {
   const searchParams = useSearchParams();

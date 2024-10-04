@@ -1,8 +1,8 @@
 'use client';
 
-import { Loading } from 'src/components/Loading';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
+import { Loading } from 'src/components/Loading';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export function SearchLoading() {
   const searchParams = useSearchParams();

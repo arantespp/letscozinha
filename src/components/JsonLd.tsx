@@ -1,4 +1,4 @@
-import type { WithContext, Thing } from 'schema-dts';
+import type { Thing, WithContext } from 'schema-dts';
 
 export function JsonLd<Schema extends Thing>({
   schema,

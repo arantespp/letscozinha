@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { HeaderNav } from './HeaderNav';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import logo from 'public/logo-texto.png';
 

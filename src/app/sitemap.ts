@@ -1,7 +1,7 @@
-import { MetadataRoute } from 'next';
 import { BASE_URL } from 'src/constants';
-import { getAllRecipes } from 'src/cms/recipes';
+import { MetadataRoute } from 'next';
 import { getAllCategories } from 'src/cms/categories';
+import { getAllRecipes } from 'src/cms/recipes';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { allRecipes } = await getAllRecipes();

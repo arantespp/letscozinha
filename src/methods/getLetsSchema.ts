@@ -1,6 +1,6 @@
-import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { Person } from 'schema-dts';
 import { getImageSchema } from './getImageSchema';
+import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 
 export async function getLetsSchema(): Promise<Person> {
   const { letsCozinhaLets } = await getLetsCozinhaLets();

@@ -1,6 +1,6 @@
-import type { Recipe } from 'src/cms/recipes';
-import type { ItemList, ListItem } from 'schema-dts';
 import { getRecipeUrl } from './getRecipeUrl';
+import type { ItemList, ListItem } from 'schema-dts';
+import type { Recipe } from 'src/cms/recipes';
 
 /**
  * https://developers.google.com/search/docs/appearance/structured-data/recipe

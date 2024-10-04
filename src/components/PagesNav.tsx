@@ -1,9 +1,9 @@
 'use client';
 
-import { sendGAEvent } from '@next/third-parties/google';
-import { INSTAGRAM_USERNAME } from 'src/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { INSTAGRAM_USERNAME } from 'src/constants';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { sendGAEvent } from '@next/third-parties/google';
 import Link from 'next/link';
 
 const navs = [

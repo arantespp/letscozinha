@@ -1,9 +1,9 @@
-import type { Recipe } from 'src/cms/recipes';
 import { Recipe as RecipeSchema } from 'schema-dts';
-import { getRecipeUrl } from './getRecipeUrl';
-import { getLetsSchema } from './getLetsSchema';
 import { getImageSchema } from './getImageSchema';
+import { getLetsSchema } from './getLetsSchema';
 import { getMarkdownAst } from './getMarkdownAst';
+import { getRecipeUrl } from './getRecipeUrl';
+import type { Recipe } from 'src/cms/recipes';
 
 /**
  * https://developers.google.com/search/docs/appearance/structured-data/recipe

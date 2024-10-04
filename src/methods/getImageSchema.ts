@@ -1,5 +1,5 @@
-import type { ImageObject } from 'schema-dts';
 import type { ImageAttributes } from 'src/cms/types';
+import type { ImageObject } from 'schema-dts';
 
 export const getImageSchema = (image: ImageAttributes): ImageObject => {
   return {

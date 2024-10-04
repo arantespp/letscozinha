@@ -1,8 +1,8 @@
 'use client';
 
+import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
-import * as React from 'react';
 import { sendGAEvent } from '@next/third-parties/google';
 
 export function RecipeInstagramLinks({

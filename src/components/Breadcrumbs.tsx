@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import * as React from 'react';
 import { JsonLd } from './JsonLd';
-import type { ListItem, BreadcrumbList } from 'schema-dts';
 import { getUrl } from '../methods/getUrl';
+import Link from 'next/link';
+import type { BreadcrumbList, ListItem } from 'schema-dts';
 
 export async function Breadcrumbs(props: {
   items: {

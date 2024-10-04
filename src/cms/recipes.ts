@@ -1,14 +1,14 @@
-import { CMS_TOKEN, CMS_URL, API_MAX_LIMIT } from './config';
+import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
+import { MeiliSearch } from 'meilisearch';
+import { cache } from 'react';
+import { mapCMSData } from './mapCMSData';
+import qs from 'qs';
 import type {
   CMSData,
   CMSDataArrayResponse,
   CMSImages,
   CMSMeta,
 } from './types';
-import { cache } from 'react';
-import qs from 'qs';
-import { mapCMSData } from './mapCMSData';
-import { MeiliSearch } from 'meilisearch';
 
 export const RECIPES_PAGE_SIZE = 15;
 

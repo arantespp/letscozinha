@@ -1,5 +1,5 @@
-import { getAllCategories } from 'src/cms/categories';
 import { CategoryTag } from 'src/components/CategoryTag';
+import { getAllCategories } from 'src/cms/categories';
 import { getAllRecipes } from 'src/cms/recipes';
 
 export async function CategoriesList({

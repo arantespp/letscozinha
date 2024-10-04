@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import logo from 'public/logo-texto.png';
-import Link from 'next/link';
 import * as React from 'react';
-import { HeaderNav } from './HeaderNav';
 import { HeaderMenu } from './HeaderMenu';
+import { HeaderNav } from './HeaderNav';
+import Image from 'next/image';
+import Link from 'next/link';
+import logo from 'public/logo-texto.png';
 
 export async function Header() {
   return (

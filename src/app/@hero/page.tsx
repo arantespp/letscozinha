@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { getLetsCozinha } from 'src/cms/singleTypes';
+import Image from 'next/image';
 
 export default async function Hero() {
   const { letsCozinha } = await getLetsCozinha();
