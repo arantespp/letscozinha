@@ -8,6 +8,7 @@ export type ImageAttributes = {
   width: number;
   height: number;
   alt?: string;
+  mime: string;
 };
 
 type Image = ImageAttributes & {

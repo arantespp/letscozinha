@@ -19,6 +19,7 @@ type RecipeAttributes = {
   descricao: string;
   slug: string;
   receita: string;
+  createdAt: string;
   updatedAt: string;
   meta_descricao: string;
   keywords: string;

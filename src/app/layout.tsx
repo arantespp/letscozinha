@@ -50,6 +50,11 @@ export const metadata: Metadata = {
     siteName: WEBSITE_NAME,
     type: 'website',
   },
+  alternates: {
+    types: {
+      'application/rss+xml': 'https://www.letscozinha.com.br/feed.xml',
+    },
+  },
 };
 
 export const viewport: Viewport = {
