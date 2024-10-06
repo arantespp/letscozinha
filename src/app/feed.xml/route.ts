@@ -1,9 +1,9 @@
-import RSS from 'rss';
-import { getLetsCozinha } from 'src/cms/singleTypes';
-import { getAllRecipes } from 'src/cms/recipes';
 import { BASE_URL, WEBSITE_NAME } from 'src/constants';
-import { getUrl } from 'src/methods/getUrl';
+import { getAllRecipes } from 'src/cms/recipes';
+import { getLetsCozinha } from 'src/cms/singleTypes';
 import { getRecipeUrl } from 'src/methods/getRecipeUrl';
+import { getUrl } from 'src/methods/getUrl';
+import RSS from 'rss';
 
 const NUMBER_OF_RECIPES_IN_FEED = 10;
 
