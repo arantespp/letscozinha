@@ -1,4 +1,5 @@
 import { CategoryTag } from './CategoryTag';
+import { LinkButton } from './LinkButton';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '../../public/logo.png';
@@ -45,12 +46,7 @@ export default function RecipeCard({
       <span className="text-text-light line-clamp-5 leading-snug">
         {recipe.descricao}
       </span>
-      <Link
-        href={href}
-        className="bg-primary text-text-dark hover:text-neutral rounded p-xs hover:bg-secondary text-center no-underline"
-      >
-        Ver Receita
-      </Link>
+      <LinkButton href={href}>Ver Receita</LinkButton>
     </div>
   );
 }

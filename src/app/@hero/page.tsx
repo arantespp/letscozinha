@@ -1,5 +1,8 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { getLetsCozinha } from 'src/cms/singleTypes';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default async function Hero() {
   const { letsCozinha } = await getLetsCozinha();
@@ -9,7 +12,7 @@ export default async function Hero() {
   const descricao = letsCozinha.descricao;
 
   return (
-    <div className="relative flex flex-col justify-center items-center min-h-[250px] lg:h-[350px]">
+    <div className="relative flex flex-col justify-center min-h-[320px] lg:h-[400px]">
       {/* <Image
         src={}
         alt="Foto da Lets"
@@ -21,11 +24,18 @@ export default async function Hero() {
       /> */}
       <div className="container relative p-sm md:p-md">
         <div className="absolute inset-0 md:inset-0 bg-white opacity-85 z-0 rounded"></div>
-        <div className="relative z-10">
+        <div className="relative z-10 flex flex-col items-center">
           <h1 className="text-5xl md:text-8xl text-center mb-lg">{titulo}</h1>
           <p className="text-text-light text-lg md:text-2xl text-center leading-snug">
             {descricao}
           </p>
+          <Link
+            href="/receitas"
+            className="no-underline text-xl md:text-2xl mt-xs rounded px-md py-sm bg-muted text-text-dark hover:bg-primary hover:text-text-dark"
+          >
+            <span className="mr-sm">Buscar receitas</span>
+            <FontAwesomeIcon icon={faSearch} />
+          </Link>
         </div>
       </div>
     </div>

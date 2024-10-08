@@ -2,6 +2,7 @@ import { BASE_URL } from 'src/constants';
 import { MetadataRoute } from 'next';
 import { getAllCategories } from 'src/cms/categories';
 import { getAllRecipes } from 'src/cms/recipes';
+import { getUrl } from 'src/methods/getUrl';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { allRecipes } = await getAllRecipes();
@@ -43,6 +44,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${BASE_URL}/conheca-a-lets`,
+      lastModified,
+    },
+    {
+      url: getUrl('/contato'),
       lastModified,
     },
     {
