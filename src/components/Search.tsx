@@ -39,13 +39,13 @@ export function Search() {
   return (
     <div className="relative flex flex-1 flex-shrink-0">
       <label htmlFor="search" className="sr-only">
-        Search
+        Buscar receitas
       </label>
       <div className="flex w-full gap-sm">
         <input
           id="search"
-          className="flex-1 px-sm py-xs border border-primary rounded placeholder-text-light"
-          placeholder="Procurar receita"
+          className="flex-1 px-sm py-sm border border-primary rounded placeholder-text-light"
+          placeholder="Digite a receita..."
           value={term}
           onChange={(e) => {
             setTerm(e.target.value);
@@ -57,7 +57,7 @@ export function Search() {
           }}
         />
         <button
-          className="flex items-center justify-center bg-primary text-white rounded w-[36px] aspect-square"
+          className="flex items-center justify-center bg-primary text-white rounded h-full aspect-square"
           onClick={() => {
             handleSearch();
           }}

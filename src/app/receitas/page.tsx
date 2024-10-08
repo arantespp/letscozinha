@@ -94,7 +94,7 @@ export default async function Page({ searchParams }: Props) {
           },
         ]}
       />
-      <h1 className="my-none">Todas as receitas</h1>
+      <h1 className="my-none">Buscar receitas</h1>
       <div>
         <div className="my-lg">
           <Search />

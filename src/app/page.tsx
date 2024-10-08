@@ -107,7 +107,7 @@ export default async function Home() {
   };
 
   return (
-    <div className="flex flex-col gap-md md:gap-xl flex-1">
+    <div className="flex flex-col gap-xl flex-1">
       <JsonLd schema={websiteSchema} />
       <React.Suspense fallback={<Loading />}>
         <FavoriteRecipes />

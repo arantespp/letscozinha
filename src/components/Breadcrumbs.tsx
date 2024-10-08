@@ -35,7 +35,7 @@ export async function Breadcrumbs(props: {
   };
 
   return (
-    <nav className="flex gap-xs mb-sm md:mb-lg leading-none">
+    <nav className="flex gap-xs mb-lg md:mb-lg leading-none">
       <JsonLd schema={breadcrumbList} />
       {props.items.map((item, index) => (
         <React.Fragment key={item.href}>
