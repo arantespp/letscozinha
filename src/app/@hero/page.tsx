@@ -33,7 +33,7 @@ export default async function Hero() {
             href="/receitas"
             className="no-underline text-xl md:text-2xl mt-xs rounded px-md py-sm bg-muted text-text-dark hover:bg-primary hover:text-text-dark"
           >
-            <span className="mr-sm">Buscar receitas</span>
+            <span className="mr-sm">Buscar Receitas</span>
             <FontAwesomeIcon icon={faSearch} />
           </Link>
         </div>
