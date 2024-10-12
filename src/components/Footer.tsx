@@ -11,7 +11,7 @@ const ImageSection = async () => {
   const descricao = letsCozinha.descricao;
 
   return (
-    <section className="flex flex-col items-center gap-sm self-center">
+    <section className="flex flex-col items-center gap-sm">
       <Link href="/">
         <Image src={logo} alt="Lets Cozinha" height={60} quality={100} />
       </Link>

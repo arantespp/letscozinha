@@ -23,7 +23,10 @@ export default async function StatusDasReceitas() {
         status.noImages = true;
       }
 
-      if (!recipe.receita.includes('##') && recipe.receita.includes('**')) {
+      if (
+        !recipe.receita.includes('## Ingredientes') ||
+        !recipe.receita.includes('## Modo de preparo')
+      ) {
         status.noFormatted = true;
       }
 

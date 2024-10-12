@@ -6,7 +6,7 @@ export const FACEBOOK_USERNAME = 'letscozinha';
 
 export const TIKTOK_USERNAME = '@letscozinha';
 
-export const INSTAGRAM_USERNAME = 'lets_cozinha';
+export const INSTAGRAM_USERNAME = 'letscozinha';
 
 export const EMAIL = 'contato@letscozinha.com.br';
 
