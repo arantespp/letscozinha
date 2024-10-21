@@ -1,29 +1,29 @@
 import { BASE_URL, WEBSITE_NAME } from 'src/constants';
-import { getAllRecipes } from 'src/cms/recipes';
 import { getLetsCozinha } from 'src/cms/singleTypes';
+import { getPosters } from 'src/cms/posters';
 import { getRecipeUrl } from 'src/methods/getRecipeUrl';
 import { getUrl } from 'src/methods/getUrl';
 import RSS from 'rss';
 
-const NUMBER_OF_RECIPES_IN_FEED = 10;
+const NUMBER_OF_RECIPES = 20;
 
 export async function GET() {
   const { letsCozinha } = await getLetsCozinha();
-  const { allRecipes } = await getAllRecipes();
+  const { posters } = await getPosters({ limit: NUMBER_OF_RECIPES });
 
   const feed = new RSS({
     title: letsCozinha.titulo,
     description: letsCozinha.descricao,
     site_url: BASE_URL,
-    feed_url: getUrl('/feed.xml'),
+    feed_url: getUrl('/ultimas-publicacoes.xml'),
     copyright: `${new Date().getFullYear()} ${WEBSITE_NAME}`,
     language: 'pt-BR',
     pubDate: new Date(),
   });
 
-  const allRecipesWithImages = allRecipes
-    .filter((recipe) => recipe.imagens?.length)
-    .slice(0, NUMBER_OF_RECIPES_IN_FEED);
+  const allRecipesWithImages = posters
+    .map((poster) => poster.receita)
+    .filter((recipe) => recipe.imagens?.length);
 
   allRecipesWithImages.forEach((recipe) => {
     const image = recipe.imagens?.[0];

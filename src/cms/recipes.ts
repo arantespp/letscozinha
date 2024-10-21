@@ -14,7 +14,7 @@ export const RECIPES_PAGE_SIZE = 15;
 
 export const RECIPES_POPULATE = ['categorias', 'imagens', 'instagram_posts'];
 
-type RecipeAttributes = {
+export type RecipeAttributes = {
   nome: string;
   descricao: string;
   slug: string;

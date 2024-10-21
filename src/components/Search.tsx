@@ -57,7 +57,7 @@ export function Search() {
           }}
         />
         <button
-          className="flex items-center justify-center bg-primary text-white rounded h-full aspect-square"
+          className="flex items-center justify-center"
           onClick={() => {
             handleSearch();
           }}

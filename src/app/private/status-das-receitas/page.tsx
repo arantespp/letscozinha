@@ -6,6 +6,16 @@ import Link from 'next/link';
 
 export const revalidate = 0;
 
+const checkIfBadSlug = (slug: string) => {
+  return (
+    /\d$/.test(slug) ||
+    slug.includes(' ') ||
+    slug.includes('receita') ||
+    slug.includes('categoria') ||
+    slug.includes('lets')
+  );
+};
+
 export default async function StatusDasReceitas() {
   const { allRecipes } = await getAllRecipes();
 
@@ -16,7 +26,7 @@ export default async function StatusDasReceitas() {
         noFormatted: false,
         noCategories: false,
         noInstagram: false,
-        slugEndsWithNumber: false,
+        badSlug: false,
       };
 
       if (!recipe.imagens || recipe.imagens.length === 0) {
@@ -38,8 +48,8 @@ export default async function StatusDasReceitas() {
         status.noInstagram = true;
       }
 
-      if (/\d$/.test(recipe.slug)) {
-        status.slugEndsWithNumber = true;
+      if (checkIfBadSlug(recipe.slug)) {
+        status.badSlug = true;
       }
 
       return { ...recipe, status };
@@ -86,12 +96,12 @@ export default async function StatusDasReceitas() {
   const categoriesWithStatus = allCategories
     .map((category) => {
       const status = {
-        slugEndsWithNumber: false,
+        badSlug: false,
         noRecipes: false,
       };
 
-      if (/\d$/.test(category.slug)) {
-        status.slugEndsWithNumber = true;
+      if (checkIfBadSlug(category.slug)) {
+        status.badSlug = true;
       }
 
       const recipes = allRecipes.filter((recipe) => {
@@ -196,7 +206,7 @@ export default async function StatusDasReceitas() {
                   </Link>
                 </td>
                 <td className="text-center">
-                  {category.status.slugEndsWithNumber ? '❌' : '✅'}
+                  {category.status.badSlug ? '❌' : '✅'}
                 </td>
                 <td className="text-center">
                   {category.status.noRecipes ? '❌' : '✅'}
@@ -247,7 +257,7 @@ export default async function StatusDasReceitas() {
                   {recipe.status.noInstagram ? '❌' : '✅'}
                 </td>
                 <td className="text-center">
-                  {recipe.status.slugEndsWithNumber ? '❌' : '✅'}
+                  {recipe.status.badSlug ? '❌' : '✅'}
                 </td>
                 <td className="text-center">
                   <a href={recipe.cmsUrl} target="_blank">

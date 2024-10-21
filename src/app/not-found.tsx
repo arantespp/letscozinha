@@ -12,7 +12,7 @@ export default async function NotFound() {
         Desculpe, mas a página que você está procurando não foi encontrada.
         Enquanto isso, você pode voltar para{' '}
       </p>
-      <HeaderNav />
+      <HeaderNav isColumn />
       <div className="my-2xl">
         <h2>Aproveite para ver as nossas receitas favoritas</h2>
         <RecipesList
