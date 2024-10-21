@@ -1,8 +1,8 @@
 import { CMS_TOKEN, CMS_URL } from './config';
+import { RECIPES_POPULATE, type RecipeAttributes, mapRecipe } from './recipes';
 import { mapCMSData } from './mapCMSData';
 import qs from 'qs';
-import type { CMSDataArrayResponse, CMSData } from './types';
-import { type RecipeAttributes, mapRecipe, RECIPES_POPULATE } from './recipes';
+import type { CMSData, CMSDataArrayResponse } from './types';
 
 type PosterAttributes = {
   receita: { data: CMSData<RecipeAttributes> };
