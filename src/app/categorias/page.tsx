@@ -18,7 +18,7 @@ export default async function CategoriesPage() {
   return (
     <>
       <h1>Categorias</h1>
-      <p>Veja as nossas categorias disponíveis:</p>
+      <p>Confira as nossas categorias:</p>
       <CategoriesList direction="row" />
     </>
   );

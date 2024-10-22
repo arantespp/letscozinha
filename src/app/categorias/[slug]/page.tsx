@@ -35,7 +35,7 @@ export async function generateMetadata(
 
   const firstImageUrl = ogImages[0];
 
-  const title = getPageTitle(`Receitas de ${category.nome} Deliciosas`);
+  const title = getPageTitle(`${category.nome}`);
 
   const description = `Encontre as melhores receitas de ${category.nome} para todas as ocasiões. Receitas saborosas que você pode preparar em casa. Explore opções tradicionais, saudáveis e irresistíveis no Lets Cozinha.`;
 
