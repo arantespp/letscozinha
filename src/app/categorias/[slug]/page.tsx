@@ -20,25 +20,9 @@ export async function generateMetadata(
     return {};
   }
 
-  const { recipes } = await getRecipes({
-    filter: { categoryId: category.id },
-  });
-
-  const categoryImagesUrls = category.imagens?.map((image) => image.url) || [];
-
-  const recipeImagesUrls =
-    recipes.flatMap((recipe) => recipe.imagens?.map((image) => image.url)) ||
-    [];
-
-  const ogImages = [...categoryImagesUrls, ...recipeImagesUrls].filter(
-    (url): url is string => !!url
-  );
-
-  const firstImageUrl = ogImages[0];
-
   const title = getPageTitle(`${category.nome}`);
 
-  const description = `Encontre as melhores receitas de ${category.nome} para todas as ocasiões. Receitas saborosas que você pode preparar em casa. Explore opções tradicionais, saudáveis e irresistíveis no Lets Cozinha.`;
+  const description = `${category.nome} para todas as ocasiões. Receitas saborosas que você pode preparar em casa. Explore opções tradicionais, saudáveis e irresistíveis no Lets Cozinha.`;
 
   return {
     title,
@@ -46,7 +30,7 @@ export async function generateMetadata(
     openGraph: {
       title,
       url: getUrl(`/categorias/${category.slug}`),
-      images: firstImageUrl,
+      type: 'website',
     },
   };
 }

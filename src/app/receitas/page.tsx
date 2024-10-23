@@ -6,6 +6,7 @@ import { SearchLoading } from './SearchLoading';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipes, searchRecipes } from 'src/cms/recipes';
 import { getUrl } from 'src/methods/getUrl';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 
 const title = getPageTitle('Busque e Descubra Novos Sabores');
@@ -80,7 +81,10 @@ async function SearchResults({
 }
 
 export default async function Page(props: Props) {
-  const searchParams = await props.searchParams;
+  const searchParams = (await props.searchParams) || {
+    page: '1',
+  };
+
   /**
    * https://github.com/vercel/next.js/issues/49297#issuecomment-1568557317
    */
@@ -112,6 +116,9 @@ export default async function Page(props: Props) {
         >
           <SearchResults searchParams={searchParams} />
         </React.Suspense>
+      </div>
+      <div className="my-sm">
+        <Link href="/receitas/todas-as-receitas">Ver todas as receitas</Link>
       </div>
     </div>
   );

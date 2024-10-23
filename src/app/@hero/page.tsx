@@ -31,7 +31,7 @@ export default async function Hero() {
           </p>
           <Link
             href="/receitas"
-            className="no-underline text-xl md:text-2xl mt-xs rounded px-md py-sm bg-muted text-text-dark hover:bg-primary hover:text-text-dark"
+            className="no-underline text-xl md:text-2xl mt-lg lg:mt-xl rounded px-md py-sm bg-muted text-text-dark hover:bg-primary hover:text-text-dark"
           >
             <span className="mr-sm">Buscar Receitas</span>
             <FontAwesomeIcon icon={faSearch} />
