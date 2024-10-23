@@ -37,28 +37,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sortByUrl = (a: { url: string }, b: { url: string }) =>
     a.url.localeCompare(b.url);
 
+  const pages = [
+    '/conheca-a-lets',
+    '/contato',
+    '/receitas/todas-as-receitas',
+    '/politica-de-privacidade',
+    '/termos-de-uso',
+    '/categorias',
+    '/receitas',
+  ];
+
   return [
     {
       url: BASE_URL,
       lastModified,
     },
-    {
-      url: `${BASE_URL}/conheca-a-lets`,
+    ...pages.map((page) => ({
+      url: getUrl(page),
       lastModified,
-    },
-    {
-      url: getUrl('/contato'),
-      lastModified,
-    },
-    {
-      url: `${BASE_URL}/categorias`,
-      lastModified,
-    },
+    })),
     ...categoriesSitemap.sort(sortByUrl),
-    {
-      url: `${BASE_URL}/receitas`,
-      lastModified,
-    },
     ...recipesSitemap.sort(sortByUrl),
   ];
 }
