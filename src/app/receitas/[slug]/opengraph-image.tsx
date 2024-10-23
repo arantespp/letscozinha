@@ -5,8 +5,6 @@ type Params = {
   slug: string;
 };
 
-export const runtime = 'edge';
-
 /**
  * https://nextjs.org/docs/app/api-reference/functions/generate-image-metadata
  */
