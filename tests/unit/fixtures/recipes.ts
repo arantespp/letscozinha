@@ -1,3 +1,6 @@
+/**
+ * Run `pnpm run print-recipe --id RECIPE_ID` to print a recipe from the CMS
+ */
 export const recipe50 = {
   id: 50,
   nome: 'Acém ao forno com batatas ao murro',
@@ -279,4 +282,61 @@ export const recipe79 = {
       url: 'https://www.instagram.com/p/CHk5l_2lHKg/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
     },
   ],
+};
+
+export const recipe87 = {
+  id: 87,
+  nome: 'Molho branco / Molho bechamel',
+  receita:
+    '## Ingredientes\n' +
+    '\n' +
+    '- Cebola e alho picados\n' +
+    '- 25g de manteiga\n' +
+    '- 25g de farinha de trigo\n' +
+    '- 700ml de leite\n' +
+    '- Sal, pimenta do reino e noz moscada a gosto\n' +
+    '\n' +
+    '## Modo de preparo\n' +
+    '\n' +
+    'Em uma panela, em fogo médio, adicione a farinha, a manteiga, o alho e a cebola. Mexa sem parar até formar uma massinha uniforme.\n' +
+    'Neste ponto, acrescente o leite e os temperos. Continue mexendo até o creme engrossar.\n' +
+    '\n' +
+    'De preferência, utilize um batedor de claras para mexer, evitando que fique qualquer pelotinha de farinha.\n' +
+    '\n' +
+    'Esta é a base do molho.\n' +
+    '\n' +
+    'A partir daí, você pode acrescentar outros sabores e cores a ele, como, por exemplo, queijos, brócolis, bacon, azeitonas, ervilha etc.\n' +
+    '\n' +
+    '### Algumas sugestões de pratos com molho branco\n' +
+    '\n' +
+    '- Lasanha de abobrinha com molho branco e frango desfiado. No caso desta lasanha, não há massa: quem faz o lugar da massa é a própria abobrinha cortada em tiras finas;\n' +
+    '- Espaguete com molho branco e brócolis.\n' +
+    '- Lasanha com molho branco, bacon e brócolis feita com massa de pastel.\n' +
+    '- Batata gratinada com molho branco e queijo.\n',
+  createdAt: '2024-07-12T15:08:52.146Z',
+  updatedAt: '2024-08-26T18:13:34.355Z',
+  slug: 'molho-branco-molho-bechamel',
+  keywords:
+    'molho branco, molho bechamel, receita de molho branco, como fazer molho bechamel, molho para lasanha, molho para gratinar, molho cremoso, molho fácil, molho caseiro, molho para massas',
+  descricao:
+    'Aprenda a fazer o clássico molho branco, também conhecido como molho bechamel, de forma simples e rápida! Com ingredientes que você provavelmente já tem em casa, esta receita é a base perfeita para diversos pratos deliciosos como lasanha, espaguete, batata gratinada e muito mais. Enriquecido com cebola, alho e temperos ao seu gosto, o molho pode ser personalizado com queijos, brócolis, bacon, e azeitonas. Transforme suas refeições com este molho cremoso e versátil!',
+  meta_descricao:
+    'Descubra como fazer o clássico molho branco (bechamel) de forma simples e rápida com nossa receita fácil! Ideal para lasanha, espaguete e mais.',
+  categorias: [
+    {
+      id: 10,
+      nome: 'Maionese/Molhos',
+      createdAt: '2024-07-02T20:22:16.175Z',
+      updatedAt: '2024-07-17T23:40:31.718Z',
+      slug: 'maionese-molhos',
+      descricao:
+        'Descubra as melhores receitas de maionese e molhos no nosso site! Desde o clássico maionese caseiro até molhos gourmet, temos uma variedade de opções para complementar qualquer prato. Nossas receitas são fáceis de seguir, utilizando ingredientes acessíveis e técnicas explicadas passo a passo. Seja para uma salada refrescante, um hambúrguer suculento ou um acompanhamento inusitado, nossos molhos são a escolha perfeita para incrementar suas refeições. Aprenda a fazer maionese vegana, maionese de alho, molho de mostarda e mel, entre outros. Surpreenda todos à mesa com sabores irresistíveis e eleve o nível das suas criações culinárias!',
+      keywords:
+        'receitas de maionese, molhos caseiros, maionese vegana, receitas de molhos, maionese de alho, molho de mostarda e mel, como fazer maionese, molho para salada, molho para hambúrguer, receitas de molhos gourmet',
+      meta_descricao:
+        'Encontre as melhores receitas de maionese e molhos caseiros para elevar suas refeições. Fácil de fazer, delicioso de saborear!',
+    },
+  ],
+  imagens: undefined,
+  instagram_posts: [],
 };

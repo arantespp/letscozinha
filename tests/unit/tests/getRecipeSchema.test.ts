@@ -1,5 +1,5 @@
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
-import { recipe50, recipe79 } from '../fixtures/recipes';
+import { recipe50, recipe79, recipe87 } from '../fixtures/recipes';
 
 test('getRecipeSchema for recipe50 should return a valid RecipeSchema', async () => {
   const schema = await getRecipeSchema(recipe50);
@@ -169,4 +169,13 @@ test('getRecipeSchema for recipe79 should return a valid RecipeSchema', async ()
       },
     ],
   });
+});
+
+test('getRecipeSchema for recipe87 should return a valid RecipeSchema', async () => {
+  const schema = await getRecipeSchema(recipe87);
+
+  /**
+   * Do not have images
+   */
+  expect(schema).toEqual(null);
 });

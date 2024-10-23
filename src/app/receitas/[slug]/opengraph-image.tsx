@@ -27,11 +27,13 @@ export async function generateImageMetadata({
   };
 
   if (!images) {
-    return {
-      ...commonMetadata,
-      id: 0,
-      alt: recipe?.nome,
-    };
+    return [
+      {
+        ...commonMetadata,
+        id: 0,
+        alt: recipe?.nome,
+      },
+    ];
   }
 
   return images.map((image, idx) => ({
@@ -56,8 +58,6 @@ export default async function Image({
   const recipe = await findRecipe({ slug });
 
   const imageUrl = recipe?.imagens?.[id]?.url;
-
-  console.log('imageUrl', imageUrl);
 
   if (!imageUrl) {
     const fontData = await fetch(
