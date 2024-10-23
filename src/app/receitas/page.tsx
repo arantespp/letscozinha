@@ -24,14 +24,20 @@ export const metadata: Metadata = {
   },
 };
 
-type Props = {
-  searchParams?: Promise<{
-    search?: string;
-    page?: string;
-  }>;
+type SearchParams = {
+  search?: string;
+  page?: string;
 };
 
-async function SearchResults({ searchParams }: Props) {
+type Props = {
+  searchParams?: Promise<SearchParams>;
+};
+
+async function SearchResults({
+  searchParams,
+}: {
+  searchParams?: SearchParams;
+}) {
   const searchTitle = searchParams?.search ? 'Resultados da busca' : 'Receitas';
 
   try {
