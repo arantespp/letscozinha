@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { getAllCategories } from 'src/cms/categories';
 import { getAllRecipes } from 'src/cms/recipes';
+import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import Link from 'next/link';
 
 export const revalidate = 0;
@@ -19,41 +20,69 @@ const checkIfBadSlug = (slug: string) => {
 export default async function StatusDasReceitas() {
   const { allRecipes } = await getAllRecipes();
 
-  const recipesWithStatus = allRecipes
-    .map((recipe) => {
-      const status = {
-        noImages: false,
-        noFormatted: false,
-        noCategories: false,
-        noInstagram: false,
-        badSlug: false,
-      };
+  const recipesWithStatus = (
+    await Promise.all(
+      allRecipes.map(async (recipe) => {
+        const schema = await getRecipeSchema(recipe);
 
-      if (!recipe.imagens || recipe.imagens.length === 0) {
-        status.noImages = true;
-      }
+        const noFormatted = (() => {
+          if (!schema?.recipeIngredient) {
+            return true;
+          }
 
-      if (
-        !recipe.receita.includes('## Ingredientes') ||
-        !recipe.receita.includes('## Modo de preparo')
-      ) {
-        status.noFormatted = true;
-      }
+          if (
+            Array.isArray(schema?.recipeIngredient) &&
+            schema?.recipeIngredient.length <= 1
+          ) {
+            return true;
+          }
 
-      if (!recipe.categorias || recipe.categorias.length === 0) {
-        status.noCategories = true;
-      }
+          if (!schema?.recipeInstructions) {
+            return true;
+          }
 
-      if (!recipe.instagram_posts || recipe.instagram_posts.length === 0) {
-        status.noInstagram = true;
-      }
+          if (
+            Array.isArray(schema?.recipeInstructions) &&
+            schema?.recipeInstructions.length <= 1
+          ) {
+            return true;
+          }
 
-      if (checkIfBadSlug(recipe.slug)) {
-        status.badSlug = true;
-      }
+          return false;
+        })();
 
-      return { ...recipe, status };
-    })
+        const status = {
+          noImages: false,
+          noFormatted: false,
+          noCategories: false,
+          noInstagram: false,
+          badSlug: false,
+        };
+
+        if (!recipe.imagens || recipe.imagens.length === 0) {
+          status.noImages = true;
+        }
+
+        if (noFormatted) {
+          status.noFormatted = true;
+        }
+
+        if (!recipe.categorias || recipe.categorias.length === 0) {
+          status.noCategories = true;
+        }
+
+        if (!recipe.instagram_posts || recipe.instagram_posts.length === 0) {
+          status.noInstagram = true;
+        }
+
+        if (checkIfBadSlug(recipe.slug)) {
+          status.badSlug = true;
+        }
+
+        return { ...recipe, status };
+      })
+    )
+  )
     .map((recipe) => {
       const cmsUrl = `${process.env.CMS_URL}/admin/content-manager/collection-types/api::lets-cozinha-receita.lets-cozinha-receita/${recipe.id}`;
       const isComplete = Object.values(recipe.status).every((value) => {

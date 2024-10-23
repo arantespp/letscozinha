@@ -13,6 +13,7 @@ import { RecipeImages } from 'src/components/RecipeImages';
 import { RecipeInstagramLinks } from 'src/components/RecipeInstagramLinks';
 import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
+import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import { getUrl } from 'src/methods/getUrl';
@@ -20,7 +21,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
@@ -32,20 +33,18 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  { params }: Props,
+  props: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const recipe = await findRecipe({ slug: params.slug });
+  const { letsCozinhaLets } = await getLetsCozinhaLets();
 
   if (!recipe) {
     return {};
   }
 
-  const ogImageUrl = getUrl(`/receitas/${recipe.slug}/og`);
-
   const url = getUrl(`/receitas/${recipe.slug}`);
-
-  const parentMetadata = await parent;
 
   const title = getPageTitle(recipe.nome);
 
@@ -54,11 +53,13 @@ export async function generateMetadata(
     description: recipe.meta_descricao,
     keywords: recipe.keywords,
     openGraph: {
-      ...parentMetadata.openGraph,
       title,
       description: recipe.meta_descricao,
-      images: ogImageUrl,
       url,
+      type: 'article',
+      publishedTime: recipe.createdAt,
+      modifiedTime: recipe.updatedAt,
+      authors: letsCozinhaLets.nome,
     },
   };
 }
@@ -74,7 +75,8 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
   );
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params;
   const recipe = await findRecipe({ slug: params.slug });
 
   if (!recipe) {

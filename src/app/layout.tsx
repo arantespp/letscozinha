@@ -38,14 +38,6 @@ export const metadata: Metadata = {
   keywords:
     'receitas deliciosas, pratos gourmet, dicas de culinária, tutoriais de cozinha',
   openGraph: {
-    images: [
-      {
-        url: 'https://www.letscozinha.com.br/logo-og.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Lets Cozinha logo',
-      },
-    ],
     url: BASE_URL,
     siteName: WEBSITE_NAME,
     type: 'website',

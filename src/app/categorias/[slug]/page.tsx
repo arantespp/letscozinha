@@ -7,12 +7,13 @@ import { getUrl } from 'src/methods/getUrl';
 import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata(
-  { params }: Props,
+  props: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const category = await findCategory({ slug: params.slug });
 
   if (!category) {
@@ -58,15 +59,14 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: {
+export default async function Page(props: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const category = await findCategory({ slug: params.slug });
 
   if (!category) {
@@ -97,7 +97,7 @@ export default async function Page({
           },
         ]}
       />
-      <h1>Receitas de {category.nome} Deliciosas</h1>
+      <h1>{category.nome}</h1>
       <RecipesList
         addCarouselSchema
         recipes={recipes}

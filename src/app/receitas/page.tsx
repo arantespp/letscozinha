@@ -25,10 +25,10 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  searchParams?: {
+  searchParams?: Promise<{
     search?: string;
     page?: string;
-  };
+  }>;
 };
 
 async function SearchResults({ searchParams }: Props) {
@@ -73,7 +73,8 @@ async function SearchResults({ searchParams }: Props) {
   }
 }
 
-export default async function Page({ searchParams }: Props) {
+export default async function Page(props: Props) {
+  const searchParams = await props.searchParams;
   /**
    * https://github.com/vercel/next.js/issues/49297#issuecomment-1568557317
    */
