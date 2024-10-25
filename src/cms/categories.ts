@@ -1,6 +1,6 @@
 import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
-import { cache } from 'react';
 import { mapCMSData } from './mapCMSData';
+import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type { CMSDataArrayResponse, CMSImages, CMSMeta } from './types';
 
@@ -33,34 +33,40 @@ export const mapCategory = (data: CMSCategoriesResponse['data'][0]) => {
 
 export type Category = ReturnType<typeof mapCategory>;
 
-export const getAllCategories = cache(async () => {
-  const allData = [];
-  let page = 1;
+export const getAllCategories = unstable_cache(
+  async () => {
+    const allData = [];
+    let page = 1;
 
-  while (true) {
-    const query = qs.stringify({
-      pagination: {
-        page,
-        pageSize: API_MAX_LIMIT,
-      },
-      sort: ['nome:asc'],
-    });
+    while (true) {
+      const query = qs.stringify({
+        pagination: {
+          page,
+          pageSize: API_MAX_LIMIT,
+        },
+        sort: ['nome:asc'],
+      });
 
-    const { data, meta } = await fetchCategories(query);
+      const { data, meta } = await fetchCategories(query);
 
-    allData.push(...data);
+      allData.push(...data);
 
-    if (meta?.pagination.pageCount === page) {
-      break;
+      if (meta?.pagination.pageCount === page) {
+        break;
+      }
+
+      page++;
     }
 
-    page++;
+    const allCategories = allData.map(mapCategory);
+
+    return { allCategories };
+  },
+  ['getAllCategories'],
+  {
+    revalidate: 60 * 60 * 24, // 24 hours
   }
-
-  const allCategories = allData.map(mapCategory);
-
-  return { allCategories };
-});
+);
 
 export const findCategory = async ({
   id,

@@ -1,7 +1,7 @@
 import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
 import { MeiliSearch } from 'meilisearch';
-import { cache } from 'react';
 import { mapCMSData } from './mapCMSData';
+import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type {
   CMSData,
@@ -59,35 +59,41 @@ export const mapRecipe = (data: CMSRecipesResponse['data'][0]) => {
 
 export type Recipe = ReturnType<typeof mapRecipe>;
 
-export const getAllRecipes = cache(async () => {
-  const allData = [];
-  let page = 1;
+export const getAllRecipes = unstable_cache(
+  async () => {
+    const allData = [];
+    let page = 1;
 
-  while (true) {
-    const query = qs.stringify({
-      pagination: {
-        page,
-        pageSize: API_MAX_LIMIT,
-      },
-      populate: RECIPES_POPULATE,
-      sort: ['updatedAt:desc'],
-    });
+    while (true) {
+      const query = qs.stringify({
+        pagination: {
+          page,
+          pageSize: API_MAX_LIMIT,
+        },
+        populate: RECIPES_POPULATE,
+        sort: ['updatedAt:desc'],
+      });
 
-    const { data, meta } = await fetchRecipes(query);
+      const { data, meta } = await fetchRecipes(query);
 
-    allData.push(...data);
+      allData.push(...data);
 
-    if (meta?.pagination.pageCount === page) {
-      break;
+      if (meta?.pagination.pageCount === page) {
+        break;
+      }
+
+      page++;
     }
 
-    page++;
+    const allRecipes = allData.map(mapRecipe);
+
+    return { allRecipes };
+  },
+  ['getAllRecipes'],
+  {
+    revalidate: 60 * 60 * 24, // 24 hours
   }
-
-  const allRecipes = allData.map(mapRecipe);
-
-  return { allRecipes };
-});
+);
 
 export const findRecipe = async ({
   id,
@@ -185,7 +191,7 @@ export const searchRecipes = async ({ search }: { search: string }) => {
   return { recipes, meta };
 };
 
-export const searchSimilarRecipes = cache(
+export const searchSimilarRecipes = unstable_cache(
   async ({ recipeId }: { recipeId: number }) => {
     try {
       const id = `${process.env.MEILISEARCH_INDEX}-${recipeId}`;
@@ -201,5 +207,9 @@ export const searchSimilarRecipes = cache(
     } catch {
       return [];
     }
+  },
+  ['searchSimilarRecipes'],
+  {
+    revalidate: 60 * 60 * 24, // 24 hours
   }
 );
