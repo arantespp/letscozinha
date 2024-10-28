@@ -2,6 +2,8 @@ import { ImageResponse } from 'next/og';
 import { findCategory } from 'src/cms/categories';
 import { getRecipes } from 'src/cms/recipes';
 
+export const runtime = 'edge';
+
 type Params = {
   slug: string;
 };

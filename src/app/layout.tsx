@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Analytics } from '@vercel/analytics/react';
 import { BASE_URL, WEBSITE_NAME } from 'src/constants';
 import { Footer } from 'src/components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -82,7 +81,6 @@ export default function RootLayout({
           </div>
         </main>
         <Footer />
-        <Analytics mode="production" />
         {isProduction && <SpeedInsights />}
       </body>
       {isProduction && <GoogleAnalytics gaId="G-KBBBK8ZDJG" />}

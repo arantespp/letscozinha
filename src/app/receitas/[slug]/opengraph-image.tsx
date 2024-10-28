@@ -1,6 +1,8 @@
 import { ImageResponse } from 'next/og';
 import { findRecipe } from 'src/cms/recipes';
 
+export const runtime = 'edge';
+
 type Params = {
   slug: string;
 };

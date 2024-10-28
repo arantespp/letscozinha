@@ -95,15 +95,6 @@ export default async function Home() {
     '@type': 'WebSite',
     url: BASE_URL,
     name: WEBSITE_NAME,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: new URL('/receitas?search={search_term_string}', BASE_URL)
-          .href,
-      },
-      'query-input': 'required name=search_term_string',
-    } as any,
   };
 
   return (

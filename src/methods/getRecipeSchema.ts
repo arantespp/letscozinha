@@ -189,7 +189,7 @@ export async function getRecipeSchema(
     }),
     author: await getLetsSchema(),
     datePublished: recipe.updatedAt,
-    description: recipe.descricao,
+    description: recipe.meta_descricao,
     keywords: recipe.keywords,
     recipeIngredient,
     recipeCategory,
