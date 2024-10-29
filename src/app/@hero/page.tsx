@@ -1,4 +1,4 @@
-import { SearchIcon } from 'src/icons/lazyIcons';
+import { SearchIcon } from 'src/icons/icons';
 import { getLetsCozinha } from 'src/cms/singleTypes';
 import Image from 'next/image';
 import Link from 'next/link';

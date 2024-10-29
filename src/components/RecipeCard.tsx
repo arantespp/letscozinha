@@ -44,7 +44,7 @@ export default function RecipeCard({
         ))}
       </div>
       <span className="text-text-light line-clamp-5 leading-snug">
-        {recipe.descricao}
+        {recipe.meta_descricao}
       </span>
       <LinkButton href={href}>Ver Receita</LinkButton>
     </div>

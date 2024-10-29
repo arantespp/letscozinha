@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { SearchIcon, SpinnerIcon } from 'src/icons/lazyIcons';
+import { SearchIcon, SpinnerIcon } from 'src/icons/icons';
 import { useDebounce } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 

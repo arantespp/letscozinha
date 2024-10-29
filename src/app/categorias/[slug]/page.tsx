@@ -1,4 +1,5 @@
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { Markdown } from 'src/components/Markdown';
 import { RecipesList } from 'src/components/RecipesList';
 import { findCategory, getAllCategories } from 'src/cms/categories';
 import { getPageTitle } from 'src/methods/getPageTitle';
@@ -82,6 +83,8 @@ export default async function Page(props: {
         ]}
       />
       <h1>{category.nome}</h1>
+      <Markdown source={category.descricao} />
+      <h2>Receitas</h2>
       <RecipesList
         addCarouselSchema
         recipes={recipes}

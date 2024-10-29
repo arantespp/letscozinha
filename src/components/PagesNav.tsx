@@ -1,7 +1,7 @@
 'use client';
 
 import { INSTAGRAM_USERNAME } from 'src/constants';
-import { InstagramIcon } from 'src/icons/lazyIcons';
+import { InstagramIcon } from 'src/icons/icons';
 import { sendGAEvent } from '@next/third-parties/google';
 import Link from 'next/link';
 

@@ -1,4 +1,4 @@
-import { LinkIcon } from 'src/icons/lazyIcons';
+import { LinkIcon } from 'src/icons/icons';
 import { getAllCategories } from 'src/cms/categories';
 import { getAllRecipes } from 'src/cms/recipes';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';

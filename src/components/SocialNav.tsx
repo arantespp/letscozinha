@@ -13,7 +13,7 @@ import {
   InstagramIcon,
   PinterestIcon,
   TiktokIcon,
-} from 'src/icons/lazyIcons';
+} from 'src/icons/icons';
 import { sendGAEvent } from '@next/third-parties/google';
 
 const socialNavs = [

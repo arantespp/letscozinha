@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { InstagramIcon } from 'src/icons/lazyIcons';
+import { InstagramIcon } from 'src/icons/icons';
 import { sendGAEvent } from '@next/third-parties/google';
 
 export function RecipeInstagramLinks({

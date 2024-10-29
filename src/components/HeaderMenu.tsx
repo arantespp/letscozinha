@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { BarsIcon } from 'src/icons/lazyIcons';
+import { BarsIcon } from 'src/icons/icons';
 import { HeaderNav } from './HeaderNav';
 import Image from 'next/image';
 import logo from 'public/logo-texto.png';

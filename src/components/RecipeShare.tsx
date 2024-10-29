@@ -12,7 +12,7 @@ import {
   WhatsappShareButton,
   XIcon,
 } from 'react-share';
-import { LinkIcon } from 'src/icons/lazyIcons';
+import { LinkIcon } from 'src/icons/icons';
 import { getRecipeUrl } from 'src/methods/getRecipeUrl';
 import type { Recipe } from '../cms/recipes';
 
