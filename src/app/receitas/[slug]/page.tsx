@@ -67,6 +67,10 @@ export async function generateMetadata(
 async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
   const similarRecipes = await searchSimilarRecipes({ recipeId: recipe.id });
 
+  if (similarRecipes.length === 0) {
+    return null;
+  }
+
   return (
     <div className="md:mt-lg">
       <h2>Confira também</h2>
