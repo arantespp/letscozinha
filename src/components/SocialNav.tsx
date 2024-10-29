@@ -7,47 +7,46 @@ import {
   PINTEREST_USERNAME,
   TIKTOK_USERNAME,
 } from 'src/constants';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import {
-  faFacebook,
-  faInstagram,
-  faPinterest,
-  faTiktok,
-} from '@fortawesome/free-brands-svg-icons';
+  EnvelopeIcon,
+  FacebookIcon,
+  InstagramIcon,
+  PinterestIcon,
+  TiktokIcon,
+} from 'src/icons/lazyIcons';
 import { sendGAEvent } from '@next/third-parties/google';
 
 const socialNavs = [
   {
-    icon: faInstagram,
+    icon: <InstagramIcon />,
     label: `@${INSTAGRAM_USERNAME}`,
     href: `https://www.instagram.com/${INSTAGRAM_USERNAME}`,
     'aria-label': 'Instagram',
     event: 'instagram_click',
   },
   {
-    icon: faFacebook,
+    icon: <FacebookIcon />,
     label: `/${FACEBOOK_USERNAME}`,
     href: `https://www.facebook.com/${FACEBOOK_USERNAME}`,
     'aria-label': 'Facebook',
     event: 'facebook_click',
   },
   {
-    icon: faTiktok,
+    icon: <TiktokIcon />,
     label: `${TIKTOK_USERNAME}`,
     href: `https://www.tiktok.com/${TIKTOK_USERNAME}`,
     'aria-label': 'TikTok',
     event: 'tiktok_click',
   },
   {
-    icon: faPinterest,
+    icon: <PinterestIcon />,
     label: `/${PINTEREST_USERNAME}`,
     href: `https://www.pinterest.com/${PINTEREST_USERNAME}`,
     'aria-label': 'Pinterest',
     event: 'pinterest_click',
   },
   {
-    icon: faEnvelope,
+    icon: <EnvelopeIcon />,
     label: `${EMAIL}`,
     href: `mailto:${EMAIL}`,
     'aria-label': 'Email',
@@ -80,9 +79,7 @@ export const SocialNav = ({
             sendGAEvent('event', link.event);
           }}
         >
-          <span className={iconClassName}>
-            <FontAwesomeIcon icon={link.icon} />
-          </span>
+          <span className={iconClassName}>{link.icon}</span>
           {!noLabel && <span>{link.label}</span>}
         </a>
       ))}

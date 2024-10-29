@@ -1,5 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { LinkIcon } from 'src/icons/lazyIcons';
 import { getAllCategories } from 'src/cms/categories';
 import { getAllRecipes } from 'src/cms/recipes';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
@@ -242,7 +241,7 @@ export default async function StatusDasReceitas() {
                 </td>
                 <td className="text-center">
                   <a href={category.cmsUrl} target="_blank">
-                    <FontAwesomeIcon icon={faLink} />
+                    <LinkIcon />
                   </a>
                 </td>
               </tr>
@@ -290,7 +289,7 @@ export default async function StatusDasReceitas() {
                 </td>
                 <td className="text-center">
                   <a href={recipe.cmsUrl} target="_blank">
-                    <FontAwesomeIcon icon={faLink} />
+                    <LinkIcon />
                   </a>
                 </td>
               </tr>

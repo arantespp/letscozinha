@@ -1,8 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { SearchIcon, SpinnerIcon } from 'src/icons/lazyIcons';
 import { useDebounce } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -62,11 +61,7 @@ export function Search() {
             handleSearch();
           }}
         >
-          {debouncedIsSearching ? (
-            <FontAwesomeIcon icon={faSpinner} spin />
-          ) : (
-            <FontAwesomeIcon icon={faSearch} />
-          )}
+          {debouncedIsSearching ? <SpinnerIcon spin /> : <SearchIcon />}
         </button>
       </div>
     </div>

@@ -1,8 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { InstagramIcon } from 'src/icons/lazyIcons';
 import { sendGAEvent } from '@next/third-parties/google';
 
 export function RecipeInstagramLinks({
@@ -33,7 +32,7 @@ export function RecipeInstagramLinks({
             className="no-underline"
           >
             <span className="text-[1.5em] mr-xs align-[-3px]">
-              <FontAwesomeIcon icon={faInstagram} />
+              <InstagramIcon />
             </span>{' '}
             Confira a receita no Instagram
             {hasComma ? ',' : ''}

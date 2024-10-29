@@ -1,8 +1,7 @@
 'use client';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { INSTAGRAM_USERNAME } from 'src/constants';
-import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { InstagramIcon } from 'src/icons/lazyIcons';
 import { sendGAEvent } from '@next/third-parties/google';
 import Link from 'next/link';
 
@@ -30,7 +29,7 @@ const navs = [
   },
   {
     href: `https://www.instagram.com/${INSTAGRAM_USERNAME}/`,
-    label: <FontAwesomeIcon className="text-[1.5em]" icon={faInstagram} />,
+    label: <InstagramIcon className="text-[1.5em]" />,
     'aria-label': 'Instagram',
     onClick: () => {
       sendGAEvent('event', 'instagram_click');

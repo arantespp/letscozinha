@@ -12,8 +12,7 @@ import {
   WhatsappShareButton,
   XIcon,
 } from 'react-share';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { LinkIcon } from 'src/icons/lazyIcons';
 import { getRecipeUrl } from 'src/methods/getRecipeUrl';
 import type { Recipe } from '../cms/recipes';
 
@@ -89,7 +88,7 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
             className="flex justify-center items-center bg-primary text-white rounded-full"
             aria-label="Copiar link"
           >
-            <FontAwesomeIcon icon={faLink} />
+            <LinkIcon />
           </button>
         </CopyToClipboard>
         {isCopied && <span className="text-text-light">Link copiado!</span>}
