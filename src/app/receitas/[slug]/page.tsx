@@ -17,6 +17,7 @@ import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import { getUrl } from 'src/methods/getUrl';
+import { getWebsiteName } from 'src/methods/getWebsiteName';
 import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
 
@@ -60,6 +61,7 @@ export async function generateMetadata(
       publishedTime: recipe.createdAt,
       modifiedTime: recipe.updatedAt,
       authors: letsCozinhaLets.nome,
+      siteName: getWebsiteName(),
     },
   };
 }

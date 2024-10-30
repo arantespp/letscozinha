@@ -5,6 +5,7 @@ import { getLetsCozinha, getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { getLetsSchema } from 'src/methods/getLetsSchema';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getUrl } from 'src/methods/getUrl';
+import { getWebsiteName } from 'src/methods/getWebsiteName';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 
@@ -25,6 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
       description: letsCozinhaLets.resumo,
       images: letsCozinhaLets.imagem.url,
       url: getUrl('/conheca-a-lets'),
+      type: 'website',
+      siteName: getWebsiteName(),
     },
   };
 }

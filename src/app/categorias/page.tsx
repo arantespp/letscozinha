@@ -2,6 +2,7 @@ import * as React from 'react';
 import { CategoriesList } from 'src/components/CategoriesList';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getUrl } from 'src/methods/getUrl';
+import { getWebsiteName } from 'src/methods/getWebsiteName';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: getUrl('/categorias'),
     type: 'website',
+    siteName: getWebsiteName(),
   },
 };
 

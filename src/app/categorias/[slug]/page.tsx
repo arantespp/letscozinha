@@ -5,6 +5,7 @@ import { findCategory, getAllCategories } from 'src/cms/categories';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipes } from 'src/cms/recipes';
 import { getUrl } from 'src/methods/getUrl';
+import { getWebsiteName } from 'src/methods/getWebsiteName';
 import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
 
@@ -32,6 +33,7 @@ export async function generateMetadata(
       title,
       url: getUrl(`/categorias/${category.slug}`),
       type: 'website',
+      siteName: getWebsiteName(),
     },
   };
 }

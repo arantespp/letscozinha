@@ -6,6 +6,7 @@ import { SearchLoading } from './SearchLoading';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipes, searchRecipes } from 'src/cms/recipes';
 import { getUrl } from 'src/methods/getUrl';
+import { getWebsiteName } from 'src/methods/getWebsiteName';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: getUrl('/receitas'),
     type: 'website',
+    siteName: getWebsiteName(),
   },
 };
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BASE_URL, WEBSITE_NAME } from 'src/constants';
+import { BASE_URL } from 'src/constants';
 import { Footer } from 'src/components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Header } from 'src/components/Header';
@@ -7,6 +7,7 @@ import { LayoutAside } from 'src/components/LayoutAside';
 import { Lora, Playfair_Display } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { getPageTitle } from 'src/methods/getPageTitle';
+import { getWebsiteName } from 'src/methods/getWebsiteName';
 import './fa.css';
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     'receitas deliciosas, pratos gourmet, dicas de culinária, tutoriais de cozinha',
   openGraph: {
     url: BASE_URL,
-    siteName: WEBSITE_NAME,
+    siteName: getWebsiteName(),
     type: 'website',
   },
   alternates: {
