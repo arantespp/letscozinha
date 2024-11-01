@@ -2,6 +2,8 @@ import { ImageResponse } from 'next/og';
 import { findRecipe } from 'src/cms/recipes';
 import { getFontData } from 'src/methods/getFontData';
 
+export const revalidate = 0;
+
 type Params = {
   slug: string;
 };
