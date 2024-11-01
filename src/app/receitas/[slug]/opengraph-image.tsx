@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { findRecipe } from 'src/cms/recipes';
-
-export const runtime = 'edge';
+import { getFontData } from 'src/methods/getFontData';
 
 type Params = {
   slug: string;
@@ -60,9 +59,7 @@ export default async function Image({
   const imageUrl = recipe?.imagens?.[id]?.url;
 
   if (!imageUrl) {
-    const fontData = await fetch(
-      new URL('../../../../assets/PlayfairDisplay-Regular.ttf', import.meta.url)
-    ).then((res) => res.arrayBuffer());
+    const fontData = await getFontData();
 
     return new ImageResponse(
       (

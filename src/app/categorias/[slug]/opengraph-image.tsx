@@ -1,8 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { findCategory } from 'src/cms/categories';
+import { getFontData } from 'src/methods/getFontData';
 import { getRecipes } from 'src/cms/recipes';
-
-export const runtime = 'edge';
 
 type Params = {
   slug: string;
@@ -129,9 +128,7 @@ export default async function OpenGraphImage({
     }
   }
 
-  const fontData = await fetch(
-    new URL('../../../../assets/PlayfairDisplay-Regular.ttf', import.meta.url)
-  ).then((res) => res.arrayBuffer());
+  const fontData = await getFontData();
 
   return new ImageResponse(
     (
