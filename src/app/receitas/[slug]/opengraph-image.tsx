@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { findRecipe } from 'src/cms/recipes';
 import { getFontData } from 'src/methods/getFontData';
 
-export const revalidate = 0;
+export const revalidate = 86400; // 24 hours
 
 type Params = {
   slug: string;

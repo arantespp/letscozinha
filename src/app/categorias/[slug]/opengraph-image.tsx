@@ -3,6 +3,8 @@ import { findCategory } from 'src/cms/categories';
 import { getFontData } from 'src/methods/getFontData';
 import { getRecipes } from 'src/cms/recipes';
 
+export const revalidate = 86400; // 24 hours
+
 type Params = {
   slug: string;
 };
