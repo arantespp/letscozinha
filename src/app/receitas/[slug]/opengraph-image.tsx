@@ -1,7 +1,11 @@
 import { ImageResponse } from 'next/og';
 import { findRecipe } from 'src/cms/recipes';
-import { getFontData } from 'src/methods/getFontData';
+import { join } from 'node:path';
+import { readFile } from 'node:fs/promises';
 
+/**
+ * It cannot be edge because edge functions do not support revalidation.
+ */
 export const revalidate = 86400; // 24 hours
 
 type Params = {
@@ -61,7 +65,9 @@ export default async function Image({
   const imageUrl = recipe?.imagens?.[id]?.url;
 
   if (!imageUrl) {
-    const fontData = await getFontData();
+    const fontData = await readFile(
+      join(process.cwd(), 'assets', 'PlayfairDisplay-Regular.ttf')
+    );
 
     return new ImageResponse(
       (
