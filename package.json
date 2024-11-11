@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "cp -r assets/ .next/assets/",
+    "postbuild": "cp -r assets/ .next/assets/ && ls && ls .next",
     "start": "next start",
     "lint": "next lint",
     "test": "jest --projects tests/unit",
