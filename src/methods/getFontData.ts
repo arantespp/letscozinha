@@ -1,13 +1,8 @@
-import { join } from 'node:path';
-import { readFile, readdir } from 'node:fs/promises';
+import { getUrl } from './getUrl';
 
 export const getFontData = async (): Promise<Buffer | ArrayBuffer> => {
-  for (const file of await readdir(join(process.cwd(), 'assets'))) {
-    console.log('file', file);
-  }
-
-  const fontDataBuffer = await readFile(
-    join(process.cwd(), 'assets', 'PlayfairDisplay-Regular.ttf')
-  );
+  const fontUrl = getUrl('/assets/PlayfairDisplay-Regular.ttf');
+  const response = await fetch(fontUrl);
+  const fontDataBuffer = await response.arrayBuffer();
   return fontDataBuffer;
 };
