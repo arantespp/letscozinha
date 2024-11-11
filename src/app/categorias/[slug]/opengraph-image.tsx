@@ -1,8 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { findCategory } from 'src/cms/categories';
+import { getFontData } from 'src/methods/getFontData';
 import { getRecipes } from 'src/cms/recipes';
-import { join } from 'node:path';
-import { readFile } from 'node:fs/promises';
 
 export const revalidate = 86400; // 24 hours
 
@@ -131,9 +130,7 @@ export default async function OpenGraphImage({
     }
   }
 
-  const fontData = await readFile(
-    join(process.cwd(), 'assets', 'PlayfairDisplay-Regular.ttf')
-  );
+  const fontData = await getFontData();
 
   return new ImageResponse(
     (
