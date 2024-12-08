@@ -14,6 +14,7 @@ const fetchPosters = async (query?: string) => {
   const response = await fetch(`${CMS_URL}/api/lets-cozinha-posters?${query}`, {
     headers: {
       Authorization: `Bearer ${CMS_TOKEN}`,
+      'Strapi-Response-Format': 'v4',
     },
   }).then((res) => res.json() as Promise<CMSPostersResponse>);
 

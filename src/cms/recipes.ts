@@ -44,6 +44,7 @@ const fetchRecipes = async (query?: string) => {
     {
       headers: {
         Authorization: `Bearer ${CMS_TOKEN}`,
+        'Strapi-Response-Format': 'v4',
       },
     }
   ).then((res) => res.json() as Promise<CMSRecipesResponse>);

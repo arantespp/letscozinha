@@ -31,6 +31,7 @@ export const getLetsCozinha = unstable_cache(
       {
         headers: {
           Authorization: `Bearer ${CMS_TOKEN}`,
+          'Strapi-Response-Format': 'v4',
         },
       }
     ).then((res) => res.json());
@@ -69,6 +70,7 @@ export const getLetsCozinhaLets = unstable_cache(
       {
         headers: {
           Authorization: `Bearer ${CMS_TOKEN}`,
+          'Strapi-Response-Format': 'v4',
         },
       }
     ).then((res) => res.json());
@@ -98,6 +100,7 @@ export const getLetsCozinhaPoliticas = unstable_cache(
       {
         headers: {
           Authorization: `Bearer ${CMS_TOKEN}`,
+          'Strapi-Response-Format': 'v4',
         },
       }
     ).then((res) => res.json());
