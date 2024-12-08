@@ -38,3 +38,5 @@ next-env.d.ts
 
 lets-cozinha-043eeac1f6b2.json
 oauth
+
+.cache/

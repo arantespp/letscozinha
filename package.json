@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "jest --projects tests/unit",
     "index-now": "tsx scripts/indexNow.ts",
+    "gis": "gis letscozinha.com.br --path lets-cozinha-043eeac1f6b2.json",
     "print-recipe": "tsx scripts/printRecipe.ts",
     "analyze": "ANALYZE=true pnpm run build"
   },
@@ -52,6 +53,7 @@
     "eslint-config-next": "15.0.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+    "google-indexing-script": "^0.4.0",
     "jest": "^29.7.0",
     "minimist": "^1.2.8",
     "postcss": "^8",
