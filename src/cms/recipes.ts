@@ -200,12 +200,14 @@ export const searchSimilarRecipes = unstable_cache(
       const searchResults = await meiliRecipesIndex.searchSimilarDocuments({
         id,
         limit: 3,
+        embedder: 'default',
       });
 
       const recipes = await getRecipesFromMeiliHits(searchResults.hits);
 
       return recipes;
-    } catch {
+    } catch (err) {
+      console.error(err);
       return [];
     }
   },
