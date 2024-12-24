@@ -1,9 +1,20 @@
 import { CategoryTag } from './CategoryTag';
 import { LinkButton } from './LinkButton';
+import { generateNextImageSizesString } from 'src/methods/generateNextImageSizesString';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '../../public/logo.png';
 import type { Recipe } from 'src/cms/recipes';
+
+const sizes = generateNextImageSizesString([
+  ['400px', '320px'],
+  ['480px', '390px'],
+  ['640px', '550px'],
+  ['768px', '680px'],
+  ['1024px', '580px'],
+  ['1280px', '390px'],
+  ['240px'],
+]);
 
 export default function RecipeCard({
   recipe,
@@ -26,7 +37,7 @@ export default function RecipeCard({
             alt={recipe.nome}
             fill
             quality={50}
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 300px"
+            sizes={sizes}
             priority={priority}
           />
         </div>

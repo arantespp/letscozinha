@@ -1,3 +1,4 @@
+import { generateNextImageSizesString } from 'src/methods/generateNextImageSizesString';
 import Image from 'next/image';
 
 type ImageProps = {
@@ -5,7 +6,9 @@ type ImageProps = {
   alt: string;
 };
 
-export function RecipeImages({ images }: { images: ImageProps[] }) {
+export function RecipeImages({ images: imagesa }: { images: ImageProps[] }) {
+  const images = [imagesa[0]];
+
   if (images.length === 0) {
     return null;
   }
@@ -22,23 +25,37 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
     return 'flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-sm';
   })();
 
-  /**
-   * sm	 640px
-   * md	 768px
-   * lg	 1024px
-   * xl	 1280px
-   * 2xl 1536px
-   */
   const sizes = (() => {
     if (images.length === 1) {
-      return '(max-width: 768px) 100vw, 42rem';
+      return generateNextImageSizesString([
+        ['400px', '350px'],
+        ['480px', '430px'],
+        ['640px', '590px'],
+        ['768px', '670px'],
+        ['1024px', '623px'],
+        ['672px'],
+      ]);
     }
 
     if (images.length === 2) {
-      return '(max-width: 640px) 100vw, (max-width: 768px) 350px, 500px';
+      return generateNextImageSizesString([
+        ['400px', '350px'],
+        ['480px', '430px'],
+        ['640px', '590px'],
+        ['768px', '670px'],
+        ['1024px', '300px'],
+        ['430px'],
+      ]);
     }
 
-    return '(max-width: 640px) 100vw, (max-width: 768px) 350px, 300px';
+    return generateNextImageSizesString([
+      ['400px', '350px'],
+      ['480px', '430px'],
+      ['640px', '590px'],
+      ['768px', '670px'],
+      ['1024px', '300px'],
+      ['280px'],
+    ]);
   })();
 
   return (
