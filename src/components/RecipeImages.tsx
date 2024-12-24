@@ -6,9 +6,7 @@ type ImageProps = {
   alt: string;
 };
 
-export function RecipeImages({ images: imagesa }: { images: ImageProps[] }) {
-  const images = [imagesa[0]];
-
+export function RecipeImages({ images }: { images: ImageProps[] }) {
   if (images.length === 0) {
     return null;
   }
