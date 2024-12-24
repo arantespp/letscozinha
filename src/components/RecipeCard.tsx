@@ -7,13 +7,33 @@ import logo from '../../public/logo.png';
 import type { Recipe } from 'src/cms/recipes';
 
 const sizes = generateNextImageSizesString([
-  ['400px', '320px'],
-  ['480px', '390px'],
-  ['640px', '550px'],
-  ['768px', '680px'],
-  ['1024px', '580px'],
-  ['1280px', '390px'],
-  ['240px'],
+  {
+    maxWidth: '400px',
+    size: '320px',
+  },
+  {
+    maxWidth: '480px',
+    size: '390px',
+  },
+  {
+    maxWidth: '640px',
+    size: '550px',
+  },
+  {
+    maxWidth: '768px',
+    size: '680px',
+  },
+  {
+    maxWidth: '1024px',
+    size: '580px',
+  },
+  {
+    maxWidth: '1280px',
+    size: '390px',
+  },
+  {
+    size: '240px',
+  },
 ]);
 
 export default function RecipeCard({

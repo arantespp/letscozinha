@@ -1,13 +1,16 @@
 export const generateNextImageSizesString = (
-  sizes: Array<[string, string?]>
+  sizes: Array<{
+    maxWidth?: string;
+    size: string;
+  }>
 ) => {
   return sizes
-    .map((s) => {
-      if (s[1]) {
-        return `(max-width: ${s[0]}) ${s[1]}`;
+    .map(({ maxWidth, size }) => {
+      if (maxWidth) {
+        return `(max-width: ${maxWidth}) ${size}`;
       }
 
-      return s[0];
+      return size;
     })
     .join(', ');
 };

@@ -26,35 +26,60 @@ export function RecipeImages({ images: imagesa }: { images: ImageProps[] }) {
   })();
 
   const sizes = (() => {
+    const commonFirstSizes = [
+      {
+        maxWidth: '400px',
+        size: '350px',
+      },
+      {
+        maxWidth: '480px',
+        size: '430px',
+      },
+      {
+        maxWidth: '640px',
+        size: '590px',
+      },
+      {
+        maxWidth: '768px',
+        size: '670px',
+      },
+    ];
+
     if (images.length === 1) {
       return generateNextImageSizesString([
-        ['400px', '350px'],
-        ['480px', '430px'],
-        ['640px', '590px'],
-        ['768px', '670px'],
-        ['1024px', '623px'],
-        ['672px'],
+        ...commonFirstSizes,
+        {
+          maxWidth: '1024px',
+          size: '623px',
+        },
+        {
+          size: '672px',
+        },
       ]);
     }
 
     if (images.length === 2) {
       return generateNextImageSizesString([
-        ['400px', '350px'],
-        ['480px', '430px'],
-        ['640px', '590px'],
-        ['768px', '670px'],
-        ['1024px', '300px'],
-        ['430px'],
+        ...commonFirstSizes,
+        {
+          maxWidth: '1024px',
+          size: '300px',
+        },
+        {
+          size: '430px',
+        },
       ]);
     }
 
     return generateNextImageSizesString([
-      ['400px', '350px'],
-      ['480px', '430px'],
-      ['640px', '590px'],
-      ['768px', '670px'],
-      ['1024px', '300px'],
-      ['280px'],
+      ...commonFirstSizes,
+      {
+        maxWidth: '1024px',
+        size: '300px',
+      },
+      {
+        size: '280px',
+      },
     ]);
   })();
 
