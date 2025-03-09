@@ -9,6 +9,7 @@ const nextConfig = {
         hostname: 'cdn.lets.rocks',
       },
     ],
+    unoptimized: true,
   },
 };
 
