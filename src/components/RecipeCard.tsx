@@ -48,7 +48,7 @@ export default function RecipeCard({
   const href = `/receitas/${recipe.slug}`;
 
   return (
-    <div className="flex flex-col gap-sm border rounded p-sm shadow-sm hover:shadow-md">
+    <div className="flex flex-col gap-sm border rounded p-sm shadow-xs hover:shadow-md">
       <Link href={href}>
         <div className="aspect-square relative">
           <Image

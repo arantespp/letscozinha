@@ -36,7 +36,7 @@ export function Search() {
   }, [debouncedTerm, handleSearch]);
 
   return (
-    <div className="relative flex flex-1 flex-shrink-0">
+    <div className="relative flex flex-1 shrink-0">
       <label htmlFor="search" className="sr-only">
         Buscar receitas
       </label>
