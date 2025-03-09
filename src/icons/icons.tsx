@@ -8,6 +8,7 @@ import {
   faLink,
   faSearch,
   faSpinner,
+  faCopy,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faFacebook,
@@ -28,6 +29,10 @@ export const EnvelopeIcon = (props: Props) => (
 
 export const LinkIcon = (props: Props) => (
   <FontAwesomeIcon {...props} icon={faLink} />
+);
+
+export const CopyIcon = (props: Props) => (
+  <FontAwesomeIcon {...props} icon={faCopy} />
 );
 
 export const SearchIcon = (props: Props) => (

@@ -12,7 +12,7 @@ import {
   WhatsappShareButton,
   XIcon,
 } from 'react-share';
-import { LinkIcon } from 'src/icons/icons';
+import { CopyIcon } from 'src/icons/icons';
 import { getRecipeUrl } from 'src/methods/getRecipeUrl';
 import type { Recipe } from '../cms/recipes';
 
@@ -85,10 +85,10 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
               width: size,
               height: size,
             }}
-            className="flex justify-center items-center bg-primary text-white rounded-full"
+            className="flex justify-center items-center bg-primary text-white rounded-full cursor-pointer"
             aria-label="Copiar link"
           >
-            <LinkIcon />
+            <CopyIcon />
           </button>
         </CopyToClipboard>
         {isCopied && <span className="text-text-light">Link copiado!</span>}
