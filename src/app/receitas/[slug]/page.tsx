@@ -5,8 +5,8 @@ import { JsonLd } from 'src/components/JsonLd';
 import { Markdown } from 'src/components/Markdown';
 import {
   Recipe,
-  findRecipe,
-  getAllRecipes,
+  getRecipe,
+  getAllSimplifiedRecipes,
   searchSimilarRecipes,
 } from 'src/cms/recipes';
 import { RecipeImages } from 'src/components/RecipeImages';
@@ -26,9 +26,9 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const { allRecipes } = await getAllRecipes();
+  const { allSimplifiedRecipes } = await getAllSimplifiedRecipes();
 
-  return allRecipes.map((recipe) => ({
+  return allSimplifiedRecipes.map((recipe) => ({
     slug: recipe.slug,
   }));
 }
@@ -38,7 +38,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params = await props.params;
-  const recipe = await findRecipe({ slug: params.slug });
+  const recipe = await getRecipe({ slug: params.slug });
   const { letsCozinhaLets } = await getLetsCozinhaLets();
 
   if (!recipe) {
@@ -67,7 +67,9 @@ export async function generateMetadata(
 }
 
 async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
-  const similarRecipes = await searchSimilarRecipes({ recipeId: recipe.id });
+  const similarRecipes = await searchSimilarRecipes({
+    recipeDocumentId: recipe.documentId,
+  });
 
   if (similarRecipes.length === 0) {
     return null;
@@ -83,11 +85,13 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
 
 export default async function Page(props: Props) {
   const params = await props.params;
-  const recipe = await findRecipe({ slug: params.slug });
+  const recipe = await getRecipe({ slug: params.slug });
 
   if (!recipe) {
     notFound();
   }
+
+  console.log(recipe);
 
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/recipe

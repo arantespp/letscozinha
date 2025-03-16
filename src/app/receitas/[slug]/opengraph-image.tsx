@@ -1,11 +1,6 @@
 import { ImageResponse } from 'next/og';
-import { findRecipe } from 'src/cms/recipes';
+import { getRecipe } from 'src/cms/recipes';
 import { getFontData } from 'src/methods/getFontData';
-
-/**
- * It cannot be edge because edge functions do not support revalidation.
- */
-export const revalidate = 86400; // 24 hours
 
 type Params = {
   slug: string;
@@ -21,7 +16,7 @@ export async function generateImageMetadata({
 }) {
   const slug = (await params).slug;
 
-  const recipe = await findRecipe({ slug });
+  const recipe = await getRecipe({ slug });
 
   const images = recipe?.imagens;
 
@@ -59,7 +54,7 @@ export default async function Image({
 }) {
   const slug = params.slug;
 
-  const recipe = await findRecipe({ slug });
+  const recipe = await getRecipe({ slug });
 
   const imageUrl = recipe?.imagens?.[id]?.url;
 

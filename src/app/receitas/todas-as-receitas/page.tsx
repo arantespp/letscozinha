@@ -1,12 +1,10 @@
-import { getAllRecipes } from 'src/cms/recipes';
+import { getAllSimplifiedRecipes } from 'src/cms/recipes';
 import Link from 'next/link';
 
-export const revalidate = 0;
-
 export default async function TodasAsReceitas() {
-  const { allRecipes } = await getAllRecipes();
+  const { data } = await getAllSimplifiedRecipes();
 
-  const sortedRecipes = allRecipes.sort((a, b) => {
+  const sortedRecipes = data.sort((a, b) => {
     if (a.nome < b.nome) {
       return -1;
     }
@@ -25,7 +23,7 @@ export default async function TodasAsReceitas() {
       <ul>
         {sortedRecipes.map((recipe) => {
           return (
-            <li key={recipe.id}>
+            <li key={recipe.documentId}>
               <Link href={`/receitas/${recipe.slug}`}>{recipe.nome}</Link>
             </li>
           );

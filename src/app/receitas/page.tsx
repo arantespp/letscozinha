@@ -4,7 +4,7 @@ import { RecipesList } from 'src/components/RecipesList';
 import { Search } from 'src/components/Search';
 import { SearchLoading } from './SearchLoading';
 import { getPageTitle } from 'src/methods/getPageTitle';
-import { getRecipes, searchRecipes } from 'src/cms/recipes';
+import { searchRecipes, getRecipesWithPagination } from 'src/cms/recipes';
 import { getUrl } from 'src/methods/getUrl';
 import { getWebsiteName } from 'src/methods/getWebsiteName';
 import Link from 'next/link';
@@ -44,12 +44,12 @@ async function SearchResults({
   const searchTitle = searchParams?.search ? 'Resultados da busca' : 'Receitas';
 
   try {
-    const { recipes, meta } = await (async () => {
+    const { data: recipes, meta } = await (async () => {
       if (searchParams?.search) {
         return searchRecipes({ search: searchParams.search });
       }
 
-      return getRecipes({ page: searchParams?.page });
+      return getRecipesWithPagination({ page: searchParams?.page });
     })();
 
     const recipesQuantity = recipes.length;

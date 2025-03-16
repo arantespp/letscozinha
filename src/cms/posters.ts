@@ -1,32 +1,14 @@
 import { CMS_TOKEN, CMS_URL } from './config';
-import { RECIPES_POPULATE, type RecipeAttributes, mapRecipe } from './recipes';
-import { mapCMSData } from './mapCMSData';
+import { RECIPES_POPULATE, Recipe } from './recipes';
+
 import qs from 'qs';
-import type { CMSData, CMSDataArrayResponse } from './types';
+import type { CMSDataArrayResponse } from './types';
 
 type PosterAttributes = {
-  receita: { data: CMSData<RecipeAttributes> };
+  receita: Recipe;
 };
 
 export type CMSPostersResponse = CMSDataArrayResponse<PosterAttributes>;
-
-const fetchPosters = async (query?: string) => {
-  const response = await fetch(`${CMS_URL}/api/lets-cozinha-posters?${query}`, {
-    headers: {
-      Authorization: `Bearer ${CMS_TOKEN}`,
-      'Strapi-Response-Format': 'v4',
-    },
-  }).then((res) => res.json() as Promise<CMSPostersResponse>);
-
-  return response;
-};
-
-const mapPoster = (data: CMSPostersResponse['data'][0]) => {
-  return {
-    ...mapCMSData(data),
-    receita: mapRecipe(data.attributes.receita.data),
-  };
-};
 
 export const getPosters = async ({ limit = 20 }: { limit: number }) => {
   const query = qs.stringify({
@@ -41,7 +23,14 @@ export const getPosters = async ({ limit = 20 }: { limit: number }) => {
     sort: ['createdAt:desc'],
   });
 
-  const { data } = await fetchPosters(query);
+  const response: CMSPostersResponse = await fetch(
+    `${CMS_URL}/api/lets-cozinha-posters?${query}`,
+    {
+      headers: {
+        Authorization: `Bearer ${CMS_TOKEN}`,
+      },
+    }
+  ).then((res) => res.json());
 
-  return { posters: data.map(mapPoster) };
+  return { posters: response.data };
 };

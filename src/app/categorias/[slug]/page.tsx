@@ -1,7 +1,7 @@
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { Markdown } from 'src/components/Markdown';
 import { RecipesList } from 'src/components/RecipesList';
-import { findCategory, getAllCategories } from 'src/cms/categories';
+import { getCategory, getAllCategories } from 'src/cms/categories';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipes } from 'src/cms/recipes';
 import { getUrl } from 'src/methods/getUrl';
@@ -16,7 +16,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params = await props.params;
-  const category = await findCategory({ slug: params.slug });
+  const category = await getCategory({ slug: params.slug });
 
   if (!category) {
     return {};
@@ -54,15 +54,17 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const params = await props.params;
-  const category = await findCategory({ slug: params.slug });
+  const category = await getCategory({ slug: params.slug });
 
   if (!category) {
     notFound();
   }
 
-  const { recipes, meta } = await getRecipes({
-    filter: { categoryId: category.id },
-    page: searchParams.page,
+  const { data, meta } = await getRecipes({
+    categoryDocumentId: category.documentId,
+    pagination: {
+      page: searchParams.page,
+    },
   });
 
   return (
@@ -89,7 +91,7 @@ export default async function Page(props: {
       <h2>Receitas</h2>
       <RecipesList
         addCarouselSchema
-        recipes={recipes}
+        recipes={data}
         pagination={meta?.pagination}
       />
     </div>

@@ -1,9 +1,7 @@
 import { ImageResponse } from 'next/og';
-import { findCategory } from 'src/cms/categories';
+import { getCategory } from 'src/cms/categories';
 import { getFontData } from 'src/methods/getFontData';
 import { getRecipes } from 'src/cms/recipes';
-
-export const revalidate = 86400; // 24 hours
 
 type Params = {
   slug: string;
@@ -21,7 +19,7 @@ export async function generateImageMetadata({
 }) {
   const slug = (await params).slug;
 
-  const category = await findCategory({ slug });
+  const category = await getCategory({ slug });
 
   if (category?.imagens) {
     return category?.imagens.map((image, idx) => ({
@@ -54,7 +52,7 @@ export default async function OpenGraphImage({
 }) {
   const slug = params.slug;
 
-  const category = await findCategory({ slug });
+  const category = await getCategory({ slug });
 
   if (category?.imagens) {
     const imageUrl = category?.imagens?.[id]?.url;
@@ -85,8 +83,8 @@ export default async function OpenGraphImage({
     );
   }
 
-  const { recipes } = await getRecipes({
-    filter: { categoryId: category?.id },
+  const { data: recipes } = await getRecipes({
+    categoryDocumentId: category?.documentId,
   });
 
   if (recipes) {

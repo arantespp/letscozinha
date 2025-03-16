@@ -1,13 +1,12 @@
-import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
+import { CMS_TOKEN, CMS_URL } from './config';
 import { MeiliSearch } from 'meilisearch';
-import { mapCMSData } from './mapCMSData';
 import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type {
-  CMSData,
   CMSDataArrayResponse,
   CMSImages,
   CMSMeta,
+  CMSData,
 } from './types';
 
 export const RECIPES_PAGE_SIZE = 15;
@@ -28,132 +27,143 @@ export type RecipeAttributes = {
     url: string;
   }[];
   categorias?: {
-    data: CMSData<{
-      id: number;
-      nome: string;
-      slug: string;
-    }>[];
-  };
+    documentId: string;
+    nome: string;
+    slug: string;
+  }[];
 };
 
 export type CMSRecipesResponse = CMSDataArrayResponse<RecipeAttributes>;
 
-const fetchRecipes = async (query?: string) => {
+export type Recipe = CMSData<RecipeAttributes>;
+
+export const getRecipes = async (args: {
+  documentIds?: string[];
+  slugs?: string[];
+  categoryDocumentId?: string;
+  pagination?: {
+    page?: number | string;
+    pageSize?: number;
+  };
+}) => {
+  const url = (() => {
+    let filters: any | undefined;
+
+    if (args.documentIds) {
+      filters = {
+        documentId: {
+          $in: args.documentIds,
+        },
+      };
+    }
+
+    if (args.slugs) {
+      filters = {
+        slug: {
+          $in: args.slugs,
+        },
+      };
+    }
+
+    if (args.categoryDocumentId) {
+      filters = {
+        categorias: {
+          documentId: {
+            $eq: args.categoryDocumentId,
+          },
+        },
+      };
+    }
+
+    return `${CMS_URL}/api/lets-cozinha-receitas?${qs.stringify({
+      pagination: {
+        page: args.pagination?.page || 1,
+        pageSize: args.pagination?.pageSize || RECIPES_PAGE_SIZE,
+      },
+      filters,
+      populate: RECIPES_POPULATE,
+    })}`;
+  })();
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${CMS_TOKEN}`,
+    },
+    cache: 'force-cache',
+  }).then((res) => res.json() as Promise<CMSRecipesResponse>);
+
+  return response;
+};
+
+export const getRecipe = async (
+  args: { documentId: string } | { slug: string }
+) => {
+  if ('documentId' in args) {
+    const response = getRecipes({ documentIds: [args.documentId] });
+    return (await response).data[0];
+  }
+
+  const response = getRecipes({ slugs: [args.slug] });
+  return (await response).data[0];
+};
+
+export const getRecipesWithPagination = async ({
+  page = 1,
+  pageSize = RECIPES_PAGE_SIZE,
+}: {
+  page?: number | string;
+  pageSize?: number;
+}) => {
+  const query = qs.stringify({
+    pagination: {
+      page,
+      pageSize,
+    },
+    populate: RECIPES_POPULATE,
+    sort: ['updatedAt:desc'],
+  });
+
   const response = await fetch(
     `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
     {
       headers: {
         Authorization: `Bearer ${CMS_TOKEN}`,
-        'Strapi-Response-Format': 'v4',
       },
+      cache: 'force-cache',
     }
   ).then((res) => res.json() as Promise<CMSRecipesResponse>);
 
   return response;
 };
 
-export const mapRecipe = (data: CMSRecipesResponse['data'][0]) => {
-  const imagens = data.attributes.imagens?.data?.map(mapCMSData);
-  const categorias = data.attributes.categorias?.data?.map(mapCMSData);
-  return { ...mapCMSData(data), imagens, categorias };
-};
-
-export type Recipe = ReturnType<typeof mapRecipe>;
-
-export const getAllRecipes = unstable_cache(
-  async () => {
-    const allData = [];
-    let page = 1;
-
-    while (true) {
-      const query = qs.stringify({
-        pagination: {
-          page,
-          pageSize: API_MAX_LIMIT,
-        },
-        populate: RECIPES_POPULATE,
-        sort: ['updatedAt:desc'],
-      });
-
-      const { data, meta } = await fetchRecipes(query);
-
-      allData.push(...data);
-
-      if (meta?.pagination.pageCount === page) {
-        break;
-      }
-
-      page++;
-    }
-
-    const allRecipes = allData.map(mapRecipe);
-
-    return { allRecipes };
-  },
-  ['getAllRecipes'],
-  {
-    revalidate: 60 * 60 * 24, // 24 hours
-  }
-);
-
-export const findRecipe = async ({
-  id,
-  slug,
-}: {
-  id?: number;
-  slug?: string;
-}) => {
-  const { allRecipes } = await getAllRecipes();
-  return allRecipes.find((recipe) => recipe.id === id || recipe.slug === slug);
-};
-
-type FilterRecipes = {
-  categoryId?: number;
-};
-
-/**
- * Because we are using a cache, we can use `getAllRecipes` to paginate the
- * recipes without making additional requests to the CMS.
- */
-export const getRecipes = async ({
-  filter,
-  page = '1',
-}: {
-  filter?: FilterRecipes;
-  page?: string;
-}) => {
-  const { allRecipes } = await getAllRecipes();
-
-  const recipes = (() => {
-    if (!filter) {
-      return allRecipes;
-    }
-
-    if (filter.categoryId) {
-      return allRecipes.filter((recipe) =>
-        recipe.categorias?.some((category) => category.id === filter.categoryId)
-      );
-    }
-
-    return [];
-  })();
-
-  const pageSize = RECIPES_PAGE_SIZE;
-
-  const meta: CMSMeta = {
+export const getAllSimplifiedRecipes = async () => {
+  const query = qs.stringify({
     pagination: {
-      page: parseInt(page, 10),
-      pageSize,
-      pageCount: Math.ceil(recipes.length / pageSize),
-      total: recipes.length,
+      page: 1,
+      pageSize: 1000,
     },
+    fields: ['nome', 'slug'],
+    sort: ['updatedAt:desc'],
+  });
+
+  const response = await fetch(
+    `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
+    {
+      headers: {
+        Authorization: `Bearer ${CMS_TOKEN}`,
+      },
+      cache: 'force-cache',
+    }
+  ).then(
+    (res) =>
+      res.json() as Promise<{
+        data: Array<Pick<Recipe, 'documentId' | 'nome' | 'slug'>>;
+      }>
+  );
+
+  return {
+    allSimplifiedRecipes: response.data,
   };
-
-  const start = (parseInt(page, 10) - 1) * pageSize;
-
-  const end = start + pageSize;
-
-  return { recipes: recipes.slice(start, end), meta };
 };
 
 const meiliClient = new MeiliSearch({
@@ -162,7 +172,7 @@ const meiliClient = new MeiliSearch({
 });
 
 type MeiliRecipe = {
-  id: number;
+  documentId: string;
 } & RecipeAttributes;
 
 const meiliRecipesIndex = meiliClient.index<MeiliRecipe>(
@@ -178,30 +188,32 @@ export const searchRecipes = async ({ search }: { search: string }) => {
     limit: RECIPES_PAGE_SIZE,
   });
 
-  const recipes = await getRecipesFromMeiliHits(searchResults.hits);
+  const data = await getRecipesFromMeiliHits(searchResults.hits);
 
   const meta: CMSMeta = {
     pagination: {
       page: 1,
       pageSize: RECIPES_PAGE_SIZE,
       pageCount: 1,
-      total: recipes.length,
+      total: data.length,
     },
   };
 
-  return { recipes, meta };
+  return { data, meta };
 };
 
 export const searchSimilarRecipes = unstable_cache(
-  async ({ recipeId }: { recipeId: number }) => {
+  async ({ recipeDocumentId }: { recipeDocumentId: string }) => {
     try {
-      const id = `${process.env.MEILISEARCH_INDEX}-${recipeId}`;
+      const id = `${process.env.MEILISEARCH_INDEX}-${recipeDocumentId}`;
 
       const searchResults = await meiliRecipesIndex.searchSimilarDocuments({
         id,
         limit: 3,
         embedder: 'default',
       });
+
+      // console.log(searchResults);
 
       const recipes = await getRecipesFromMeiliHits(searchResults.hits);
 

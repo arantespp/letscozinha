@@ -1,7 +1,6 @@
 export type CMSData<Attributes> = {
-  id: number;
-  attributes: Attributes;
-};
+  documentId: string;
+} & Attributes;
 
 export type ImageAttributes = {
   url: string;
@@ -20,13 +19,9 @@ type Image = ImageAttributes & {
   };
 };
 
-export type CMSImages = {
-  data: CMSData<Image>[];
-};
+export type CMSImage = CMSData<Image>;
 
-export type CMSImage = {
-  data: CMSData<Image>;
-};
+export type CMSImages = CMSImage[];
 
 export type CMSMeta = {
   pagination: {

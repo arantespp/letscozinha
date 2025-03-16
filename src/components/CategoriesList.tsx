@@ -1,6 +1,6 @@
 import { CategoryTag } from 'src/components/CategoryTag';
-import { getAllCategories } from 'src/cms/categories';
-import { getAllRecipes } from 'src/cms/recipes';
+import { getAllCategories, type Category } from 'src/cms/categories';
+import { getRecipes } from 'src/cms/recipes';
 
 export async function CategoriesList({
   direction = 'column',
@@ -8,12 +8,26 @@ export async function CategoriesList({
   direction?: 'row' | 'column';
 }) {
   const { allCategories } = await getAllCategories();
-  const { allRecipes } = await getAllRecipes();
 
-  const allCategoriesThatHaveRecipes = allCategories.filter((category) => {
-    return allRecipes.some((recipe) =>
-      recipe.categorias?.map((categoria) => categoria.id).includes(category.id)
-    );
+  const allCategoriesThatHaveRecipes = (
+    await Promise.all(
+      allCategories.map(async (category) => {
+        const { data: recipes } = await getRecipes({
+          categoryDocumentId: category.documentId,
+          pagination: {
+            page: 1,
+          },
+        });
+
+        if (recipes.length > 0) {
+          return category;
+        }
+
+        return null;
+      })
+    )
+  ).filter((category): category is Category => {
+    return !!category;
   });
 
   const className = (() => {
@@ -27,7 +41,7 @@ export async function CategoriesList({
   return (
     <div className={className}>
       {allCategoriesThatHaveRecipes.map((category) => (
-        <div key={category.id}>
+        <div key={category.documentId}>
           <CategoryTag {...category} />
         </div>
       ))}

@@ -3,12 +3,11 @@ import { BASE_URL, WEBSITE_NAME } from 'src/constants';
 import { JsonLd } from 'src/components/JsonLd';
 import { Loading } from 'src/components/Loading';
 import { RecipesList } from 'src/components/RecipesList';
-import { getAllRecipes } from 'src/cms/recipes';
 import { getLetsCozinha } from 'src/cms/singleTypes';
 import { getMostVisitedPages } from 'src/ga4/getMostVisitedPages';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import type { Recipe } from 'src/cms/recipes';
+import { getRecipes } from 'src/cms/recipes';
 import type { WebSite } from 'schema-dts';
 
 export const metadata: Metadata = {
@@ -45,27 +44,27 @@ async function FavoriteRecipes() {
 async function MostVisitedRecipes() {
   try {
     const mostVisitedPages = await getMostVisitedPages();
-    const { allRecipes } = await getAllRecipes();
 
     if (!mostVisitedPages || mostVisitedPages.length === 0) {
       return null;
     }
 
-    const mostVisitedRecipes = mostVisitedPages
+    const mostVisitedRecipesSlugs = mostVisitedPages
       .filter((page) => page.path?.startsWith('/receitas/'))
       .sort((a, b) => Number(b.views) - Number(a.views))
-      .map((page) => {
-        const recipe = allRecipes.find((recipe) =>
-          recipe.slug.startsWith(page.path.replace('/receitas/', ''))
-        );
-
-        return {
-          ...recipe,
-          views: page.views,
-        };
-      })
       .filter(Boolean)
-      .slice(0, 6) as Recipe[];
+      .map((page) => page.path?.replace('/receitas/', ''))
+      .slice(0, 6);
+
+    if (mostVisitedRecipesSlugs.length === 0) {
+      return null;
+    }
+
+    const mostVisitedRecipes = (
+      await getRecipes({
+        slugs: mostVisitedRecipesSlugs,
+      })
+    ).data;
 
     if (mostVisitedRecipes.length === 0) {
       return null;
