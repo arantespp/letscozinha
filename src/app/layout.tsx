@@ -41,6 +41,7 @@ export const metadata: Metadata = {
     url: BASE_URL,
     siteName: getWebsiteName(),
     type: 'website',
+    images: ['https://www.letscozinha.com.br/opengraph-image.jpg'],
   },
   alternates: {
     types: {
