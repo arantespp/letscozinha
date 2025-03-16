@@ -1,16 +1,16 @@
 import './env';
 
-import { findRecipe } from '../src/cms/recipes';
+import { getRecipe } from '../src/cms/recipes';
 import minimist from 'minimist';
 
 const args = minimist(process.argv.slice(2));
 
-if (!args.id) {
-  console.error('Please provide an id');
+if (!args.documentId) {
+  console.error('Please provide an document id');
   process.exit(1);
 }
 
 (async () => {
-  const recipe = await findRecipe({ id: args.id });
+  const recipe = await getRecipe({ documentId: args.documentId });
   console.log(recipe);
 })();

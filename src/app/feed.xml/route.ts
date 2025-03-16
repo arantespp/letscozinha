@@ -1,5 +1,5 @@
 import { BASE_URL, WEBSITE_NAME } from 'src/constants';
-import { getAllRecipes } from 'src/cms/recipes';
+import { getRecipes } from 'src/cms/recipes';
 import { getLetsCozinha } from 'src/cms/singleTypes';
 import { getRecipeUrl } from 'src/methods/getRecipeUrl';
 import { getUrl } from 'src/methods/getUrl';
@@ -9,7 +9,11 @@ const NUMBER_OF_RECIPES_IN_FEED = 10;
 
 export async function GET() {
   const { letsCozinha } = await getLetsCozinha();
-  const { allRecipes } = await getAllRecipes();
+  const { data } = await getRecipes({
+    pagination: {
+      pageSize: NUMBER_OF_RECIPES_IN_FEED,
+    },
+  });
 
   const feed = new RSS({
     title: letsCozinha.titulo,
@@ -21,7 +25,7 @@ export async function GET() {
     pubDate: new Date(),
   });
 
-  const allRecipesWithImages = allRecipes
+  const allRecipesWithImages = data
     .filter((recipe) => recipe.imagens?.length)
     .slice(0, NUMBER_OF_RECIPES_IN_FEED);
 

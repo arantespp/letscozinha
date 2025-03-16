@@ -18,7 +18,7 @@ export function Search() {
     return new URLSearchParams(searchParams);
   }, [searchParams]);
 
-  const isSearching = params.get('isSearching');
+  const isSearching = false;
 
   const [debouncedIsSearching] = useDebounce(isSearching, 500);
 

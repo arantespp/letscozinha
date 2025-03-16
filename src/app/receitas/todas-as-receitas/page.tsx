@@ -2,9 +2,9 @@ import { getAllSimplifiedRecipes } from 'src/cms/recipes';
 import Link from 'next/link';
 
 export default async function TodasAsReceitas() {
-  const { data } = await getAllSimplifiedRecipes();
+  const { allSimplifiedRecipes } = await getAllSimplifiedRecipes();
 
-  const sortedRecipes = data.sort((a, b) => {
+  const sortedRecipes = allSimplifiedRecipes.sort((a, b) => {
     if (a.nome < b.nome) {
       return -1;
     }

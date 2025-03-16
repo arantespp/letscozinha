@@ -1,4 +1,5 @@
 export type CMSData<Attributes> = {
+  id: number;
   documentId: string;
 } & Attributes;
 

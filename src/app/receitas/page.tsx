@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { RecipesList } from 'src/components/RecipesList';
 import { Search } from 'src/components/Search';
-import { SearchLoading } from './SearchLoading';
+import { Loading } from 'src/components/Loading';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { searchRecipes, getRecipesWithPagination } from 'src/cms/recipes';
 import { getUrl } from 'src/methods/getUrl';
@@ -112,10 +112,7 @@ export default async function Page(props: Props) {
         <div className="my-lg">
           <Search />
         </div>
-        <React.Suspense
-          key={suspenseKey}
-          fallback={<SearchLoading key={suspenseKey} />}
-        >
+        <React.Suspense key={suspenseKey} fallback={<Loading />}>
           <SearchResults searchParams={searchParams} />
         </React.Suspense>
       </div>

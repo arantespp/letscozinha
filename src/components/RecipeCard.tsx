@@ -69,7 +69,7 @@ export default function RecipeCard({
       </h3>
       <div className="flex flex-row flex-wrap gap-xs">
         {(recipe.categorias || []).map((category) => (
-          <div key={category.id} className="p-xs">
+          <div key={category.documentId} className="p-xs">
             <CategoryTag {...category} isSmall />
           </div>
         ))}

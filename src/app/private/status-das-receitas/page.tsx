@@ -1,6 +1,6 @@
 import { LinkIcon } from 'src/icons/icons';
 import { getAllCategories } from 'src/cms/categories';
-import { getAllRecipes } from 'src/cms/recipes';
+import { getAllSimplifiedRecipes, getRecipe } from 'src/cms/recipes';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import Link from 'next/link';
 
@@ -15,11 +15,14 @@ const checkIfBadSlug = (slug: string) => {
 };
 
 export default async function StatusDasReceitas() {
-  const { allRecipes } = await getAllRecipes();
+  const { allSimplifiedRecipes } = await getAllSimplifiedRecipes();
 
   const recipesWithStatus = (
     await Promise.all(
-      allRecipes.map(async (recipe) => {
+      allSimplifiedRecipes.map(async (simplifiedRecipe) => {
+        const recipe = await getRecipe({
+          documentId: simplifiedRecipe.documentId,
+        });
         const schema = await getRecipeSchema(recipe);
 
         const noFormatted = (() => {
@@ -91,7 +94,7 @@ export default async function StatusDasReceitas() {
       return a.nome.localeCompare(b.nome);
     });
 
-  const allRecipesCount = allRecipes.length;
+  const allRecipesCount = allSimplifiedRecipes.length;
 
   const incompleteRecipesCount = recipesWithStatus.reduce((acc, recipe) => {
     return acc + (recipe.isComplete ? 0 : 1);
@@ -130,8 +133,10 @@ export default async function StatusDasReceitas() {
         status.badSlug = true;
       }
 
-      const recipes = allRecipes.filter((recipe) => {
-        return recipe.categorias?.some((cat) => cat.id === category.id);
+      const recipes = recipesWithStatus.filter((recipe) => {
+        return recipe.categorias?.some(
+          (cat) => cat.documentId === category.documentId
+        );
       });
 
       if (recipes.length === 0) {

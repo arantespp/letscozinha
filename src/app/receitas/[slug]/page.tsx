@@ -67,9 +67,7 @@ export async function generateMetadata(
 }
 
 async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
-  const similarRecipes = await searchSimilarRecipes({
-    recipeDocumentId: recipe.documentId,
-  });
+  const similarRecipes = await searchSimilarRecipes({ recipe });
 
   if (similarRecipes.length === 0) {
     return null;
@@ -90,8 +88,6 @@ export default async function Page(props: Props) {
   if (!recipe) {
     notFound();
   }
-
-  console.log(recipe);
 
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/recipe
