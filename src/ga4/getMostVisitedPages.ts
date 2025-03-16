@@ -20,8 +20,8 @@ const propertyId = process.env.GA4_PROPERTY_ID;
 export async function getMostVisitedPages() {
   try {
     const getCachedResponse = unstable_cache(
-      async () =>
-        analyticsDataClient.runReport({
+      async () => {
+        return analyticsDataClient.runReport({
           property: `properties/${propertyId}`,
           dateRanges: [
             {
@@ -40,7 +40,8 @@ export async function getMostVisitedPages() {
             },
           ],
           limit: 25,
-        }),
+        });
+      },
       ['getMostVisitedPages'],
       {
         revalidate: REVALIDATE_1_DAY,

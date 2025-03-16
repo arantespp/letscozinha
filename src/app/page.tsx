@@ -64,7 +64,12 @@ async function MostVisitedRecipes() {
       await getRecipes({
         slugs: mostVisitedRecipesSlugs,
       })
-    ).data;
+    ).data.sort((a, b) =>
+      mostVisitedRecipesSlugs.indexOf(a.slug) >
+      mostVisitedRecipesSlugs.indexOf(b.slug)
+        ? 1
+        : -1
+    );
 
     if (mostVisitedRecipes.length === 0) {
       return null;
