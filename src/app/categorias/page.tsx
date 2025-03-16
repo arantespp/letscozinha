@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     url: getUrl('/categorias'),
     type: 'website',
     siteName: getWebsiteName(),
+    images: ['https://www.letscozinha.com.br/opengraph-image.jpg'],
   },
 };
 

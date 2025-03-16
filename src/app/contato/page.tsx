@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     url,
     type: 'website',
     siteName: getWebsiteName(),
+    images: ['https://www.letscozinha.com.br/opengraph-image.jpg'],
   },
 };
 

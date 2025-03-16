@@ -24,6 +24,7 @@ export const metadata: Metadata = {
     url: getUrl('/receitas'),
     type: 'website',
     siteName: getWebsiteName(),
+    images: ['https://www.letscozinha.com.br/opengraph-image.jpg'],
   },
 };
 
