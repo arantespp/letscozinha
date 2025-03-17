@@ -4,6 +4,8 @@ import { getAllSimplifiedRecipes, getRecipe } from 'src/cms/recipes';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import Link from 'next/link';
 
+export const revalidate = 1;
+
 const checkIfBadSlug = (slug: string) => {
   return (
     /\d$/.test(slug) ||
@@ -146,7 +148,7 @@ export default async function StatusDasReceitas() {
       return { ...category, status };
     })
     .map((category) => {
-      const cmsUrl = `${process.env.CMS_URL}/admin/content-manager/collection-types/api::lets-cozinha-categoria.lets-cozinha-categoria/${category.id}`;
+      const cmsUrl = `${process.env.CMS_URL}/admin/content-manager/collection-types/api::lets-cozinha-categoria.lets-cozinha-categoria/${category.documentId}`;
       const isComplete = Object.values(category.status).every((value) => {
         return !value;
       });
