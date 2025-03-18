@@ -223,14 +223,17 @@ export const searchRecipes = async (args: {
 export const searchSimilarRecipes = unstable_cache(
   async ({ recipe }: { recipe: Recipe }) => {
     try {
-      const recipes = await searchRecipes({
-        search: recipe.nome,
-        limit: 4,
+      const id = `lets-cozinha-receita-${recipe.id}`;
+
+      const similars = await meiliRecipesIndex.searchSimilarDocuments({
+        id,
+        limit: 3,
+        embedder: 'lets-cozinha-receita-openai-embedder',
       });
 
-      return recipes.data
-        .filter((r) => r.documentId !== recipe.documentId)
-        .slice(0, 3);
+      const data = await getRecipesFromMeiliHits(similars.hits);
+
+      return data;
     } catch (err) {
       console.error(err);
       return [];
