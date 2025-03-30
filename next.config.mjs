@@ -3,13 +3,12 @@ import bundleAnalyzer from '@next/bundle-analyzer';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    minimumCacheTTL: 2678400, // 31 days
+    minimumCacheTTL: 31536000, // 1 year
     remotePatterns: [
       {
         hostname: 'cdn.lets.rocks',
       },
     ],
-    unoptimized: true,
   },
 };
 
