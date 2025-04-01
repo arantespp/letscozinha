@@ -1,4 +1,4 @@
-import { MDXRemote, type MDXRemoteProps } from 'next-mdx-remote/rsc';
+import { MDXRemote, type MDXRemoteProps } from 'next-mdx-remote-client/rsc';
 
 const components: MDXRemoteProps['components'] = {
   wrapper: ({ children }) => (

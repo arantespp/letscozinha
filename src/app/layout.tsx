@@ -48,6 +48,9 @@ export const metadata: Metadata = {
       'application/rss+xml': 'https://www.letscozinha.com.br/feed.xml',
     },
   },
+  facebook: {
+    appId: '1645850439307158',
+  },
 };
 
 export const viewport: Viewport = {
