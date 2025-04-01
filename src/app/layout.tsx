@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BASE_URL } from 'src/constants';
+import { BASE_URL, FB_APP_ID } from 'src/constants';
 import { Footer } from 'src/components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Header } from 'src/components/Header';
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     },
   },
   facebook: {
-    appId: '1645850439307158',
+    appId: FB_APP_ID,
   },
 };
 

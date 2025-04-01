@@ -11,3 +11,5 @@ export const INSTAGRAM_USERNAME = 'letscozinha';
 export const EMAIL = 'contato@letscozinha.com.br';
 
 export const PINTEREST_USERNAME = 'letscozinha';
+
+export const FB_APP_ID = '1645850439307158';
