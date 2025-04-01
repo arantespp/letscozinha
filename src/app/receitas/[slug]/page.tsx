@@ -20,6 +20,7 @@ import { getUrl } from 'src/methods/getUrl';
 import { getWebsiteName } from 'src/methods/getWebsiteName';
 import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { FB_APP_ID } from 'src/constants';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -62,6 +63,9 @@ export async function generateMetadata(
       modifiedTime: recipe.updatedAt,
       authors: letsCozinhaLets.nome,
       siteName: getWebsiteName(),
+    },
+    facebook: {
+      appId: FB_APP_ID,
     },
   };
 }

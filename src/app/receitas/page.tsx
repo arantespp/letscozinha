@@ -9,7 +9,6 @@ import { getUrl } from 'src/methods/getUrl';
 import { getWebsiteName } from 'src/methods/getWebsiteName';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { FB_APP_ID } from 'src/constants';
 
 const title = getPageTitle('Busque e Descubra Novos Sabores');
 
@@ -26,9 +25,6 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: getWebsiteName(),
     images: ['https://www.letscozinha.com.br/opengraph-image.jpg'],
-  },
-  facebook: {
-    appId: FB_APP_ID,
   },
 };
 
