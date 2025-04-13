@@ -3,7 +3,7 @@ import { BASE_URL, FB_APP_ID } from 'src/constants';
 import { Footer } from 'src/components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Header } from 'src/components/Header';
-import { LayoutAside } from 'src/components/LayoutAside';
+import { LayoutWrapper } from 'src/components/LayoutWrapper';
 import { Lora, Playfair_Display } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { getPageTitle } from 'src/methods/getPageTitle';
@@ -70,25 +70,25 @@ export default function RootLayout({
   return (
     <html
       lang="pt-br"
-      className={`${playfairDisplay.variable} ${lora.variable}`}
+      className={`${playfairDisplay.variable} ${lora.variable} scroll-smooth`}
     >
-      <body>
+      <body className="flex flex-col min-h-screen">
         <Header />
-        <main className="pb-xl md:pb-2xl">
-          <React.Suspense fallback={<div className="h-[200px]"></div>}>
+
+        <main className="flex-grow pb-xl md:pb-2xl">
+          <React.Suspense fallback={<div className="min-h-[250px]"></div>}>
             {hero}
           </React.Suspense>
-          <div className="container my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl">
-            <div className="flex-1">
-              <React.Suspense fallback={null}>{children}</React.Suspense>
-            </div>
-            <LayoutAside />
-          </div>
+
+          <LayoutWrapper>
+            <React.Suspense fallback={null}>{children}</React.Suspense>
+          </LayoutWrapper>
         </main>
+
         <Footer />
         {isProduction && <SpeedInsights />}
+        {isProduction && <GoogleAnalytics gaId="G-KBBBK8ZDJG" />}
       </body>
-      {isProduction && <GoogleAnalytics gaId="G-KBBBK8ZDJG" />}
     </html>
   );
 }

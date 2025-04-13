@@ -14,6 +14,7 @@ import { CategoryTag } from 'src/components/CategoryTag';
 import { getAllCategories } from 'src/cms/categories';
 import { getCategories } from 'src/cms/categories';
 import { CookingCTA } from 'src/components/CookingCTA';
+import { CategoriesList } from 'src/components/CategoriesList';
 
 export const metadata: Metadata = {
   alternates: {
@@ -128,27 +129,26 @@ async function FavoriteRecipes() {
 async function PopularCategories() {
   try {
     const categoriesResponse = await getCategories({ page: 1 });
-    const topCategories = categoriesResponse.data.slice(0, 6);
+    const topCategories = categoriesResponse.data.slice(0, 3);
 
     if (!topCategories.length) {
       return null;
     }
 
     return (
-      <section className="mb-xl py-lg bg-muted rounded-lg">
+      <section className="mb-xl">
         <div className="container">
-          <h2 className="text-2xl md:text-3xl mb-md">Categorias Populares</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-sm">
-            {topCategories.map((category) => (
-              <Link 
-                key={category.slug} 
-                href={`/categorias/${category.slug}`}
-                className="flex flex-col items-center justify-center p-md bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow text-center no-underline"
-              >
-                <span className="text-text-dark font-medium">{category.nome}</span>
-              </Link>
-            ))}
+          <div className="flex justify-between items-center mb-md">
+            <h2 className="text-2xl md:text-3xl mb-0">Categorias Populares</h2>
+            <Link
+              href="/categorias"
+              className="text-primary font-medium hover:underline"
+            >
+              Ver todas
+            </Link>
           </div>
+
+          <CategoriesList displayStyle="featured" />
         </div>
       </section>
     );
@@ -237,8 +237,10 @@ export default async function Home() {
       <React.Suspense fallback={<Loading />}>
         <FavoriteRecipes />
       </React.Suspense>
-      
-      <CookingCTA />
+
+      <React.Suspense fallback={<Loading />}>
+        <CookingCTA />
+      </React.Suspense>
 
       <React.Suspense fallback={<Loading />}>
         <PopularCategories />

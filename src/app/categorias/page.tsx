@@ -19,10 +19,20 @@ export const metadata: Metadata = {
 
 export default async function CategoriesPage() {
   return (
-    <>
-      <h1>Categorias</h1>
-      <p>Confira as nossas categorias:</p>
-      <CategoriesList direction="row" />
-    </>
+    <div className="container py-lg">
+      <header className="mb-lg">
+        <h1 className="text-3xl md:text-4xl font-heading mb-sm">
+          Categorias de Receitas
+        </h1>
+        <p className="text-text-light max-w-2xl">
+          Explore nossa coleção de receitas organizadas por categorias e
+          encontre a inspiração perfeita para sua próxima refeição.
+        </p>
+      </header>
+
+      <div className="mb-2xl">
+        <CategoriesList displayStyle="featured" />
+      </div>
+    </div>
   );
 }

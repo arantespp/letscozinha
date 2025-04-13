@@ -181,18 +181,27 @@ export const getAllSimplifiedRecipes = async () => {
   return { allSimplifiedRecipes };
 };
 
-const meiliClient = new MeiliSearch({
-  host: process.env.MEILISEARCH_HOST || '',
-  apiKey: process.env.MEILISEARCH_API_KEY || '',
-});
+const MEILISEARCH_HOST = process.env.MEILISEARCH_HOST || '';
+const MEILISEARCH_API_KEY = process.env.MEILISEARCH_API_KEY || '';
+const MEILISEARCH_INDEX = process.env.MEILISEARCH_INDEX || '';
+
+// Initialize MeiliSearch client only if host is provided
+const meiliClient = MEILISEARCH_HOST
+  ? new MeiliSearch({
+      host: MEILISEARCH_HOST,
+      apiKey: MEILISEARCH_API_KEY,
+    })
+  : null;
 
 type MeiliRecipe = {
   documentId: string;
 } & RecipeAttributes;
 
-const meiliRecipesIndex = meiliClient.index<MeiliRecipe>(
-  process.env.MEILISEARCH_INDEX || ''
-);
+// Only initialize index if client exists
+const meiliRecipesIndex =
+  meiliClient && MEILISEARCH_INDEX
+    ? meiliClient.index<MeiliRecipe>(MEILISEARCH_INDEX)
+    : null;
 
 const getRecipesFromMeiliHits = async (hits: MeiliRecipe[]) => {
   return hits as Recipe[];
@@ -202,26 +211,67 @@ export const searchRecipes = async (args: {
   search: string;
   limit?: number;
 }) => {
-  const searchResults = await meiliRecipesIndex.search(args.search, {
-    limit: RECIPES_PAGE_SIZE,
-  });
+  // Check if MeiliSearch is available
+  if (!meiliRecipesIndex) {
+    console.warn(
+      'MeiliSearch is not configured. Search functionality is disabled.'
+    );
+    return {
+      data: [],
+      meta: {
+        pagination: {
+          page: 1,
+          pageSize: args.limit || RECIPES_PAGE_SIZE,
+          pageCount: 1,
+          total: 0,
+        },
+      },
+    };
+  }
 
-  const data = await getRecipesFromMeiliHits(searchResults.hits);
+  try {
+    const searchResults = await meiliRecipesIndex.search(args.search, {
+      limit: RECIPES_PAGE_SIZE,
+    });
 
-  const meta: CMSMeta = {
-    pagination: {
-      page: 1,
-      pageSize: args.limit || RECIPES_PAGE_SIZE,
-      pageCount: 1,
-      total: data.length,
-    },
-  };
+    const data = await getRecipesFromMeiliHits(searchResults.hits);
 
-  return { data, meta };
+    const meta: CMSMeta = {
+      pagination: {
+        page: 1,
+        pageSize: args.limit || RECIPES_PAGE_SIZE,
+        pageCount: 1,
+        total: data.length,
+      },
+    };
+
+    return { data, meta };
+  } catch (error) {
+    console.error('MeiliSearch error:', error);
+    return {
+      data: [],
+      meta: {
+        pagination: {
+          page: 1,
+          pageSize: args.limit || RECIPES_PAGE_SIZE,
+          pageCount: 1,
+          total: 0,
+        },
+      },
+    };
+  }
 };
 
 export const searchSimilarRecipes = unstable_cache(
   async ({ recipe }: { recipe: Recipe }) => {
+    // Check if MeiliSearch is available
+    if (!meiliRecipesIndex) {
+      console.warn(
+        'MeiliSearch is not configured. Similar recipes functionality is disabled.'
+      );
+      return [];
+    }
+
     try {
       const id = `lets-cozinha-receita-${recipe.id}`;
 

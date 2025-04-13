@@ -26,18 +26,18 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
   const title = recipe.nome;
   const image = recipe.imagens?.[0]?.url;
   const description = recipe.descricao;
-  
+
   const commonProps = {
     url: shareUrl,
     windowHeight,
     windowWidth,
   };
-  
-  const iconProps = { 
-    round: true, 
+
+  const iconProps = {
+    round: true,
     size,
     bgStyle: { fill: 'var(--color-text-dark)' },
-    iconFillColor: 'white'
+    iconFillColor: 'white',
   };
 
   return (
@@ -48,11 +48,12 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
         </div>
         <h2 className="text-xl font-bold mb-0">Compartilhar Receita</h2>
       </div>
-      
+
       <p className="text-text-light text-sm leading-relaxed">
-        Gostou da receita de <strong>{recipe.nome}</strong>? Compartilhe com amigos e familiares para que eles possam experimentar também!
+        Gostou da receita de <strong>{recipe.nome}</strong>? Compartilhe com
+        amigos e familiares para que eles possam experimentar também!
       </p>
-      
+
       <div className="flex flex-wrap gap-md mt-md items-center justify-center sm:justify-start">
         <FacebookShareButton
           {...commonProps}
@@ -62,7 +63,7 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
         >
           <FacebookIcon {...iconProps} />
         </FacebookShareButton>
-        
+
         <WhatsappShareButton
           {...commonProps}
           title={title}
@@ -71,7 +72,7 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
         >
           <WhatsappIcon {...iconProps} />
         </WhatsappShareButton>
-        
+
         <TwitterShareButton
           {...commonProps}
           title={title}
@@ -80,7 +81,7 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
         >
           <XIcon {...iconProps} />
         </TwitterShareButton>
-        
+
         {image && (
           <PinterestShareButton
             {...commonProps}
@@ -92,7 +93,7 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
             <PinterestIcon {...iconProps} />
           </PinterestShareButton>
         )}
-        
+
         <CopyToClipboard
           text={shareUrl}
           onCopy={() => {
@@ -106,8 +107,8 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
               height: size,
             }}
             className={`flex justify-center items-center rounded-full cursor-pointer transition-all ${
-              isCopied 
-                ? 'bg-accent text-white scale-110' 
+              isCopied
+                ? 'bg-accent text-white scale-110'
                 : 'bg-primary text-white hover:scale-110'
             }`}
             aria-label="Copiar link"
@@ -116,7 +117,7 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
           </button>
         </CopyToClipboard>
       </div>
-      
+
       {isCopied && (
         <div className="bg-accent/10 text-accent p-xs rounded text-center text-sm mt-sm">
           Link copiado para a área de transferência!
