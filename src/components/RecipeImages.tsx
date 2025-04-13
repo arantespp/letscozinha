@@ -1,5 +1,8 @@
+'use client';
+
 import { generateNextImageSizesString } from 'src/methods/generateNextImageSizesString';
 import Image from 'next/image';
+import { useState } from 'react';
 
 type ImageProps = {
   url: string;
@@ -7,21 +10,11 @@ type ImageProps = {
 };
 
 export function RecipeImages({ images }: { images: ImageProps[] }) {
+  const [activeImage, setActiveImage] = useState(0);
+
   if (images.length === 0) {
     return null;
   }
-
-  const containerClassName = (() => {
-    if (images.length === 1) {
-      return '';
-    }
-
-    if (images.length === 2) {
-      return 'flex flex-col md:grid grid-cols-2 gap-sm';
-    }
-
-    return 'flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-sm';
-  })();
 
   const sizes = (() => {
     const commonFirstSizes = [
@@ -56,45 +49,53 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
       ]);
     }
 
-    if (images.length === 2) {
-      return generateNextImageSizesString([
-        ...commonFirstSizes,
-        {
-          maxWidth: '1024px',
-          size: '300px',
-        },
-        {
-          size: '430px',
-        },
-      ]);
-    }
-
     return generateNextImageSizesString([
       ...commonFirstSizes,
       {
         maxWidth: '1024px',
-        size: '300px',
+        size: '623px',
       },
       {
-        size: '280px',
+        size: '672px',
       },
     ]);
   })();
 
   return (
-    <div className={containerClassName}>
-      {images.map((image) => (
-        <div className="aspect-square relative max-w-image-lg" key={image.url}>
-          <Image
-            className="rounded object-cover object-center"
-            src={image.url}
-            alt={image.alt}
-            fill
-            sizes={sizes}
-            priority
-          />
+    <div className="flex flex-col gap-sm">
+      {/* Main image display */}
+      <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-sm">
+        <Image
+          className="object-cover object-center transition-transform duration-500 hover:scale-105"
+          src={images[activeImage].url}
+          alt={images[activeImage].alt}
+          fill
+          sizes={sizes}
+          priority
+        />
+      </div>
+
+      {/* Thumbnails */}
+      {images.length > 1 && (
+        <div className="flex gap-xs overflow-x-auto pb-1 -mx-1 px-1">
+          {images.map((image, index) => (
+            <button
+              key={image.url}
+              onClick={() => setActiveImage(index)}
+              className={`relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden transition-all 
+                ${activeImage === index ? 'ring-2 ring-primary scale-105' : 'opacity-70 hover:opacity-100'}`}
+            >
+              <Image
+                src={image.url}
+                alt={`Miniatura ${index + 1}`}
+                fill
+                sizes="64px"
+                className="object-cover"
+              />
+            </button>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

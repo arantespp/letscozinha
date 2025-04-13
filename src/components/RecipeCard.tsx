@@ -44,40 +44,56 @@ export default function RecipeCard({
   priority?: boolean;
 }) {
   const image = recipe.imagens?.[0] || recipe.imagens?.[0].formats.medium;
-
   const href = `/receitas/${recipe.slug}`;
 
   return (
-    <div className="flex flex-col gap-sm border rounded p-sm shadow-xs hover:shadow-md">
-      <Link href={href}>
-        <div className="aspect-square relative">
+    <div className="flex flex-col gap-sm border border-gray-100 rounded-lg p-sm shadow-sm hover:shadow-lg transition-all duration-300 bg-white h-full">
+      <Link href={href} className="overflow-hidden rounded-lg block">
+        <div className="aspect-square relative overflow-hidden">
           <Image
-            className="rounded object-cover object-center"
+            className="rounded-lg object-cover object-center transform hover:scale-105 transition-transform duration-500"
             src={image?.url || logo}
             alt={recipe.nome}
             fill
-            quality={50}
+            quality={70}
             sizes={sizes}
             priority={priority}
           />
+          {recipe.categorias && recipe.categorias.length > 0 && (
+            <div className="absolute top-2 left-2">
+              <span className="bg-primary text-text-dark text-xs font-medium py-1 px-2 rounded-full">
+                {recipe.categorias[0].nome}
+              </span>
+            </div>
+          )}
         </div>
       </Link>
-      <h3 className="my-none flex-1">
-        <Link href={href} className="no-underline">
-          {recipe.nome}
-        </Link>
-      </h3>
-      <div className="flex flex-row flex-wrap gap-xs">
-        {(recipe.categorias || []).map((category) => (
-          <div key={category.documentId} className="p-xs">
-            <CategoryTag {...category} isSmall />
-          </div>
-        ))}
+      <div className="flex flex-col gap-xs flex-1 pt-1">
+        <h3 className="my-none text-lg font-bold line-clamp-2">
+          <Link
+            href={href}
+            className="no-underline hover:text-primary transition-colors"
+          >
+            {recipe.nome}
+          </Link>
+        </h3>
+        <div className="flex flex-row flex-wrap gap-xs mb-1">
+          {(recipe.categorias || []).slice(1).map((category) => (
+            <div key={category.documentId}>
+              <CategoryTag {...category} isSmall />
+            </div>
+          ))}
+        </div>
+        <span className="text-text-light text-sm line-clamp-3 leading-snug mb-auto">
+          {recipe.meta_descricao}
+        </span>
+        <LinkButton
+          href={href}
+          className="mt-2 text-center bg-primary hover:bg-primary/80 text-text-dark font-medium transition-colors"
+        >
+          Ver Receita
+        </LinkButton>
       </div>
-      <span className="text-text-light line-clamp-5 leading-snug">
-        {recipe.meta_descricao}
-      </span>
-      <LinkButton href={href}>Ver Receita</LinkButton>
     </div>
   );
 }

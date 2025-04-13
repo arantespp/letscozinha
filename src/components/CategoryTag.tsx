@@ -9,20 +9,20 @@ export function CategoryTag({
   slug: string;
   isSmall?: boolean;
 }) {
-  const fontSize = isSmall ? 'text-sm' : 'text-base';
-
-  const padding = isSmall ? 'leading-tight px-xs' : 'px-sm';
+  const className = isSmall
+    ? 'text-xs px-2 py-0.5'
+    : 'text-sm px-3 py-1';
 
   return (
     <Link
       href={`/categorias/${slug}`}
-      className={`hover:text-neutral no-underline ${fontSize}`}
+      className="no-underline"
     >
-      <div
-        className={`w-fit	bg-gray-200 text-text-dark hover:text-neutral rounded hover:bg-primary no-underline ${padding}`}
+      <span
+        className={`inline-block bg-gray-100 text-text-dark rounded-full hover:bg-primary hover:text-text-dark transition-colors font-medium ${className}`}
       >
         {nome}
-      </div>
+      </span>
     </Link>
   );
 }
