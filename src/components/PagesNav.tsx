@@ -7,12 +7,8 @@ import Link from 'next/link';
 
 const navs = [
   {
-    href: '/',
-    label: 'Home',
-  },
-  {
     href: '/receitas',
-    label: 'Buscar Receitas',
+    label: 'Receitas',
   },
   {
     href: '/conheca-a-lets',
