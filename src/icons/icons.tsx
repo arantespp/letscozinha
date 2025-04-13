@@ -9,6 +9,7 @@ import {
   faSearch,
   faSpinner,
   faCopy,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faFacebook,
@@ -57,4 +58,8 @@ export const PinterestIcon = (props: Props) => (
 
 export const TiktokIcon = (props: Props) => (
   <FontAwesomeIcon {...props} icon={faTiktok} />
+);
+
+export const XMarkIcon = (props: Props) => (
+  <FontAwesomeIcon {...props} icon={faXmark} />
 );
