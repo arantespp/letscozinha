@@ -35,16 +35,18 @@ export async function Breadcrumbs(props: {
   };
 
   return (
-    <nav className="flex gap-xs mb-lg md:mb-lg leading-none">
+    <nav className="flex flex-wrap gap-xs mb-lg md:mb-lg leading-relaxed">
       <JsonLd schema={breadcrumbList} />
       {props.items.map((item, index) => (
         <React.Fragment key={item.href}>
           {item.current ? (
             <span className="text-text-light">{item.name}</span>
           ) : (
-            <Link href={item.href}>{item.name}</Link>
+            <Link className="hover:underline" href={item.href}>
+              {item.name}
+            </Link>
           )}
-          {index < props.items.length - 1 && <span>/</span>}
+          {index < props.items.length - 1 && <span className="mx-1">/</span>}
         </React.Fragment>
       ))}
     </nav>
