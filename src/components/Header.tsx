@@ -19,7 +19,7 @@ export function Header() {
           <Image
             src={logo}
             alt="Lets Cozinha"
-            height={55}
+            height={50}
             quality={100}
             priority
             className="relative -left-2"

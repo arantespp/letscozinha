@@ -145,7 +145,7 @@ export default async function Page(props: Props) {
         </div>
       </div>
 
-      <article className="container">
+      <article className="">
         <div className="grid md:grid-cols-[2fr_1fr] gap-xl">
           <div className="flex flex-col gap-lg order-2 md:order-1">
             {/* Recipe content */}

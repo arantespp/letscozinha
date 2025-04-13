@@ -7,9 +7,11 @@ import Image from 'next/image';
 export async function CategoriesList({
   direction = 'column',
   displayStyle = 'default',
+  limit,
 }: {
   direction?: 'row' | 'column';
   displayStyle?: 'default' | 'grid' | 'featured';
+  limit?: number;
 }) {
   const { allCategories } = await getAllCategories();
 
@@ -38,9 +40,13 @@ export async function CategoriesList({
   });
 
   if (displayStyle === 'grid') {
+    const categoriesToShow = limit
+      ? allCategoriesThatHaveRecipes.slice(0, limit)
+      : allCategoriesThatHaveRecipes;
+
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-md">
-        {allCategoriesThatHaveRecipes.map((category) => (
+        {categoriesToShow.map((category) => (
           <Link
             key={category.documentId}
             href={`/categorias/${category.slug}`}
@@ -60,13 +66,17 @@ export async function CategoriesList({
   }
 
   if (displayStyle === 'featured') {
-    const categoriesWithMoreRecipes = allCategoriesThatHaveRecipes
-      .sort((a, b) => b.recipeCount - a.recipeCount)
-      .slice(0, 6);
+    const categoriesWithMoreRecipes = allCategoriesThatHaveRecipes.sort(
+      (a, b) => b.recipeCount - a.recipeCount
+    );
+
+    const categoriesToShow = limit
+      ? categoriesWithMoreRecipes.slice(0, limit)
+      : categoriesWithMoreRecipes;
 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-lg">
-        {categoriesWithMoreRecipes.map((category) => (
+        {categoriesToShow.map((category) => (
           <Link
             key={category.documentId}
             href={`/categorias/${category.slug}`}
@@ -110,9 +120,13 @@ export async function CategoriesList({
       ? 'flex flex-col gap-[14px]'
       : 'flex flex-row flex-wrap gap-sm';
 
+  const categoriesToShow = limit
+    ? allCategoriesThatHaveRecipes.slice(0, limit)
+    : allCategoriesThatHaveRecipes;
+
   return (
     <div className={className}>
-      {allCategoriesThatHaveRecipes.map((category) => (
+      {categoriesToShow.map((category) => (
         <div key={category.documentId}>
           <CategoryTag {...category} />
         </div>

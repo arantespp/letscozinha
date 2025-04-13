@@ -148,7 +148,7 @@ async function PopularCategories() {
             </Link>
           </div>
 
-          <CategoriesList displayStyle="featured" />
+          <CategoriesList displayStyle="featured" limit={6} />
         </div>
       </section>
     );

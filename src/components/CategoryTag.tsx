@@ -9,7 +9,7 @@ export function CategoryTag({
   slug: string;
   isSmall?: boolean;
 }) {
-  const className = isSmall ? 'text-xs px-2 py-0.5' : 'text-sm px-3 py-1';
+  const className = isSmall ? 'text-sm px-2 py-0.5' : 'text-md px-3 py-1';
 
   return (
     <Link href={`/categorias/${slug}`} className="no-underline">

@@ -114,9 +114,6 @@ export default async function Page(props: {
                 <h1 className="text-3xl md:text-4xl font-heading mb-sm">
                   {category.nome}
                 </h1>
-                <div className="text-text-light prose">
-                  <Markdown source={category.descricao} />
-                </div>
               </div>
             </div>
           </div>

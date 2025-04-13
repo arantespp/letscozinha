@@ -36,7 +36,7 @@ const PageNavSection = () => {
 
 const NewsletterSection = () => {
   return (
-    <section className="flex flex-col items-center lg:items-start w-full lg:max-w-xs">
+    <section className="flex flex-col items-center lg:items-start w-full">
       <h4 className="text-lg font-bold mb-md">Receba Nossas Novidades</h4>
       <p className="text-text-dark/80 text-sm mb-sm text-center lg:text-left">
         Cadastre seu email para receber nossas receitas e dicas culinárias.
@@ -64,10 +64,16 @@ export async function Footer() {
 
   return (
     <footer className="bg-muted/50 border-t border-gray-100">
-      <div className="container py-xl gap-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start">
-        <ImageSection />
-        <PageNavSection />
-        <NewsletterSection />
+      <div className="container py-xl gap-lg grid grid-cols-1 md:grid-cols-12 items-start">
+        <div className="md:col-span-6 lg:col-span-5 xl:col-span-4">
+          <ImageSection />
+        </div>
+        <div className="md:col-span-6 lg:col-span-3 xl:col-span-3">
+          <PageNavSection />
+        </div>
+        <div className="md:col-span-12 lg:col-span-4 xl:col-span-5">
+          <NewsletterSection />
+        </div>
       </div>
       <div className="bg-primary/10 border-t border-primary/20">
         <div className="container py-md flex flex-col md:flex-row justify-between items-center gap-md">
