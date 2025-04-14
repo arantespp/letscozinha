@@ -18,7 +18,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      className={`container my-lg md:my-xl ${!showSidebar ? 'max-w-5xl mx-auto' : ''}`}
+      className={`my-lg md:my-xl ${!showSidebar ? 'max-w-5xl mx-auto' : ''}`}
     >
       <div
         className={`flex flex-col ${showSidebar ? 'md:flex-row gap-xl' : ''}`}

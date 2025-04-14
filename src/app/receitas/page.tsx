@@ -174,7 +174,7 @@ export default async function Page(props: Props) {
   const suspenseKey = JSON.stringify(searchParams?.search);
 
   return (
-    <div className="px-xs md:px-0 py-lg">
+    <div className="">
       <Breadcrumbs
         items={[
           {

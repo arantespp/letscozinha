@@ -112,7 +112,7 @@ export default async function Page(props: Props) {
     <div className="pb-xl">
       <JsonLd schema={recipeSchema} />
 
-      <div className="bg-gradient-to-b from-muted/50 to-neutral pt-md pb-lg mb-lg">
+      <div className="bg-gradient-to-b from-muted/50 to-neutral pt-md pb-lg">
         <div className="container">
           <Breadcrumbs
             items={[
@@ -177,7 +177,7 @@ export default async function Page(props: Props) {
         <hr className="my-xl" />
       </article>
 
-      <div className="container">
+      <div className="">
         <React.Suspense fallback={null}>
           <SimilarRecipes recipe={recipe} />
         </React.Suspense>

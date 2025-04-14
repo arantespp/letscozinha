@@ -11,7 +11,7 @@ import logo from 'public/logo-texto.png';
 export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-primary/5 via-neutral/95 to-primary/5 backdrop-blur-sm border-b border-primary/10 shadow-sm">
-      <div className="container py-sm md:py-sm flex items-center justify-between">
+      <div className="container py-sm md:py-sm flex items-center justify-between px-sm md:px-0">
         <Link
           href="/"
           className="transition-opacity hover:opacity-90 flex-shrink-0"

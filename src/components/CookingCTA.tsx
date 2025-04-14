@@ -6,7 +6,7 @@ export async function CookingCTA() {
   const { letsCozinhaLets } = await getLetsCozinhaLets();
 
   return (
-    <section className="container my-lg md:my-xl overflow-hidden px-sm md:px-0">
+    <section className="my-lg md:my-xl overflow-hidden md:px-0">
       <div className="bg-gradient-to-r from-primary/20 to-accent/20 rounded-xl p-md md:p-xl relative">
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-10">
           <div className="w-full h-full bg-[url('/cooking-pattern.svg')] bg-repeat" />

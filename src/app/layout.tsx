@@ -78,7 +78,7 @@ export default function RootLayout({
           <React.Suspense fallback={<div className="h-[200px]"></div>}>
             {hero}
           </React.Suspense>
-          <div className="container my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl">
+          <div className="container mx-auto my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl">
             <div className="flex-1">
               <React.Suspense fallback={null}>{children}</React.Suspense>
             </div>

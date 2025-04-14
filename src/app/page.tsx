@@ -137,19 +137,17 @@ async function PopularCategories() {
 
     return (
       <section className="mb-xl">
-        <div className="container">
-          <div className="flex justify-between items-center mb-md">
-            <h2 className="text-2xl md:text-3xl mb-0">Categorias Populares</h2>
-            <Link
-              href="/categorias"
-              className="text-primary font-medium hover:underline"
-            >
-              Ver todas
-            </Link>
-          </div>
-
-          <CategoriesList displayStyle="featured" limit={6} />
+        <div className="flex justify-between items-center mb-md">
+          <h2 className="text-2xl md:text-3xl mb-0">Categorias Populares</h2>
+          <Link
+            href="/categorias"
+            className="text-primary font-medium hover:underline"
+          >
+            Ver todas
+          </Link>
         </div>
+
+        <CategoriesList displayStyle="featured" limit={6} />
       </section>
     );
   } catch (error) {

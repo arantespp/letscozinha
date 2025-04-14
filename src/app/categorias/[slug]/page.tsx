@@ -70,7 +70,7 @@ export default async function Page(props: {
 
   return (
     <div className="flex flex-col">
-      <div className="container py-lg">
+      <div className="">
         <Breadcrumbs
           items={[
             {
