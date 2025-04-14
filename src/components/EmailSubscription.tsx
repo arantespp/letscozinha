@@ -115,7 +115,8 @@ export function EmailSubscription({
 
       {status === 'success' && (
         <p className={`text-green-600 text-sm mt-xs ${textAlignmentClass}`}>
-          Obrigado! Verifique seu e-mail para confirmar sua inscrição.
+          Obrigado por se inscrever! Você receberá novidades e receitas
+          diretamente no seu e-mail.
         </p>
       )}
       {status === 'error' && (
