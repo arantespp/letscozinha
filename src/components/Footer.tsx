@@ -1,6 +1,7 @@
 import { PagesNav } from './PagesNav';
 import { SocialNav } from './SocialNav';
 import { getLetsCozinha } from 'src/cms/singleTypes';
+import { FooterNewsletterSection } from './FooterNewsletterSection';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from 'public/logo-texto.png';
@@ -34,31 +35,6 @@ const PageNavSection = () => {
   );
 };
 
-const NewsletterSection = () => {
-  return (
-    <section className="flex flex-col items-center lg:items-start w-full">
-      <h4 className="text-lg font-bold mb-md">Receba Nossas Novidades</h4>
-      <p className="text-text-dark/80 text-sm mb-sm text-center lg:text-left">
-        Cadastre seu email para receber nossas receitas e dicas culinárias.
-      </p>
-      <form className="flex flex-col sm:flex-row gap-xs w-full">
-        <input
-          type="email"
-          placeholder="Seu email"
-          className="px-md py-sm border border-gray-200 rounded-md flex-1 focus:outline-none focus:ring-2 focus:ring-primary/50"
-          required
-        />
-        <button
-          type="submit"
-          className="bg-primary hover:bg-primary/80 text-text-dark px-md py-sm rounded-md font-medium transition-colors whitespace-nowrap"
-        >
-          Inscrever
-        </button>
-      </form>
-    </section>
-  );
-};
-
 export async function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -72,7 +48,7 @@ export async function Footer() {
           <PageNavSection />
         </div>
         <div className="md:col-span-12 lg:col-span-4 xl:col-span-5">
-          <NewsletterSection />
+          <FooterNewsletterSection />
         </div>
       </div>
       <div className="bg-primary/10 border-t border-primary/20">

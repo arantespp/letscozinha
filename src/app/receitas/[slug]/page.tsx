@@ -13,6 +13,7 @@ import { RecipeImages } from 'src/components/RecipeImages';
 import { RecipeInstagramLinks } from 'src/components/RecipeInstagramLinks';
 import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
+import { RecipeEmailSubscription } from 'src/components/RecipeEmailSubscription';
 import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
@@ -173,9 +174,12 @@ export default async function Page(props: Props) {
             </div>
           </div>
         </div>
-
-        <hr className="my-xl" />
       </article>
+
+      {/* Removed the hr element and improved spacing */}
+      <div className="mx-auto">
+        <RecipeEmailSubscription />
+      </div>
 
       <div className="">
         <React.Suspense fallback={null}>
