@@ -41,6 +41,7 @@ export default async function Hero() {
                     src={featuredRecipes[0].imagens[0].url}
                     alt={featuredRecipes[0].nome || 'Receita destaque'}
                     fill
+                    sizes="(max-width: 768px) 140px, (max-width: 1200px) 300px, 350px"
                     style={{ objectFit: 'cover', objectPosition: 'center' }}
                     priority
                   />
@@ -55,7 +56,9 @@ export default async function Hero() {
                     <Image
                       src={featuredRecipes[1].imagens[0].url}
                       alt={featuredRecipes[1].nome || 'Receita destaque'}
-                      fill
+                      width={220}
+                      height={220}
+                      sizes="(max-width: 768px) 75px, 220px"
                       style={{ objectFit: 'cover', objectPosition: 'center' }}
                     />
                   ) : (
@@ -68,7 +71,9 @@ export default async function Hero() {
                     <Image
                       src={featuredRecipes[2].imagens[0].url}
                       alt={featuredRecipes[2].nome || 'Receita destaque'}
-                      fill
+                      width={220}
+                      height={220}
+                      sizes="(max-width: 768px) 75px, 220px"
                       style={{ objectFit: 'cover', objectPosition: 'center' }}
                     />
                   ) : (

@@ -1,40 +1,18 @@
 import { CategoryTag } from './CategoryTag';
 import { LinkButton } from './LinkButton';
-import { generateNextImageSizesString } from 'src/methods/generateNextImageSizesString';
+import { getOptimizedImageProps } from 'src/methods/generateNextImageSizesString';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '../../public/logo.png';
 import type { Recipe } from 'src/cms/recipes';
 
-const sizes = generateNextImageSizesString([
-  {
-    maxWidth: '400px',
-    size: '320px',
-  },
-  {
-    maxWidth: '480px',
-    size: '390px',
-  },
-  {
-    maxWidth: '640px',
-    size: '550px',
-  },
-  {
-    maxWidth: '768px',
-    size: '680px',
-  },
-  {
-    maxWidth: '1024px',
-    size: '580px',
-  },
-  {
-    maxWidth: '1280px',
-    size: '390px',
-  },
-  {
-    size: '240px',
-  },
-]);
+// Configurações de tamanho específicas para cards de receitas
+const recipeCardSizes = [
+  { maxWidth: '640px', size: '90vw' }, // Mobile (mais amplo)
+  { maxWidth: '768px', size: '45vw' }, // Tablet (2 colunas)
+  { maxWidth: '1024px', size: '30vw' }, // Desktop pequeno (3 colunas)
+  { size: '25vw' }, // Desktop grande
+];
 
 export default function RecipeCard({
   recipe,
@@ -43,8 +21,18 @@ export default function RecipeCard({
   recipe: Recipe;
   priority?: boolean;
 }) {
-  const image = recipe.imagens?.[0] || recipe.imagens?.[0].formats.medium;
+  const image = recipe.imagens?.[0] || recipe.imagens?.[0]?.formats?.medium;
   const href = `/receitas/${recipe.slug}`;
+
+  // Usando a nova função helper que retorna todas as props otimizadas
+  const imageProps = getOptimizedImageProps(image, {
+    defaultWidth: 400,
+    defaultHeight: 400,
+    priority,
+    quality: 70,
+    customSizes: recipeCardSizes,
+    useDefaultSizes: false,
+  });
 
   return (
     <div className="flex flex-col gap-sm border border-gray-100 rounded-lg p-sm shadow-sm hover:shadow-lg transition-all duration-300 bg-white h-full">
@@ -54,10 +42,7 @@ export default function RecipeCard({
             className="rounded-lg object-cover object-center transform hover:scale-105 transition-transform duration-500"
             src={image?.url || logo}
             alt={recipe.nome}
-            fill
-            quality={70}
-            sizes={sizes}
-            priority={priority}
+            {...imageProps}
           />
           {recipe.categorias && recipe.categorias.length > 0 && (
             <div className="absolute top-2 left-2">

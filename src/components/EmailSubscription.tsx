@@ -78,7 +78,9 @@ export function EmailSubscription({
 
   const textAlignmentClass =
     textAlignment === 'center' ? 'text-center' : 'text-left';
-  const formLayoutClass = formLayout === 'row' ? 'sm:flex-row' : 'flex-col';
+  // Always start with flex-col, apply sm:flex-row only if formLayout is 'row'
+  const formLayoutClass =
+    formLayout === 'row' ? 'flex-col sm:flex-row' : 'flex-col';
 
   return (
     <div className={`${containerClassName} ${marginClassName}`}>
