@@ -2,6 +2,73 @@ import { SearchIcon } from 'src/icons/icons';
 import { getLetsCozinha } from 'src/cms/singleTypes';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Suspense } from 'react';
+
+// Componente para renderizar apenas a parte de imagem do Hero
+function HeroImages({ featuredRecipes }: { featuredRecipes: any[] }) {
+  return (
+    <div className="relative order-1 md:order-2 md:h-[450px] mb-md md:mb-0 flex justify-center">
+      <div className="grid grid-cols-2 gap-sm h-full w-full max-w-[280px] md:max-w-full">
+        <div className="h-[160px] md:h-full aspect-[3/4] md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-2">
+          {featuredRecipes[0]?.imagens?.[0] ? (
+            <Image
+              src={featuredRecipes[0].imagens[0].url}
+              alt={featuredRecipes[0].nome || 'Receita destaque'}
+              fill
+              sizes="(max-width: 768px) 140px, (max-width: 1200px) 300px, 350px"
+              style={{ objectFit: 'cover', objectPosition: 'center' }}
+              priority
+              loading="eager"
+              quality={75}
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/40 to-secondary/30"></div>
+          )}
+        </div>
+
+        <div className="grid gap-sm">
+          <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-1">
+            {featuredRecipes[1]?.imagens?.[0] ? (
+              <Image
+                src={featuredRecipes[1].imagens[0].url}
+                alt={featuredRecipes[1].nome || 'Receita destaque'}
+                fill
+                sizes="(max-width: 768px) 75px, 220px"
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
+                priority
+                loading="eager"
+                quality={75}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-secondary/30 to-accent/20"></div>
+            )}
+          </div>
+
+          <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-1">
+            {featuredRecipes[2]?.imagens?.[0] ? (
+              <Image
+                src={featuredRecipes[2].imagens[0].url}
+                alt={featuredRecipes[2].nome || 'Receita destaque'}
+                fill
+                sizes="(max-width: 768px) 75px, 220px"
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
+                priority
+                loading="eager"
+                quality={75}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-accent/30 to-primary/20"></div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Decorative element */}
+      <div className="absolute -bottom-4 -left-4 w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/20 -z-10"></div>
+      <div className="absolute -top-4 -right-4 w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent/20 -z-10"></div>
+    </div>
+  );
+}
 
 export default async function Hero() {
   const { letsCozinha } = await getLetsCozinha();
@@ -32,59 +99,22 @@ export default async function Hero() {
             </Link>
           </div>
 
-          {/* Hero Image Collage */}
-          <div className="relative order-1 md:order-2 md:h-[450px] mb-md md:mb-0 flex justify-center">
-            <div className="grid grid-cols-2 gap-sm h-full w-full max-w-[280px] md:max-w-full">
-              <div className="h-[160px] md:h-full aspect-[3/4] md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-2">
-                {featuredRecipes[0]?.imagens?.[0] ? (
-                  <Image
-                    src={featuredRecipes[0].imagens[0].url}
-                    alt={featuredRecipes[0].nome || 'Receita destaque'}
-                    fill
-                    sizes="(max-width: 768px) 140px, (max-width: 1200px) 300px, 350px"
-                    style={{ objectFit: 'cover', objectPosition: 'center' }}
-                    priority
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-primary/40 to-secondary/30"></div>
-                )}
-              </div>
-
-              <div className="grid gap-sm">
-                <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-1">
-                  {featuredRecipes[1]?.imagens?.[0] ? (
-                    <Image
-                      src={featuredRecipes[1].imagens[0].url}
-                      alt={featuredRecipes[1].nome || 'Receita destaque'}
-                      fill
-                      sizes="(max-width: 768px) 75px, 220px"
-                      style={{ objectFit: 'cover', objectPosition: 'center' }}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-secondary/30 to-accent/20"></div>
-                  )}
-                </div>
-
-                <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-1">
-                  {featuredRecipes[2]?.imagens?.[0] ? (
-                    <Image
-                      src={featuredRecipes[2].imagens[0].url}
-                      alt={featuredRecipes[2].nome || 'Receita destaque'}
-                      fill
-                      sizes="(max-width: 768px) 75px, 220px"
-                      style={{ objectFit: 'cover', objectPosition: 'center' }}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-accent/30 to-primary/20"></div>
-                  )}
+          {/* Hero Images com Suspense para melhorar o carregamento */}
+          <Suspense
+            fallback={
+              <div className="relative order-1 md:order-2 md:h-[450px] mb-md md:mb-0 flex justify-center">
+                <div className="grid grid-cols-2 gap-sm h-full w-full max-w-[280px] md:max-w-full">
+                  <div className="h-[160px] md:h-full aspect-[3/4] md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-2 bg-gray-200 animate-pulse"></div>
+                  <div className="grid gap-sm">
+                    <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-1 bg-gray-200 animate-pulse"></div>
+                    <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-1 bg-gray-200 animate-pulse"></div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Decorative element */}
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/20 -z-10"></div>
-            <div className="absolute -top-4 -right-4 w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent/20 -z-10"></div>
-          </div>
+            }
+          >
+            <HeroImages featuredRecipes={featuredRecipes} />
+          </Suspense>
         </div>
       </div>
     </div>
