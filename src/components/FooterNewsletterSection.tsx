@@ -1,5 +1,3 @@
-'use client';
-
 import { EmailSubscription } from './EmailSubscription';
 
 /**

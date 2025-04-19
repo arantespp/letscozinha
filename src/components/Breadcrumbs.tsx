@@ -1,54 +1,43 @@
 import * as React from 'react';
-import { JsonLd } from './JsonLd';
-import { getUrl } from '../methods/getUrl';
-import Link from 'next/link';
-import type { BreadcrumbList, ListItem } from 'schema-dts';
+import { getBreadcrumbSchema } from 'src/methods/getBreadcrumbSchema';
 
-export async function Breadcrumbs(props: {
-  items: {
-    name: string;
-    href: string;
-    current?: boolean;
-  }[];
+type BreadcrumbItem = {
+  name: string;
+  url?: string;
+  href?: string;
+  current?: boolean;
+};
+
+export function Breadcrumbs({
+  breadcrumbs,
+  items,
+}: {
+  breadcrumbs?: BreadcrumbItem[];
+  items?: BreadcrumbItem[];
 }) {
-  /**
-   * https://developers.google.com/search/docs/appearance/structured-data/breadcrumb
-   */
-  const itemListElement = props.items.reduce<ListItem[]>((acc, item) => {
-    if (item.href === '/') {
-      return acc;
-    }
+  // Usar items se breadcrumbs não for fornecido
+  const breadcrumbItems = breadcrumbs || items || [];
 
-    const listItem: ListItem = {
-      '@type': 'ListItem',
-      position: acc.length + 1,
-      name: item.name,
-      item: getUrl(item.href),
-    };
+  // Normalizar os itens para garantir que todos tenham a propriedade 'url'
+  const normalizedItems = breadcrumbItems.map((item) => ({
+    name: item.name,
+    url: item.url || item.href || '#',
+  }));
 
-    return [...acc, listItem];
-  }, []);
-
-  const breadcrumbList: BreadcrumbList = {
-    '@type': 'BreadcrumbList',
-    itemListElement,
-  };
+  const breadcrumbSchema = getBreadcrumbSchema(normalizedItems);
 
   return (
-    <nav className="flex flex-wrap gap-xs mb-lg md:mb-lg leading-relaxed">
-      <JsonLd schema={breadcrumbList} />
-      {props.items.map((item, index) => (
-        <React.Fragment key={item.href}>
-          {item.current ? (
-            <span className="text-text-light">{item.name}</span>
-          ) : (
-            <Link className="hover:underline" href={item.href}>
-              {item.name}
-            </Link>
-          )}
-          {index < props.items.length - 1 && <span className="mx-1">/</span>}
-        </React.Fragment>
-      ))}
+    <nav aria-label="breadcrumb">
+      <script type="application/ld+json">
+        {JSON.stringify(breadcrumbSchema)}
+      </script>
+      <ol className="breadcrumb">
+        {normalizedItems.map((breadcrumb, index) => (
+          <li key={index} className="breadcrumb-item">
+            <a href={breadcrumb.url}>{breadcrumb.name}</a>
+          </li>
+        ))}
+      </ol>
     </nav>
   );
 }

@@ -66,6 +66,7 @@ export function HeaderMenu() {
             height: '100%',
             width: '100%',
           }}
+          onClick={() => setIsOpen(false)}
         >
           {/* Dark overlay */}
           <div

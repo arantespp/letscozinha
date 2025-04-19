@@ -4,6 +4,7 @@ import { getOptimizedImageProps } from 'src/methods/generateNextImageSizesString
 import Image from 'next/image';
 import { useState } from 'react';
 import { ImageAttributes } from 'src/cms/types';
+import { getImageSchema } from 'src/methods/getImageSchema';
 
 type ImageProps = ImageAttributes;
 
@@ -33,8 +34,14 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
     useDefaultSizes: false,
   });
 
+  // Gerando dados estruturados para SEO
+  const imageSchema = getImageSchema(activeImageData);
+
   return (
     <div className="flex flex-col gap-sm">
+      {/* Dados estruturados para SEO */}
+      <script type="application/ld+json">{JSON.stringify(imageSchema)}</script>
+
       {/* Main image display */}
       <div className="aspect-[4/3] relative rounded-lg overflow-hidden shadow-sm">
         <Image
