@@ -51,15 +51,44 @@ export function getImageUrl(image: any) {
   return image.url;
 }
 
-// Recipe component for Template 1 (Minimalist)
-const Template1RecipeItem = ({ recipe }: { recipe: Recipe }) => {
+// Generic Recipe component that works with any template
+const RecipeItem = ({
+  recipe,
+  template,
+}: {
+  recipe: Recipe;
+  template: EbookTemplate;
+}) => {
   const mainImage = recipe.imagens?.[0];
-  const template = getTemplateById('1');
+  const isTemplate2 = template.id === '2'; // Template 2 shows ingredients list
 
   return (
     <View style={template.styles.recipeSection}>
       <View style={template.styles.recipeHeader}>
         <Text style={baseStyles.recipeTitle}>{recipe.nome}</Text>
+
+        {/* Categories are displayed differently based on template */}
+        {!isTemplate2 && (
+          <View style={baseStyles.categoriesContainer}>
+            {recipe.categorias?.map((category) => (
+              <Text key={category.documentId} style={baseStyles.category}>
+                {category.nome}
+              </Text>
+            ))}
+          </View>
+        )}
+      </View>
+
+      {/* Image rendering based on template */}
+      {mainImage && (
+        <Image
+          src={getImageUrl(mainImage)}
+          style={template.styles.recipeImage || baseStyles.image}
+        />
+      )}
+
+      {/* Categories for template 2 appear after the image */}
+      {isTemplate2 && (
         <View style={baseStyles.categoriesContainer}>
           {recipe.categorias?.map((category) => (
             <Text key={category.documentId} style={baseStyles.category}>
@@ -67,63 +96,29 @@ const Template1RecipeItem = ({ recipe }: { recipe: Recipe }) => {
             </Text>
           ))}
         </View>
-      </View>
-
-      {mainImage && (
-        <Image src={getImageUrl(mainImage)} style={baseStyles.image} />
       )}
 
       <Text style={baseStyles.paragraph}>
-        {recipe.meta_descricao || recipe.descricao?.substring(0, 150) + '...'}
+        {recipe.meta_descricao ||
+          recipe.descricao?.substring(0, isTemplate2 ? 200 : 150) + '...'}
       </Text>
 
-      <Text style={baseStyles.recipeId}>ID: {recipe.documentId}</Text>
-    </View>
-  );
-};
-
-// Recipe component for Template 2 (Magazine style)
-const Template2RecipeItem = ({ recipe }: { recipe: Recipe }) => {
-  const mainImage = recipe.imagens?.[0];
-  const template = getTemplateById('2');
-
-  return (
-    <View style={template.styles.recipeSection}>
-      <View style={template.styles.recipeHeader}>
-        <Text style={baseStyles.recipeTitle}>{recipe.nome}</Text>
-      </View>
-
-      {mainImage && (
-        <Image
-          src={getImageUrl(mainImage)}
-          style={template.styles.recipeImage}
-        />
+      {/* Ingredients list for template 2 */}
+      {isTemplate2 && (
+        <>
+          <View style={baseStyles.separator} />
+          <View style={baseStyles.section}>
+            <Text style={baseStyles.sectionTitle}>Ingredientes Principais</Text>
+            {parseIngredientsFromMarkdown(recipe.receita)
+              .slice(0, 5)
+              .map((ingredient, index) => (
+                <Text key={index} style={baseStyles.listItem}>
+                  • {ingredient}
+                </Text>
+              ))}
+          </View>
+        </>
       )}
-
-      <View style={baseStyles.categoriesContainer}>
-        {recipe.categorias?.map((category) => (
-          <Text key={category.documentId} style={baseStyles.category}>
-            {category.nome}
-          </Text>
-        ))}
-      </View>
-
-      <Text style={baseStyles.paragraph}>
-        {recipe.meta_descricao || recipe.descricao?.substring(0, 200) + '...'}
-      </Text>
-
-      <View style={baseStyles.separator} />
-
-      <View style={baseStyles.section}>
-        <Text style={baseStyles.sectionTitle}>Ingredientes Principais</Text>
-        {parseIngredientsFromMarkdown(recipe.receita)
-          .slice(0, 5)
-          .map((ingredient, index) => (
-            <Text key={index} style={baseStyles.listItem}>
-              • {ingredient}
-            </Text>
-          ))}
-      </View>
 
       <Text style={baseStyles.recipeId}>ID: {recipe.documentId}</Text>
     </View>
@@ -139,11 +134,6 @@ const EbookPdf = ({
   templateId: string;
 }) => {
   const template = getTemplateById(templateId);
-  const isTemplate2 = templateId === '2';
-
-  const RecipeItemComponent = isTemplate2
-    ? Template2RecipeItem
-    : Template1RecipeItem;
 
   return (
     <Document>
@@ -159,7 +149,11 @@ const EbookPdf = ({
         <Text style={baseStyles.subtitle}>Template: {templateId}</Text>
 
         {recipes.map((recipe) => (
-          <RecipeItemComponent key={recipe.documentId} recipe={recipe} />
+          <RecipeItem
+            key={recipe.documentId}
+            recipe={recipe}
+            template={template}
+          />
         ))}
 
         <Text style={baseStyles.footer}>
