@@ -13,6 +13,62 @@ export const baseStyles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     padding: 30,
   },
+  // --- START: Added Cover Page Styles ---
+  coverPage: {
+    backgroundColor: '#FFFFFF',
+    padding: 50,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  coverLogo: {
+    width: 150,
+    height: 94, // Adjusted height for 751x471 aspect ratio (150 / (751/471))
+    marginBottom: 30,
+  },
+  coverTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+    color: '#333333',
+  },
+  coverSubtitle: {
+    fontSize: 18,
+    marginBottom: 40,
+    textAlign: 'center',
+    color: '#666666',
+  },
+  coverDate: {
+    fontSize: 12,
+    color: '#999999',
+    position: 'absolute',
+    bottom: 50,
+  },
+  // --- END: Added Cover Page Styles ---
+  // --- START: Added TOC Styles ---
+  tocPage: {
+    backgroundColor: '#FFFFFF',
+    padding: 40,
+  },
+  tocTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 25,
+    textAlign: 'center',
+    color: '#333333',
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+    paddingBottom: 10,
+  },
+  tocEntry: {
+    fontSize: 14,
+    marginBottom: 10,
+    lineHeight: 1.4,
+    color: '#444444',
+  },
+  // --- END: Added TOC Styles ---
   title: {
     fontSize: 24,
     marginBottom: 20,
@@ -55,7 +111,7 @@ export const baseStyles = StyleSheet.create({
   },
   logo: {
     width: 50,
-    height: 50,
+    height: 31, // Adjusted height for 751x471 aspect ratio (50 / (751/471))
   },
   headerText: {
     fontSize: 10,
@@ -104,6 +160,11 @@ export const baseStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 5,
+  },
+  // Add base style for lists
+  list: {
+    marginLeft: 15,
+    marginBottom: 10,
   },
   listItem: {
     fontSize: 11,

@@ -1,48 +1,58 @@
 /**
- * eBook Creation Service API
+ * ============================================================
+ * EBOOK CREATION GUIDELINES FOR AGENTS
+ * ============================================================
  *
- * POST /api/ebook
- * Generates a PDF eBook from a list of recipe IDs using customizable templates.
+ * Purpose: This API route generates downloadable PDF recipe ebooks.
  *
- * Request body (JSON):
- * {
- *   recipeIds: string[],      // array of CMS recipe document IDs
- *   templateId?: string       // one of '1', '2', '3'; defaults to '1'
- * }
+ * Key Files:
+ *  - `src/app/api/ebook/route.tsx`: This file. Contains the API endpoint logic, PDF structure, and component rendering.
+ *  - `src/ebook/templates.tsx`: Defines available ebook templates (styles and metadata). Contains `baseStyles` for common elements and template-specific styles.
+ *  - `src/cms/recipes.ts`: Contains the `Recipe` type definition and functions (`getRecipe`) to fetch recipe data from the CMS.
  *
- * Fetches recipes from CMS, parses ingredients, steps, cook time, servings and images,
- * then renders a PDF with React-PDF using the chosen template styles.
- * Returns the PDF buffer with headers:
- *   Content-Type: application/pdf
- *   Content-Disposition: attachment; filename="receitas-ebook.pdf"
+ * Workflow:
+ * 1. Trigger: A POST request is sent to `/api/ebook` with `recipeIds` (required array of strings) and `templateId` (optional string, defaults to '1').
+ * 2. Data Fetching: The `getRecipe` function is called for each ID to retrieve full recipe details.
+ * 3. PDF Rendering: `@react-pdf/renderer` is used.
+ *    - `EbookPdf` component: Defines the overall document structure (Cover Page, Table of Contents, Recipe Pages).
+ *    - `RecipeItem` component: Renders individual recipe details. It parses the `receita` (markdown) field to extract:
+ *        - Ingredients (under `## Ingredientes` heading, using list format `-` or `*`).
+ *        - Steps (under `## Modo de Preparo` heading, using numbered or list format).
+ *        - Cook Time (under `## Tempo de Preparo` heading).
+ *        - Servings (under `## Rendimento` heading).
+ *    - Fetches the logo from `LOGO_URL`. Ensure logo styles in `templates.tsx` respect the aspect ratio.
+ * 4. Templating:
+ *    - The `templateId` determines the visual style applied.
+ *    - `baseStyles` in `templates.tsx` apply to all templates (headers, footers, cover, TOC, basic text).
+ *    - Template-specific styles are defined within each template object in `ebookTemplates` in `templates.tsx`.
+ * 5. Output: A PDF buffer is generated and returned with appropriate `Content-Type` and `Content-Disposition` headers.
  *
- * Available templates:
- *  - '1' Minimalista: clean single-column layout
- *  - '2' Revista: magazine style with larger images
- *  - '3' Elegante: two-column gourmet layout
- *
- * DON'T:
- *  - Hard-code template-specific rendering branches in component logic
- *  - Duplicate parsing or styling logic across templates
- *  - Use browser-only APIs inside PDF generator
- *  - Expose CMS tokens or endpoints in client-side code
- *  - Skip validation of missing or invalid recipe IDs
+ * Best Practices:
+ *  - Refer to `src/cms/recipes.ts` for the `Recipe` type structure.
+ *  - When adding/modifying templates, edit `src/ebook/templates.tsx`.
+ *  - Ensure recipe markdown follows the expected heading structure (`## Ingredientes`, etc.) for correct parsing.
+ *  - Use `baseStyles` for consistency; override or add specifics in template styles.
+ *  - Maintain the Cover Page -> TOC -> Recipe Pages structure.
+ *  - Keep parsing logic within `RecipeItem` or dedicated helper functions.
+ * ============================================================
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getRecipe } from 'src/cms/recipes';
 import { renderToBuffer } from '@react-pdf/renderer';
 import React from 'react';
-import { Document, Page, Text, View, Image } from '@react-pdf/renderer';
+import { Document, Page, Text, View, Image, Link } from '@react-pdf/renderer';
 import type { Recipe } from 'src/cms/recipes';
 import {
   baseStyles,
   ebookTemplates,
   type EbookTemplate,
 } from 'src/ebook/templates';
+import { BASE_URL } from 'src/constants';
+import Markdown from 'react-markdown';
+import type { Components } from 'react-markdown';
 
-// Logo em base64 para evitar problemas de caminhos
-const LOGO_BASE64 =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF8WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDUgNzkuMTYzNDk5LCAyMDE4LzA4LzEzLTE2OjQwOjIyICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDIwLTAzLTI2VDIxOjQxOjE2LTAzOjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMC0wMy0yN1QxNDoxNzo1NC0wMzowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyMC0wMy0yN1QxNDoxNzo1NC0wMzowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpmNzQ2NTQyZi1hZmI2LTRlZTQtYmViNi1lOTk5YTUwOWQ4ZmMiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDoyYTg3MDM2Yy1jNDJmLWE4NGEtOGZmMC0wOTI5MjgxZDBmZTYiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo3NmE4OGE5MS0wOWEwLThkNGEtOWUzZS0wY2RkYzI5OWFmNzAiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjc2YTg4YTkxLTA5YTAtOGQ0YS05ZTNlLTBjZGRjMjk5YWY3MCIgc3RFdnQ6d2hlbj0iMjAyMC0wMy0yNlQyMTo0MToxNi0wMzowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTkgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDpmNzQ2NTQyZi1hZmI2LTRlZTQtYmViNi1lOTk5YTUwOWQ4ZmMiIHN0RXZ0OndoZW49IjIwMjAtMDMtMjdUMTQ6MTc6NTQtMDM6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE5IChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4wTOC9AAAGfElEQVR4nO2dS2wbRRjHf7bj2HHsJE7t1klaCfFoqBCpQJSHkCioQlQcEEIqXBBS1aptJQ5cOPQCHEA9wZUTrXrg0BYQgkMlQAIJiYcqKlUSJA6tSNqQ2LHj96vaj4O9ydrJ2vF6Z3Yd7/4/KYrX3v3mG//3nW9mvBlno9lcEGPYBk6qKigLLUVlyS0LbcM+BthWf+V02L2s1aHdWEHt2G5HUVm60C2D/B2KKstlq10VfIdbcst9+3F5uKbS0Bql59XT+HdnMJ6ZRCwnG7HsoJNGxuL4kzkSx7Mk3p0ndW4JY6mue5J1YcmxRKDp2+FqpnGtF4IrO/F/OE3gxdvwBrw6mghJsRZn5cxV0h9cJ3s+QSNr9ayhpVhacsohy48JFtGY/WtSbfLRCB5PP+0q+hDLCZaSTPC4O2tnLNYyVeoZswt6w+iOx57+Mco+GsZ0yqC6SmW1Tr1i0mzI7JNzWyEcjiG9XgYgWzRZWq6TzpgUy83OrRD+YXQltHJA+2gE1J5qjJ2IceCpPTxy/ygHHt/N9r3BdbEsflHgymdxLn60wJWPFpA1EnYWS044B+2lh3A4huH1ABYPPTvBkXcmmH7tDn789CbffvoHseNRwiGDvbv8xA5HeO6lKc5/PMfXZ36XJUdXMQSKYu+yUC/QdVv/zLl7efTcTr77/A8+fPU3Lo3ewv1iicaS9WRDQeHZC/dieirw0LH9+Pc99iQcgJnvE3z26nWuXprj4Xf3sRhNg9cPhY1a6S6GnXbHqQUajmEYXiRDKFhOV/nhtZt889Jv1PNVDh8O4POoGIZKqWhfZgmOeFvb6dYKRaXbwkCxXy9Kb+8fZKWzk+laF6GwsrlXQz4E9lHCkRJHshxJl+MWM7ufZltzk93lmHLkdAGFnLNbdSdg27fbUbuDDJxuDl07SDmGnHIjxYHD6bS92iWuW9qJrjnSvafVTqE5YsA+JdcqYQVJdSe3vNtxrY4dW+oky7hn3ZG+pdLx3M11SnGPNAc/eBd7i66Crpu6YjRbYOTbhX1KW32PtZnN10qJI1uczmk5YrvjMITD7PJoJJrbv3Rcy1a7UuvmXq3oWCeOEQUaGdHKMaLIEcMxnRNFTu44Y1GUyRHB3dJIlSOGOyOjB1kObZ1KQZaVQUiZI4J3o65k2XmSJVHQ1npwEFxJ6z1ZouKsRCnT/y1xFmTI2ybYrWXjDFR3skKlldLLGCdkDERJchxzlnc5OiM1ziG7MxbrKmubIXCZ0oGzS+vGedB0Zjw8BhQ5YiDnbOnSuaHJnRkTh+ZIt2lKc0P2cMxZfvcwpAtzhAeIjm1FbY0d1LVMxyhCjZdajFvKTe+ypuTGGcjYCTcbcXC7I/lZjY51hHZuaCYn6ZITFnvUbZfitENL9iBkODhJ6Y6UkMYQyG07VtYcEXS/K0k50nZnKOaGDLvW0Fxo79TxP9mSQ4YO3dWXrmMMYTkiGNRxuXnIPmQs1DnySoEjwxDKGTmk6IzshLvZ6YhgMEVOyAlZW+TIGI4IamurcIbpusyQ0h0po9RQOGzuZEtIwxA5bVty5IQhDnLEQKHOyPcbj6HQuiFnULYjJ3TdGapy5KgaonZHzJa2xwE3OrJ21JxBqHH/uWmGqNkR012GMBJzhJcdcgKGstW0ZmsSp2RttVuOcyS1G2qLZaiKIDm9OMppX3KOKCQzttMcMWSvzpEW49YxpTgigK43JYTOTwbCwOxOu5GxjR5j4y11pUuG4hcF2bsw5dOK7+dmbvuT30tltUsN2R29mKnQ3AzNxnWCfLu+MTfshBPLGXMwDJHw/aGsZKmZKs126+q2pXTa7c46TiGvD59/Mg7A8kqDYm5zT1hnRJGVIwJ2I4YfkuLz+fD5YCVd37DPGjRJTNYpJPLgdeHxQK1Wo9T4h8baU3/vf97xr3ZNjtixMADJ5SYPPBZaz5FSocb9j+6inqtAc7g3L7OZKvljS1xvXIVqheqq9Wq7WhXqtTqxQ752I+w9MgqXr5L5Jc+utIUOi9mFKgsXK+y5K4AvcgeGx8UIdDG/XMV78hbZuUXYIe810aXFOt7EJYwdk4xOjlBPmlSyZXzJnOvXlrUCQzAMj9Mub6i0gjeE7DMPN9YVBY/X5V9AcKrpstmO04X3IjcydQ25WXfaTtvtLsZ6hAx7Sx2eVfcw/Fy3+BKSsLUO45YvBt7DloDsVJFhZbNT2JYb+DYRBhaxvH5/9+kC9NuFdpLlSIjLGCTGv9zBNJZgUBjsAAAAAElFTkSuQmCC';
+// Use the URL for the logo
+const LOGO_URL = `${BASE_URL}/logo.png`;
 
 // Helper function to get a template by ID
 export function getTemplateById(templateId: string): EbookTemplate {
@@ -52,56 +62,45 @@ export function getTemplateById(templateId: string): EbookTemplate {
   );
 }
 
-// Helper function to extract ingredients from markdown
-export function parseIngredientsFromMarkdown(markdown: string): string[] {
-  if (!markdown) return [];
-
-  // Look for the ingredients section and the list that follows
-  const ingredientsMatch = markdown.match(
-    /## Ingredientes\s+([\s\S]*?)(?=##|$)/
-  );
-  if (!ingredientsMatch) return [];
-
-  const ingredientsSection = ingredientsMatch[1];
-
-  // Extract list items (items that start with - or *)
-  const ingredients = ingredientsSection
-    .split('\n')
-    .filter(
-      (line) => line.trim().startsWith('-') || line.trim().startsWith('*')
-    )
-    .map((line) => line.trim().replace(/^[-*]\s+/, ''));
-
-  return ingredients;
-}
-
 // Helper to get URL for images that might have signed URLs
 export function getImageUrl(image: any) {
   if (!image) return null;
   return image.url;
 }
 
-// Helpers to parse sections from markdown
-function parseSectionFromMarkdown(
-  markdown: string,
-  title: string
-): string | null {
-  const match = markdown.match(new RegExp(`## ${title}\s+([\s\S]*?)(?=##|$)`));
-  return match ? match[1].split('\n')[0].trim() : null;
-}
-function parseStepsFromMarkdown(markdown: string): string[] {
-  const match = markdown.match(/## Modo de Preparo\s+([\s\S]*?)(?=##|$)/);
-  if (!match) return [];
-  return match[1]
-    .split('\n')
-    .filter((line) => line.trim().match(/^\d+\.|[-*]/))
-    .map((line) =>
-      line
-        .trim()
-        .replace(/^\d+\.|[-*]\s*/, '')
-        .trim()
-    );
-}
+// Define PDF components for Markdown
+const pdfComponents = (template: EbookTemplate): Components => ({
+  h2: ({ children }) => <Text style={baseStyles.sectionTitle}>{children}</Text>,
+  p: ({ children }) => <Text style={baseStyles.paragraph}>{children}</Text>,
+  ul: ({ children }) => (
+    // Use baseStyles.list directly as template.styles.listContainer doesn't exist
+    <View style={baseStyles.list}>{children}</View>
+  ),
+  ol: ({ children }) => (
+    // Use baseStyles.list directly as template.styles.listContainer doesn't exist
+    <View style={baseStyles.list}>{children}</View>
+  ),
+  // Explicitly type props for li to include ordered and index
+  li: ({
+    children,
+    ordered,
+    index,
+  }: {
+    children?: React.ReactNode;
+    ordered?: boolean;
+    index?: number;
+  }) => (
+    <Text style={baseStyles.listItem}>
+      {ordered ? `${(index ?? 0) + 1}. ` : '• '}
+      {children}
+    </Text>
+  ),
+  strong: ({ children }) => (
+    <Text style={{ ...baseStyles.paragraph, fontWeight: 'bold' }}>
+      {children}
+    </Text>
+  ),
+});
 
 // Generic Recipe component that works with any template
 const RecipeItem = ({
@@ -112,23 +111,33 @@ const RecipeItem = ({
   template: EbookTemplate;
 }) => {
   const mainImage = recipe.imagens?.[0];
-  const ingredients = parseIngredientsFromMarkdown(recipe.receita);
-  const steps = parseStepsFromMarkdown(recipe.receita);
-  const cookTime = parseSectionFromMarkdown(recipe.receita, 'Tempo de Preparo');
-  const servings = parseSectionFromMarkdown(recipe.receita, 'Rendimento');
+  let cookTime: string | null = null;
+  let servings: string | null = null;
+
+  try {
+    const timeMatch = recipe.receita?.match(/## Tempo de Preparo\s+(.*)/);
+    cookTime = timeMatch ? timeMatch[1].trim() : null;
+    const servingsMatch = recipe.receita?.match(/## Rendimento\s+(.*)/);
+    servings = servingsMatch ? servingsMatch[1].trim() : null;
+  } catch (e) {
+    /* ignore */
+  }
+
   return (
     <View style={template.styles.recipeSection}>
       <View style={template.styles.recipeHeader}>
         <Text style={baseStyles.recipeTitle}>{recipe.nome}</Text>
-        {recipe.categorias && recipe.categorias.length > 0 && (
-          <View style={baseStyles.categoriesContainer}>
-            {recipe.categorias?.map((cat) => (
-              <Text key={cat.documentId} style={baseStyles.category}>
-                {cat.nome}
-              </Text>
-            ))}
-          </View>
-        )}
+        {recipe.categorias &&
+          Array.isArray(recipe.categorias) &&
+          recipe.categorias.length > 0 && (
+            <View style={baseStyles.categoriesContainer}>
+              {recipe.categorias.map((cat) => (
+                <Text key={cat.documentId} style={baseStyles.category}>
+                  {cat.nome}
+                </Text>
+              ))}
+            </View>
+          )}
       </View>
       {mainImage && (
         <Image
@@ -145,36 +154,13 @@ const RecipeItem = ({
           {servings && <Text style={baseStyles.servings}>🍽️ {servings}</Text>}
         </View>
       )}
-      {ingredients.length > 0 && (
+      {recipe.receita && (
         <View style={template.styles.sectionContainer || baseStyles.section}>
-          <View
-            style={
-              template.styles.ingredientsListContainer ||
-              baseStyles.ingredientsList
-            }
-          >
-            <Text style={baseStyles.ingredientsTitle}>Ingredientes</Text>
-            {ingredients.map((ing, i) => (
-              <Text key={i} style={baseStyles.listItem}>
-                • {ing}
-              </Text>
-            ))}
-          </View>
-          {steps.length > 0 && (
-            <View
-              style={template.styles.stepsListContainer || baseStyles.stepsList}
-            >
-              <Text style={baseStyles.sectionTitle}>Modo de Preparo</Text>
-              {steps.map((step, i) => (
-                <Text key={i} style={baseStyles.listItem}>
-                  {i + 1}. {step}
-                </Text>
-              ))}
-            </View>
-          )}
+          <Markdown components={pdfComponents(template)}>
+            {recipe.receita}
+          </Markdown>
         </View>
       )}
-      <Text style={baseStyles.recipeId}>ID: {recipe.documentId}</Text>
     </View>
   );
 };
@@ -188,40 +174,88 @@ const EbookPdf = ({
   templateId: string;
 }) => {
   const template = getTemplateById(templateId);
+  const generationDate = new Date().toLocaleDateString();
 
   return (
-    <Document>
-      <Page size="A4" style={template.styles.page}>
-        <View style={baseStyles.header}>
-          <Image src={LOGO_BASE64} style={baseStyles.logo} />
-          <Text style={baseStyles.headerText}>
-            Gerado em {new Date().toLocaleDateString()}
-          </Text>
-        </View>
-
-        <Text style={baseStyles.title}>{template.title}</Text>
-        <Text style={baseStyles.subtitle}>Template: {templateId}</Text>
-
-        {recipes.map((recipe) => (
-          <RecipeItem
-            key={recipe.documentId}
-            recipe={recipe}
-            template={template}
-          />
-        ))}
-
+    <Document
+      title={`Ebook de Receitas - ${template.title}`}
+      author="Lets Cozinha"
+      subject="Coletânea de Receitas Selecionadas"
+      keywords={recipes.map((r) => r.keywords || r.nome).join(', ')}
+      producer="Lets Cozinha Ebook Generator"
+      creator="Lets Cozinha"
+    >
+      {/* --- START: Cover Page --- */}
+      <Page size="A4" style={baseStyles.coverPage} fixed>
+        <Image src={LOGO_URL} style={baseStyles.coverLogo} />
+        <Text style={baseStyles.coverTitle}>{template.title}</Text>
+        <Text style={baseStyles.coverSubtitle}>
+          Uma seleção especial de receitas
+        </Text>
+        <Text style={baseStyles.coverDate}>Gerado em {generationDate}</Text>
         <Text style={baseStyles.footer}>
           © {new Date().getFullYear()} Lets Cozinha - Todos os direitos
           reservados
         </Text>
-        {/* Page number */}
+      </Page>
+      {/* --- END: Cover Page --- */}
+
+      {/* --- START: Table of Contents --- */}
+      <Page size="A4" style={baseStyles.tocPage}>
+        <View style={baseStyles.header} fixed>
+          <Image src={LOGO_URL} style={baseStyles.logo} />
+          <Text style={baseStyles.headerText}>Índice de Receitas</Text>
+        </View>
+        <Text style={baseStyles.tocTitle}>Índice</Text>
+        {recipes.map((recipe) => (
+          <View key={`toc-${recipe.documentId}`} style={baseStyles.tocEntry}>
+            <Text>{recipe.nome}</Text>
+          </View>
+        ))}
+        <Text style={baseStyles.footer} fixed>
+          © {new Date().getFullYear()} Lets Cozinha - Todos os direitos
+          reservados
+        </Text>
         <Text
           style={baseStyles.pageNumber}
           render={({ pageNumber, totalPages }) =>
             `${pageNumber} / ${totalPages}`
           }
+          fixed
         />
       </Page>
+      {/* --- END: Table of Contents --- */}
+
+      {/* --- START: Recipe Pages --- */}
+      {recipes.map((recipe, index) => (
+        <Page key={recipe.documentId} size="A4" style={template.styles.page}>
+          <View style={baseStyles.header} fixed>
+            <Image src={LOGO_URL} style={baseStyles.logo} />
+            <Text style={baseStyles.headerText}>
+              {template.title} - {generationDate}
+            </Text>
+          </View>
+
+          <RecipeItem recipe={recipe} template={template} />
+
+          {index < recipes.length - 1 && template.styles.separator && (
+            <View style={template.styles.separator} />
+          )}
+
+          <Text style={baseStyles.footer} fixed>
+            © {new Date().getFullYear()} Lets Cozinha - Todos os direitos
+            reservados
+          </Text>
+          <Text
+            style={baseStyles.pageNumber}
+            render={({ pageNumber, totalPages }) =>
+              `${pageNumber} / ${totalPages}`
+            }
+            fixed
+          />
+        </Page>
+      ))}
+      {/* --- END: Recipe Pages --- */}
     </Document>
   );
 };
@@ -238,29 +272,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Busca os dados das receitas
     const recipesData = await Promise.all(
       recipeIds.map(async (id) => {
-        return await getRecipe({ documentId: id });
+        try {
+          const recipe = await getRecipe({ documentId: id });
+          return recipe;
+        } catch (fetchError) {
+          return null;
+        }
       })
     );
 
-    // Filtra receitas indefinidas (caso algum ID seja inválido)
-    const validRecipes = recipesData.filter(Boolean);
+    const validRecipes = recipesData.filter(Boolean) as Recipe[];
 
     if (validRecipes.length === 0) {
+      console.error('[EBOOK GEN] No valid recipes found after filtering.');
       return NextResponse.json(
         { error: 'Nenhuma receita válida encontrada' },
         { status: 400 }
       );
     }
 
-    // Gera o buffer do PDF usando o componente EbookPdf
     const pdfBuffer = await renderToBuffer(
       <EbookPdf recipes={validRecipes} templateId={templateId || '1'} />
     );
 
-    // Retorna o PDF como resposta para download
     return new NextResponse(pdfBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
@@ -268,7 +304,12 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Erro ao gerar PDF:', error);
+    console.error('[EBOOK GEN] Erro fatal ao gerar PDF:', error);
+    if (error instanceof Error) {
+      console.error('[EBOOK GEN] Error Name:', error.name);
+      console.error('[EBOOK GEN] Error Message:', error.message);
+      console.error('[EBOOK GEN] Error Stack:', error.stack);
+    }
     return NextResponse.json(
       { error: 'Falha ao gerar o PDF' },
       { status: 500 }
