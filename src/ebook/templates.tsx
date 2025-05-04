@@ -12,6 +12,7 @@ export const baseStyles = StyleSheet.create({
   page: {
     backgroundColor: '#FFFFFF',
     padding: 30,
+    fontFamily: 'Lora', // Default font for the page
   },
   // --- START: Added Cover Page Styles ---
   coverPage: {
@@ -21,6 +22,7 @@ export const baseStyles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    fontFamily: 'Lora', // Default font for cover page
   },
   coverLogo: {
     width: 150,
@@ -33,24 +35,28 @@ export const baseStyles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     color: '#333333',
+    fontFamily: 'Playfair Display', // Use Playfair Display for cover title
   },
   coverSubtitle: {
     fontSize: 18,
     marginBottom: 40,
     textAlign: 'center',
     color: '#666666',
+    fontFamily: 'Lora', // Use Lora for subtitle
   },
   coverDate: {
     fontSize: 12,
     color: '#999999',
     position: 'absolute',
     bottom: 50,
+    fontFamily: 'Lora', // Use Lora for date
   },
   // --- END: Added Cover Page Styles ---
   // --- START: Added TOC Styles ---
   tocPage: {
     backgroundColor: '#FFFFFF',
     padding: 40,
+    fontFamily: 'Lora', // Default font for TOC page
   },
   tocTitle: {
     fontSize: 24,
@@ -61,12 +67,14 @@ export const baseStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#EEEEEE',
     paddingBottom: 10,
+    fontFamily: 'Playfair Display', // Use Playfair Display for TOC title
   },
   tocEntry: {
     fontSize: 14,
     marginBottom: 10,
     lineHeight: 1.4,
     color: '#444444',
+    fontFamily: 'Lora', // Use Lora for TOC entries
   },
   // --- END: Added TOC Styles ---
   title: {
@@ -74,21 +82,25 @@ export const baseStyles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     fontWeight: 'bold',
+    fontFamily: 'Playfair Display', // Use Playfair Display for titles
   },
   subtitle: {
     fontSize: 18,
     marginBottom: 10,
     fontWeight: 'bold',
+    fontFamily: 'Playfair Display', // Use Playfair Display for subtitles
   },
   recipeTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    fontFamily: 'Playfair Display', // Use Playfair Display for recipe titles
   },
   recipeId: {
     fontSize: 10,
     color: '#666666',
     marginBottom: 10,
+    fontFamily: 'Lora', // Use Lora for recipe ID
   },
   footer: {
     position: 'absolute',
@@ -98,6 +110,7 @@ export const baseStyles = StyleSheet.create({
     textAlign: 'center',
     color: '#666666',
     fontSize: 10,
+    fontFamily: 'Lora', // Use Lora for footer text
   },
   header: {
     flexDirection: 'row',
@@ -116,11 +129,13 @@ export const baseStyles = StyleSheet.create({
   headerText: {
     fontSize: 10,
     color: '#999999',
+    fontFamily: 'Lora', // Use Lora for header text
   },
   paragraph: {
     fontSize: 12,
     marginBottom: 10,
     lineHeight: 1.5,
+    fontFamily: 'Lora', // Use Lora for paragraphs
   },
   imagesContainer: {
     flexDirection: 'row',
@@ -147,6 +162,7 @@ export const baseStyles = StyleSheet.create({
     color: '#666666',
     marginRight: 5,
     marginBottom: 5,
+    fontFamily: 'Lora', // Use Lora for category tags
   },
   categoriesContainer: {
     flexDirection: 'row',
@@ -160,6 +176,7 @@ export const baseStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 5,
+    fontFamily: 'Playfair Display', // Use Playfair Display for section titles
   },
   // Add base style for lists
   list: {
@@ -170,12 +187,14 @@ export const baseStyles = StyleSheet.create({
     fontSize: 11,
     marginBottom: 3,
     lineHeight: 1.5,
+    fontFamily: 'Lora', // Use Lora for list items
   },
   ingredientsTitle: {
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#333333',
+    fontFamily: 'Playfair Display', // Use Playfair Display for ingredients title
   },
   ingredientsList: {
     marginLeft: 15,
@@ -193,10 +212,12 @@ export const baseStyles = StyleSheet.create({
   cookTime: {
     fontSize: 11,
     color: '#555555',
+    fontFamily: 'Lora', // Use Lora for cook time
   },
   servings: {
     fontSize: 11,
     color: '#555555',
+    fontFamily: 'Lora', // Use Lora for servings
   },
   pageNumber: {
     position: 'absolute',
@@ -204,6 +225,7 @@ export const baseStyles = StyleSheet.create({
     bottom: 30,
     right: 30,
     color: '#999999',
+    fontFamily: 'Lora', // Use Lora for page numbers
   },
 });
 

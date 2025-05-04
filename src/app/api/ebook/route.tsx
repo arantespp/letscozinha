@@ -38,7 +38,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getRecipe } from 'src/cms/recipes';
-import { renderToBuffer } from '@react-pdf/renderer';
+import { renderToBuffer, Font } from '@react-pdf/renderer'; // Import Font
 import React from 'react';
 import { Document, Page, Text, View, Image, Link } from '@react-pdf/renderer';
 import type { Recipe } from 'src/cms/recipes';
@@ -50,9 +50,70 @@ import {
 import { BASE_URL } from 'src/constants';
 import Markdown from 'react-markdown';
 import type { Components } from 'react-markdown';
+import path from 'node:path'; // Import path for font file paths
 
 // Use the URL for the logo
 const LOGO_URL = `${BASE_URL}/logo.png`;
+
+// Helper function to get the absolute path to a font file
+const getFontPath = (fontFilename: string) => {
+  // Path to fonts in the public/assets directory
+  return path.join(process.cwd(), 'public', 'assets', fontFilename);
+};
+
+// Register Playfair Display font
+Font.register({
+  family: 'Playfair Display',
+  fonts: [
+    {
+      src: getFontPath('PlayfairDisplay-Regular.ttf'),
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+    },
+    {
+      src: getFontPath('PlayfairDisplay-Bold.ttf'),
+      fontWeight: 'bold',
+      fontStyle: 'normal',
+    },
+    {
+      src: getFontPath('PlayfairDisplay-Italic.ttf'),
+      fontWeight: 'normal',
+      fontStyle: 'italic',
+    },
+    {
+      src: getFontPath('PlayfairDisplay-Medium.ttf'),
+      fontWeight: 500,
+      fontStyle: 'normal',
+    },
+  ],
+});
+
+// Register Lora font
+Font.register({
+  family: 'Lora',
+  fonts: [
+    {
+      src: getFontPath('Lora-Regular.ttf'),
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+    },
+    {
+      src: getFontPath('Lora-Bold.ttf'),
+      fontWeight: 'bold',
+      fontStyle: 'normal',
+    },
+    {
+      src: getFontPath('Lora-Italic.ttf'),
+      fontWeight: 'normal',
+      fontStyle: 'italic',
+    },
+    {
+      src: getFontPath('Lora-Medium.ttf'),
+      fontWeight: 500,
+      fontStyle: 'normal',
+    },
+  ],
+});
 
 // Helper function to get a template by ID
 export function getTemplateById(templateId: string): EbookTemplate {
@@ -72,15 +133,8 @@ export function getImageUrl(image: any) {
 const pdfComponents = (template: EbookTemplate): Components => ({
   h2: ({ children }) => <Text style={baseStyles.sectionTitle}>{children}</Text>,
   p: ({ children }) => <Text style={baseStyles.paragraph}>{children}</Text>,
-  ul: ({ children }) => (
-    // Use baseStyles.list directly as template.styles.listContainer doesn't exist
-    <View style={baseStyles.list}>{children}</View>
-  ),
-  ol: ({ children }) => (
-    // Use baseStyles.list directly as template.styles.listContainer doesn't exist
-    <View style={baseStyles.list}>{children}</View>
-  ),
-  // Explicitly type props for li to include ordered and index
+  ul: ({ children }) => <View style={baseStyles.list}>{children}</View>,
+  ol: ({ children }) => <View style={baseStyles.list}>{children}</View>,
   li: ({
     children,
     ordered,
@@ -96,7 +150,24 @@ const pdfComponents = (template: EbookTemplate): Components => ({
     </Text>
   ),
   strong: ({ children }) => (
-    <Text style={{ ...baseStyles.paragraph, fontWeight: 'bold' }}>
+    <Text
+      style={{
+        ...baseStyles.paragraph,
+        fontFamily: 'Lora',
+        fontWeight: 'bold',
+      }}
+    >
+      {children}
+    </Text>
+  ),
+  em: ({ children }) => (
+    <Text
+      style={{
+        ...baseStyles.paragraph,
+        fontFamily: 'Lora',
+        fontStyle: 'italic',
+      }}
+    >
       {children}
     </Text>
   ),
