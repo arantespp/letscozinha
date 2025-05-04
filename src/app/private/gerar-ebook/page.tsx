@@ -1,4 +1,5 @@
 import { getAllSimplifiedRecipes } from 'src/cms/recipes';
+import { ebookTemplates } from 'src/ebook/templates';
 import EbookSelector from './EbookSelector';
 
 export default async function GerarEbookPage() {
@@ -13,7 +14,7 @@ export default async function GerarEbookPage() {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Gerador de Ebooks de Receitas</h1>
-      <EbookSelector recipes={sortedRecipes} />
+      <EbookSelector recipes={sortedRecipes} templates={ebookTemplates} />
     </div>
   );
 }

@@ -1,20 +1,13 @@
+/**
+ * Module defining eBook PDF templates and shared styles.
+ * Provides multiple layout options for rendering recipes in a PDF eBook.
+ */
 import { StyleSheet } from '@react-pdf/renderer';
+export type EbookStyles = ReturnType<typeof StyleSheet.create>;
 
-// Define a type for the template
-export interface EbookTemplate {
-  id: string;
-  name: string;
-  description: string;
-  styles: {
-    page: any;
-    recipeSection: any;
-    recipeHeader: any;
-    recipeImage?: any;
-  };
-  title: string;
-}
-
-// Base styles that are common to all templates
+/**
+ * Common base styles for PDF pages and elements.
+ */
 export const baseStyles = StyleSheet.create({
   page: {
     backgroundColor: '#FFFFFF',
@@ -55,7 +48,9 @@ export const baseStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
-    borderBottom: '1px solid #EEEEEE',
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+    borderBottomStyle: 'solid',
     paddingBottom: 10,
   },
   logo: {
@@ -83,7 +78,9 @@ export const baseStyles = StyleSheet.create({
     borderRadius: 5,
   },
   separator: {
-    borderBottom: '1px solid #EEEEEE',
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+    borderBottomStyle: 'solid',
     marginVertical: 15,
   },
   category: {
@@ -113,9 +110,63 @@ export const baseStyles = StyleSheet.create({
     marginBottom: 3,
     lineHeight: 1.5,
   },
+  ingredientsTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333333',
+  },
+  ingredientsList: {
+    marginLeft: 15,
+    marginBottom: 10,
+  },
+  stepsList: {
+    marginLeft: 15,
+    marginBottom: 10,
+  },
+  cookInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  cookTime: {
+    fontSize: 11,
+    color: '#555555',
+  },
+  servings: {
+    fontSize: 11,
+    color: '#555555',
+  },
+  pageNumber: {
+    position: 'absolute',
+    fontSize: 10,
+    bottom: 30,
+    right: 30,
+    color: '#999999',
+  },
 });
 
-// Define each template with its specific styles
+/**
+ * Describes an eBook template with its metadata and style definitions.
+ * @interface
+ */
+export interface EbookTemplate {
+  /** Unique template identifier */
+  id: string;
+  /** Display name of the template */
+  name: string;
+  /** Short description of the template style */
+  description: string;
+  /** StyleSheet definitions for PDF rendering */
+  styles: EbookStyles;
+  /** Title shown on the eBook cover/header */
+  title: string;
+}
+
+/**
+ * Collection of predefined eBook templates.
+ * @type {EbookTemplate[]}
+ */
 export const ebookTemplates: EbookTemplate[] = [
   {
     id: '1',
@@ -130,14 +181,27 @@ export const ebookTemplates: EbookTemplate[] = [
       recipeSection: {
         marginBottom: 20,
         padding: 15,
-        border: '1px solid #EEEEEE',
+        borderWidth: 1,
+        borderColor: '#EEEEEE',
+        borderStyle: 'solid',
         borderRadius: 5,
         backgroundColor: '#FFFFFF',
       },
       recipeHeader: {
-        borderBottom: '1px solid #EEEEEE',
+        borderBottomWidth: 1,
+        borderBottomColor: '#EEEEEE',
+        borderBottomStyle: 'solid',
         paddingBottom: 10,
         marginBottom: 10,
+      },
+      sectionContainer: {
+        marginBottom: 15,
+      },
+      ingredientsListContainer: {
+        width: '100%',
+      },
+      stepsListContainer: {
+        width: '100%',
       },
     }),
     title: 'Coletânea de Receitas - Estilo Minimalista',
@@ -171,7 +235,70 @@ export const ebookTemplates: EbookTemplate[] = [
         height: 200,
         objectFit: 'cover',
       },
+      sectionContainer: {
+        marginBottom: 20,
+      },
+      ingredientsListContainer: {
+        marginBottom: 10,
+      },
+      stepsListContainer: {
+        marginBottom: 10,
+      },
     }),
     title: 'Coletânea de Receitas - Estilo Revista',
+  },
+  {
+    id: '3',
+    name: 'Elegante',
+    description:
+      'Layout sofisticado com estilo gourmet: combina tipografia refinada, elementos decorativos sutis e layout em duas colunas para ingredientes e modo de preparo.',
+    styles: StyleSheet.create({
+      page: {
+        ...baseStyles.page,
+        padding: 50,
+        backgroundColor: '#FAFAFA',
+      },
+      recipeSection: {
+        marginBottom: 30,
+        padding: 25,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
+        borderStyle: 'solid',
+      },
+      recipeHeader: {
+        borderBottomWidth: 2,
+        borderBottomColor: '#DDD',
+        borderBottomStyle: 'solid',
+        paddingBottom: 10,
+        marginBottom: 15,
+        alignItems: 'center',
+      },
+      recipeImage: {
+        width: '100%',
+        height: 220,
+        objectFit: 'cover',
+        borderRadius: 5,
+        marginBottom: 20,
+      },
+      sectionContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
+      ingredientsListContainer: {
+        width: '45%',
+      },
+      stepsListContainer: {
+        width: '45%',
+      },
+      separator: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#CCC',
+        borderBottomStyle: 'dashed',
+        marginVertical: 20,
+      },
+    }),
+    title: 'Coletânea de Receitas - Estilo Elegante',
   },
 ];

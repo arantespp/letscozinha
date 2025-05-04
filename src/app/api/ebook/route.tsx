@@ -1,3 +1,33 @@
+/**
+ * eBook Creation Service API
+ *
+ * POST /api/ebook
+ * Generates a PDF eBook from a list of recipe IDs using customizable templates.
+ *
+ * Request body (JSON):
+ * {
+ *   recipeIds: string[],      // array of CMS recipe document IDs
+ *   templateId?: string       // one of '1', '2', '3'; defaults to '1'
+ * }
+ *
+ * Fetches recipes from CMS, parses ingredients, steps, cook time, servings and images,
+ * then renders a PDF with React-PDF using the chosen template styles.
+ * Returns the PDF buffer with headers:
+ *   Content-Type: application/pdf
+ *   Content-Disposition: attachment; filename="receitas-ebook.pdf"
+ *
+ * Available templates:
+ *  - '1' Minimalista: clean single-column layout
+ *  - '2' Revista: magazine style with larger images
+ *  - '3' Elegante: two-column gourmet layout
+ *
+ * DON'T:
+ *  - Hard-code template-specific rendering branches in component logic
+ *  - Duplicate parsing or styling logic across templates
+ *  - Use browser-only APIs inside PDF generator
+ *  - Expose CMS tokens or endpoints in client-side code
+ *  - Skip validation of missing or invalid recipe IDs
+ */
 import { NextRequest, NextResponse } from 'next/server';
 import { getRecipe } from 'src/cms/recipes';
 import { renderToBuffer } from '@react-pdf/renderer';
@@ -51,6 +81,28 @@ export function getImageUrl(image: any) {
   return image.url;
 }
 
+// Helpers to parse sections from markdown
+function parseSectionFromMarkdown(
+  markdown: string,
+  title: string
+): string | null {
+  const match = markdown.match(new RegExp(`## ${title}\s+([\s\S]*?)(?=##|$)`));
+  return match ? match[1].split('\n')[0].trim() : null;
+}
+function parseStepsFromMarkdown(markdown: string): string[] {
+  const match = markdown.match(/## Modo de Preparo\s+([\s\S]*?)(?=##|$)/);
+  if (!match) return [];
+  return match[1]
+    .split('\n')
+    .filter((line) => line.trim().match(/^\d+\.|[-*]/))
+    .map((line) =>
+      line
+        .trim()
+        .replace(/^\d+\.|[-*]\s*/, '')
+        .trim()
+    );
+}
+
 // Generic Recipe component that works with any template
 const RecipeItem = ({
   recipe,
@@ -60,66 +112,68 @@ const RecipeItem = ({
   template: EbookTemplate;
 }) => {
   const mainImage = recipe.imagens?.[0];
-  const isTemplate2 = template.id === '2'; // Template 2 shows ingredients list
-
+  const ingredients = parseIngredientsFromMarkdown(recipe.receita);
+  const steps = parseStepsFromMarkdown(recipe.receita);
+  const cookTime = parseSectionFromMarkdown(recipe.receita, 'Tempo de Preparo');
+  const servings = parseSectionFromMarkdown(recipe.receita, 'Rendimento');
   return (
     <View style={template.styles.recipeSection}>
       <View style={template.styles.recipeHeader}>
         <Text style={baseStyles.recipeTitle}>{recipe.nome}</Text>
-
-        {/* Categories are displayed differently based on template */}
-        {!isTemplate2 && (
+        {recipe.categorias && recipe.categorias.length > 0 && (
           <View style={baseStyles.categoriesContainer}>
-            {recipe.categorias?.map((category) => (
-              <Text key={category.documentId} style={baseStyles.category}>
-                {category.nome}
+            {recipe.categorias?.map((cat) => (
+              <Text key={cat.documentId} style={baseStyles.category}>
+                {cat.nome}
               </Text>
             ))}
           </View>
         )}
       </View>
-
-      {/* Image rendering based on template */}
       {mainImage && (
         <Image
           src={getImageUrl(mainImage)}
           style={template.styles.recipeImage || baseStyles.image}
         />
       )}
-
-      {/* Categories for template 2 appear after the image */}
-      {isTemplate2 && (
-        <View style={baseStyles.categoriesContainer}>
-          {recipe.categorias?.map((category) => (
-            <Text key={category.documentId} style={baseStyles.category}>
-              {category.nome}
-            </Text>
-          ))}
+      <Text style={baseStyles.paragraph}>
+        {recipe.meta_descricao || recipe.descricao + '...'}
+      </Text>
+      {(cookTime || servings) && (
+        <View style={baseStyles.cookInfo}>
+          {cookTime && <Text style={baseStyles.cookTime}>⌛ {cookTime}</Text>}
+          {servings && <Text style={baseStyles.servings}>🍽️ {servings}</Text>}
         </View>
       )}
-
-      <Text style={baseStyles.paragraph}>
-        {recipe.meta_descricao ||
-          recipe.descricao?.substring(0, isTemplate2 ? 200 : 150) + '...'}
-      </Text>
-
-      {/* Ingredients list for template 2 */}
-      {isTemplate2 && (
-        <>
-          <View style={baseStyles.separator} />
-          <View style={baseStyles.section}>
-            <Text style={baseStyles.sectionTitle}>Ingredientes Principais</Text>
-            {parseIngredientsFromMarkdown(recipe.receita)
-              .slice(0, 5)
-              .map((ingredient, index) => (
-                <Text key={index} style={baseStyles.listItem}>
-                  • {ingredient}
+      {ingredients.length > 0 && (
+        <View style={template.styles.sectionContainer || baseStyles.section}>
+          <View
+            style={
+              template.styles.ingredientsListContainer ||
+              baseStyles.ingredientsList
+            }
+          >
+            <Text style={baseStyles.ingredientsTitle}>Ingredientes</Text>
+            {ingredients.map((ing, i) => (
+              <Text key={i} style={baseStyles.listItem}>
+                • {ing}
+              </Text>
+            ))}
+          </View>
+          {steps.length > 0 && (
+            <View
+              style={template.styles.stepsListContainer || baseStyles.stepsList}
+            >
+              <Text style={baseStyles.sectionTitle}>Modo de Preparo</Text>
+              {steps.map((step, i) => (
+                <Text key={i} style={baseStyles.listItem}>
+                  {i + 1}. {step}
                 </Text>
               ))}
-          </View>
-        </>
+            </View>
+          )}
+        </View>
       )}
-
       <Text style={baseStyles.recipeId}>ID: {recipe.documentId}</Text>
     </View>
   );
@@ -160,14 +214,18 @@ const EbookPdf = ({
           © {new Date().getFullYear()} Lets Cozinha - Todos os direitos
           reservados
         </Text>
+        {/* Page number */}
+        <Text
+          style={baseStyles.pageNumber}
+          render={({ pageNumber, totalPages }) =>
+            `${pageNumber} / ${totalPages}`
+          }
+        />
       </Page>
     </Document>
   );
 };
 
-/**
- * Rota da API para gerar ebooks em PDF a partir de IDs de receitas
- */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

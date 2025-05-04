@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { EbookTemplate } from 'src/ebook/templates';
 
 interface Recipe {
   documentId: string;
@@ -14,11 +15,17 @@ interface Recipe {
 
 interface EbookSelectorProps {
   recipes: Recipe[];
+  templates: EbookTemplate[];
 }
 
-export default function EbookSelector({ recipes }: EbookSelectorProps) {
+export default function EbookSelector({
+  recipes,
+  templates,
+}: EbookSelectorProps) {
   const [selectedRecipes, setSelectedRecipes] = useState<string[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<string>('1');
+  const [selectedTemplate, setSelectedTemplate] = useState<string>(
+    templates[0]?.id || '1'
+  );
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -140,51 +147,35 @@ export default function EbookSelector({ recipes }: EbookSelectorProps) {
       <div className="bg-white shadow-sm rounded-lg p-6 mb-6">
         <h2 className="text-lg font-semibold mb-4">Selecione o Template</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div
-            className={`border rounded-lg p-4 cursor-pointer ${selectedTemplate === '1' ? 'border-primary bg-primary/5' : 'hover:bg-muted'}`}
-            onClick={() => setSelectedTemplate('1')}
-          >
-            <div className="flex items-center mb-2">
-              <input
-                type="radio"
-                name="template"
-                id="template1"
-                checked={selectedTemplate === '1'}
-                onChange={() => setSelectedTemplate('1')}
-                className="mr-2"
-              />
-              <label htmlFor="template1" className="font-medium cursor-pointer">
-                Template 1: Minimalista
-              </label>
+          {templates.map((template) => (
+            <div
+              key={template.id}
+              className={`border rounded-lg p-4 cursor-pointer ${
+                selectedTemplate === template.id
+                  ? 'border-primary bg-primary/5'
+                  : 'hover:bg-muted'
+              }`}
+              onClick={() => setSelectedTemplate(template.id)}
+            >
+              <div className="flex items-center mb-2">
+                <input
+                  type="radio"
+                  name="template"
+                  id={`template${template.id}`}
+                  checked={selectedTemplate === template.id}
+                  onChange={() => setSelectedTemplate(template.id)}
+                  className="mr-2"
+                />
+                <label
+                  htmlFor={`template${template.id}`}
+                  className="font-medium cursor-pointer"
+                >
+                  Template {template.id}: {template.name}
+                </label>
+              </div>
+              <p className="text-sm text-text-light">{template.description}</p>
             </div>
-            <p className="text-sm text-text-light">
-              Layout clean e simples, ideal para receitas com descrições curtas.
-              Exibe o nome da receita, categoria e uma breve descrição.
-            </p>
-          </div>
-
-          <div
-            className={`border rounded-lg p-4 cursor-pointer ${selectedTemplate === '2' ? 'border-primary bg-primary/5' : 'hover:bg-muted'}`}
-            onClick={() => setSelectedTemplate('2')}
-          >
-            <div className="flex items-center mb-2">
-              <input
-                type="radio"
-                name="template"
-                id="template2"
-                checked={selectedTemplate === '2'}
-                onChange={() => setSelectedTemplate('2')}
-                className="mr-2"
-              />
-              <label htmlFor="template2" className="font-medium cursor-pointer">
-                Template 2: Revista
-              </label>
-            </div>
-            <p className="text-sm text-text-light">
-              Layout estilo revista com imagens maiores e listagem dos
-              principais ingredientes. Ideal para um ebook mais visual.
-            </p>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -300,7 +291,8 @@ export default function EbookSelector({ recipes }: EbookSelectorProps) {
         <div className="text-sm">
           <span className="font-medium">{selectedRecipes.length}</span>{' '}
           receita(s) selecionada(s) • Template:{' '}
-          {selectedTemplate === '1' ? 'Minimalista' : 'Revista'}
+          {templates.find((t) => t.id === selectedTemplate)?.name ||
+            'Selecionado'}
         </div>
         <button
           onClick={handleGenerateEbook}
