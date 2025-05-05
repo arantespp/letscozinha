@@ -7,7 +7,7 @@
  *
  * Key Files:
  *  - `src/app/api/ebook/route.tsx`: This file. Contains the API endpoint logic, PDF structure, and component rendering.
- *  - `src/ebook/templates.tsx`: Defines available ebook templates (styles and metadata). Contains `baseStyles` for common elements and template-specific styles.
+ *    Also includes template definitions (styles and metadata).
  *  - `src/cms/recipes.ts`: Contains the `Recipe` type definition and functions (`getRecipe`) to fetch recipe data from the CMS.
  *
  * Workflow:
@@ -20,16 +20,15 @@
  *        - Steps (under `## Modo de Preparo` heading, using numbered or list format).
  *        - Cook Time (under `## Tempo de Preparo` heading).
  *        - Servings (under `## Rendimento` heading).
- *    - Fetches the logo from `LOGO_URL`. Ensure logo styles in `templates.tsx` respect the aspect ratio.
+ *    - Fetches the logo from `LOGO_URL`. Ensure logo styles respect the aspect ratio.
  * 4. Templating:
  *    - The `templateId` determines the visual style applied.
- *    - `baseStyles` in `templates.tsx` apply to all templates (headers, footers, cover, TOC, basic text).
- *    - Template-specific styles are defined within each template object in `ebookTemplates` in `templates.tsx`.
+ *    - `baseStyles` apply to all templates (headers, footers, cover, TOC, basic text).
+ *    - Template-specific styles are defined within each template object in `ebookTemplates`.
  * 5. Output: A PDF buffer is generated and returned with appropriate `Content-Type` and `Content-Disposition` headers.
  *
  * Best Practices:
  *  - Refer to `src/cms/recipes.ts` for the `Recipe` type structure.
- *  - When adding/modifying templates, edit `src/ebook/templates.tsx`.
  *  - Ensure recipe markdown follows the expected heading structure (`## Ingredientes`, etc.) for correct parsing.
  *  - Use `baseStyles` for consistency; override or add specifics in template styles.
  *  - Maintain the Cover Page -> TOC -> Recipe Pages structure.
@@ -38,15 +37,10 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getRecipe } from 'src/cms/recipes';
-import { renderToBuffer, Font } from '@react-pdf/renderer'; // Import Font
+import { renderToBuffer, Font, StyleSheet } from '@react-pdf/renderer'; // Updated import
 import React from 'react';
 import { Document, Page, Text, View, Image, Link } from '@react-pdf/renderer';
 import type { Recipe } from 'src/cms/recipes';
-import {
-  baseStyles,
-  ebookTemplates,
-  type EbookTemplate,
-} from 'src/ebook/templates';
 import { BASE_URL } from 'src/constants';
 import Markdown from 'react-markdown';
 import type { Components } from 'react-markdown';
@@ -54,6 +48,31 @@ import path from 'node:path'; // Import path for font file paths
 
 // Use the URL for the logo
 const LOGO_URL = `${BASE_URL}/logo.png`;
+
+// Website theme color constants from globals.css
+const THEME = {
+  colors: {
+    primary: '#fab200', // Primary yellow color
+    secondary: '#d8110d', // Secondary red color
+    accent: '#4caf50', // Accent green color
+    neutral: '#ffffff', // Background white
+    muted: 'rgb(243 244 246)', // Light gray background
+    textLight: '#737373', // Light gray text
+    textDark: '#333333', // Dark text
+  },
+  spacing: {
+    xs: '0.25rem',
+    sm: '1rem',
+    md: '1.5rem',
+    lg: '2rem',
+    xl: '4rem',
+  },
+  fonts: {
+    heading: 'Playfair Display',
+    body: 'Lora',
+  },
+  radius: '4px',
+};
 
 // Helper function to get the absolute path to a font file
 const getFontPath = (fontFilename: string) => {
@@ -85,6 +104,11 @@ Font.register({
       fontWeight: 500,
       fontStyle: 'normal',
     },
+    {
+      src: getFontPath('PlayfairDisplay-SemiBold.ttf'),
+      fontWeight: 600,
+      fontStyle: 'normal',
+    },
   ],
 });
 
@@ -112,13 +136,506 @@ Font.register({
       fontWeight: 500,
       fontStyle: 'normal',
     },
+    {
+      src: getFontPath('Lora-SemiBold.ttf'),
+      fontWeight: 600,
+      fontStyle: 'normal',
+    },
   ],
 });
 
-// Helper function to get a template by ID
-export function getTemplateById(templateId: string): EbookTemplate {
+export type EbookStyles = ReturnType<typeof StyleSheet.create>;
+
+/**
+ * Common base styles for PDF pages and elements, matching website theme.
+ */
+export const baseStyles = StyleSheet.create({
+  page: {
+    backgroundColor: THEME.colors.neutral,
+    padding: 30,
+    fontFamily: THEME.fonts.body,
+    color: THEME.colors.textDark,
+    lineHeight: 1.5,
+  },
+  coverPage: {
+    backgroundColor: THEME.colors.neutral,
+    padding: 50,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontFamily: THEME.fonts.body,
+  },
+  coverLogo: {
+    width: 150,
+    height: 94, // Adjusted height for 751x471 aspect ratio (150 / (751/471))
+    marginBottom: 30,
+  },
+  coverTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+    color: THEME.colors.textDark,
+    fontFamily: THEME.fonts.heading,
+  },
+  coverSubtitle: {
+    fontSize: 18,
+    marginBottom: 40,
+    textAlign: 'center',
+    color: THEME.colors.textLight,
+    fontFamily: THEME.fonts.body,
+  },
+  coverDate: {
+    fontSize: 12,
+    color: THEME.colors.textLight,
+    position: 'absolute',
+    bottom: 50,
+    fontFamily: THEME.fonts.body,
+  },
+  tocPage: {
+    backgroundColor: THEME.colors.neutral,
+    padding: 40,
+    fontFamily: THEME.fonts.body,
+  },
+  tocTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 25,
+    textAlign: 'center',
+    color: THEME.colors.textDark,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.colors.muted,
+    paddingBottom: 10,
+    fontFamily: THEME.fonts.heading,
+  },
+  tocEntry: {
+    fontSize: 14,
+    marginBottom: 10,
+    lineHeight: 1.4,
+    color: THEME.colors.textDark,
+    fontFamily: THEME.fonts.body,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontFamily: THEME.fonts.heading,
+    color: THEME.colors.textDark,
+  },
+  subtitle: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: 'bold',
+    fontFamily: THEME.fonts.heading,
+    color: THEME.colors.textDark,
+  },
+  recipeTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    fontFamily: THEME.fonts.heading,
+    color: THEME.colors.textDark,
+  },
+  recipeId: {
+    fontSize: 10,
+    color: THEME.colors.textLight,
+    marginBottom: 10,
+    fontFamily: THEME.fonts.body,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
+    right: 30,
+    textAlign: 'center',
+    color: THEME.colors.textLight,
+    fontSize: 10,
+    fontFamily: THEME.fonts.body,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.colors.muted,
+    borderBottomStyle: 'solid',
+    paddingBottom: 10,
+  },
+  logo: {
+    width: 50,
+    height: 31, // Adjusted height for 751x471 aspect ratio (50 / (751/471))
+  },
+  headerText: {
+    fontSize: 10,
+    color: THEME.colors.textLight,
+    fontFamily: THEME.fonts.body,
+  },
+  paragraph: {
+    fontSize: 12,
+    marginBottom: 10,
+    lineHeight: 1.5,
+    fontFamily: THEME.fonts.body,
+    color: THEME.colors.textDark,
+  },
+  imagesContainer: {
+    flexDirection: 'row',
+    marginBottom: 15,
+    gap: 10,
+  },
+  image: {
+    width: '30%',
+    height: 150,
+    objectFit: 'cover',
+    borderRadius: THEME.radius,
+  },
+  separator: {
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.colors.muted,
+    borderBottomStyle: 'solid',
+    marginVertical: 15,
+  },
+  category: {
+    backgroundColor: THEME.colors.muted,
+    padding: '3 6',
+    borderRadius: 12,
+    fontSize: 9,
+    color: THEME.colors.textDark,
+    marginRight: 5,
+    marginBottom: 5,
+    fontFamily: THEME.fonts.body,
+  },
+  categoriesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 10,
+  },
+  section: {
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    fontFamily: THEME.fonts.heading,
+    color: THEME.colors.textDark,
+  },
+  list: {
+    marginLeft: 15,
+    marginBottom: 10,
+  },
+  listItem: {
+    fontSize: 11,
+    marginBottom: 3,
+    lineHeight: 1.5,
+    fontFamily: THEME.fonts.body,
+    color: THEME.colors.textDark,
+  },
+  ingredientsTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: THEME.colors.textDark,
+    fontFamily: THEME.fonts.heading,
+  },
+  ingredientsList: {
+    marginLeft: 15,
+    marginBottom: 10,
+  },
+  stepsList: {
+    marginLeft: 15,
+    marginBottom: 10,
+  },
+  cookInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  cookTime: {
+    fontSize: 11,
+    color: THEME.colors.textDark,
+    fontFamily: THEME.fonts.body,
+  },
+  servings: {
+    fontSize: 11,
+    color: THEME.colors.textDark,
+    fontFamily: THEME.fonts.body,
+  },
+  pageNumber: {
+    position: 'absolute',
+    fontSize: 10,
+    bottom: 30,
+    right: 30,
+    color: THEME.colors.textLight,
+    fontFamily: THEME.fonts.body,
+  },
+  primaryButton: {
+    backgroundColor: THEME.colors.primary,
+    padding: 8,
+    borderRadius: THEME.radius,
+    textAlign: 'center',
+  },
+  primaryButtonText: {
+    color: THEME.colors.textDark,
+    fontFamily: THEME.fonts.body,
+    fontWeight: 'bold',
+  },
+  accentText: {
+    color: THEME.colors.accent,
+    fontFamily: THEME.fonts.body,
+  },
+  primaryText: {
+    color: THEME.colors.primary,
+    fontFamily: THEME.fonts.body,
+  },
+  secondaryText: {
+    color: THEME.colors.secondary,
+    fontFamily: THEME.fonts.body,
+  },
+});
+
+/**
+ * Describes an eBook template with its metadata and style definitions.
+ * @interface
+ */
+export interface EbookTemplate {
+  /** Display name of the template which also serves as its unique identifier */
+  name: string;
+  /** Short description of the template style */
+  description: string;
+  /** StyleSheet definitions for PDF rendering */
+  styles: EbookStyles;
+  /** Title shown on the eBook cover/header */
+  title: string;
+}
+
+/**
+ * Collection of predefined eBook templates.
+ * @type {EbookTemplate[]}
+ */
+export const ebookTemplates: EbookTemplate[] = [
+  {
+    name: 'Minimalista',
+    description:
+      'Layout clean e simples, ideal para receitas com descrições curtas. Exibe o nome da receita, categoria e uma breve descrição.',
+    styles: StyleSheet.create({
+      page: {
+        ...baseStyles.page,
+        padding: 40,
+      },
+      recipeSection: {
+        marginBottom: 20,
+        padding: 15,
+        borderWidth: 1,
+        borderColor: THEME.colors.muted,
+        borderStyle: 'solid',
+        borderRadius: THEME.radius,
+        backgroundColor: THEME.colors.neutral,
+      },
+      recipeHeader: {
+        borderBottomWidth: 1,
+        borderBottomColor: THEME.colors.muted,
+        borderBottomStyle: 'solid',
+        paddingBottom: 10,
+        marginBottom: 10,
+      },
+      sectionContainer: {
+        marginBottom: 15,
+      },
+      ingredientsListContainer: {
+        width: '100%',
+      },
+      stepsListContainer: {
+        width: '100%',
+      },
+    }),
+    title: 'Coletânea de Receitas - Estilo Minimalista',
+  },
+  {
+    name: 'Revista',
+    description:
+      'Layout estilo revista com imagens maiores e listagem dos principais ingredientes. Ideal para um ebook mais visual.',
+    styles: StyleSheet.create({
+      page: {
+        ...baseStyles.page,
+        backgroundColor: THEME.colors.neutral,
+      },
+      recipeSection: {
+        marginBottom: 30,
+        padding: 20,
+        backgroundColor: THEME.colors.neutral,
+        borderRadius: 10,
+        borderLeftWidth: 4,
+        borderLeftColor: THEME.colors.primary,
+        borderLeftStyle: 'solid',
+      },
+      recipeHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 15,
+        borderBottomWidth: 2,
+        borderBottomColor: THEME.colors.muted,
+        borderBottomStyle: 'solid',
+        paddingBottom: 10,
+      },
+      recipeImage: {
+        marginBottom: 15,
+        borderRadius: THEME.radius,
+        width: '100%',
+        height: 200,
+        objectFit: 'cover',
+      },
+      sectionContainer: {
+        marginBottom: 20,
+      },
+      ingredientsListContainer: {
+        marginBottom: 10,
+        backgroundColor: THEME.colors.muted,
+        padding: 10,
+        borderRadius: THEME.radius,
+      },
+      stepsListContainer: {
+        marginBottom: 10,
+      },
+    }),
+    title: 'Coletânea de Receitas - Estilo Revista',
+  },
+  {
+    name: 'Elegante',
+    description:
+      'Layout sofisticado com estilo gourmet: combina tipografia refinada, elementos decorativos sutis e layout em duas colunas para ingredientes e modo de preparo.',
+    styles: StyleSheet.create({
+      page: {
+        ...baseStyles.page,
+        padding: 50,
+        backgroundColor: THEME.colors.neutral,
+      },
+      recipeSection: {
+        marginBottom: 30,
+        padding: 25,
+        backgroundColor: THEME.colors.neutral,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: THEME.colors.muted,
+        borderStyle: 'solid',
+      },
+      recipeHeader: {
+        borderBottomWidth: 2,
+        borderBottomColor: THEME.colors.primary,
+        borderBottomStyle: 'solid',
+        paddingBottom: 10,
+        marginBottom: 15,
+        alignItems: 'center',
+      },
+      recipeImage: {
+        width: '100%',
+        height: 220,
+        objectFit: 'cover',
+        borderRadius: THEME.radius,
+        marginBottom: 20,
+      },
+      sectionContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
+      ingredientsListContainer: {
+        width: '45%',
+        backgroundColor: THEME.colors.muted,
+        padding: 10,
+        borderRadius: THEME.radius,
+      },
+      stepsListContainer: {
+        width: '45%',
+      },
+      separator: {
+        borderBottomWidth: 1,
+        borderBottomColor: THEME.colors.primary,
+        borderBottomStyle: 'dashed',
+        marginVertical: 20,
+      },
+    }),
+    title: 'Coletânea de Receitas - Estilo Elegante',
+  },
+  {
+    name: 'Lets Cozinha',
+    description:
+      'Layout oficial do Lets Cozinha, com as cores e estilos do site. Combina elementos visuais da marca com um layout prático e atraente.',
+    styles: StyleSheet.create({
+      page: {
+        ...baseStyles.page,
+        padding: 40,
+      },
+      recipeSection: {
+        marginBottom: 25,
+        padding: 20,
+        borderRadius: THEME.radius,
+        backgroundColor: THEME.colors.neutral,
+        borderTopWidth: 5,
+        borderTopColor: THEME.colors.primary,
+        borderTopStyle: 'solid',
+        borderBottomWidth: 1,
+        borderBottomColor: THEME.colors.muted,
+        borderBottomStyle: 'solid',
+        borderLeftWidth: 1,
+        borderLeftColor: THEME.colors.muted,
+        borderLeftStyle: 'solid',
+        borderRightWidth: 1,
+        borderRightColor: THEME.colors.muted,
+        borderRightStyle: 'solid',
+      },
+      recipeHeader: {
+        borderBottomWidth: 1,
+        borderBottomColor: THEME.colors.muted,
+        borderBottomStyle: 'solid',
+        paddingBottom: 15,
+        marginBottom: 15,
+      },
+      recipeImage: {
+        width: '100%',
+        height: 200,
+        objectFit: 'cover',
+        borderRadius: THEME.radius,
+        marginBottom: 15,
+      },
+      sectionContainer: {
+        marginBottom: 20,
+      },
+      ingredientsListContainer: {
+        backgroundColor: THEME.colors.muted,
+        padding: 15,
+        borderRadius: THEME.radius,
+        marginBottom: 15,
+        borderLeftWidth: 3,
+        borderLeftColor: THEME.colors.secondary,
+        borderLeftStyle: 'solid',
+      },
+      stepsListContainer: {
+        marginBottom: 15,
+        padding: 15,
+        borderRadius: THEME.radius,
+        backgroundColor: '#FAFAFA',
+        borderLeftWidth: 3,
+        borderLeftColor: THEME.colors.accent,
+        borderLeftStyle: 'solid',
+      },
+      separator: {
+        borderBottomWidth: 1,
+        borderBottomColor: THEME.colors.muted,
+        borderBottomStyle: 'solid',
+        marginVertical: 15,
+      },
+    }),
+    title: 'Livro de Receitas do Lets Cozinha',
+  },
+];
+
+// Helper function to get a template by name
+export function getTemplateById(templateName: string): EbookTemplate {
   return (
-    ebookTemplates.find((template) => template.id === templateId) ||
+    ebookTemplates.find((template) => template.name === templateName) ||
     ebookTemplates[0]
   );
 }
@@ -153,7 +670,7 @@ const pdfComponents = (template: EbookTemplate): Components => ({
     <Text
       style={{
         ...baseStyles.paragraph,
-        fontFamily: 'Lora',
+        fontFamily: THEME.fonts.body,
         fontWeight: 'bold',
       }}
     >
@@ -164,7 +681,7 @@ const pdfComponents = (template: EbookTemplate): Components => ({
     <Text
       style={{
         ...baseStyles.paragraph,
-        fontFamily: 'Lora',
+        fontFamily: THEME.fonts.body,
         fontStyle: 'italic',
       }}
     >
@@ -364,8 +881,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Use the template name as the identifier, default to 'Minimalista'
     const pdfBuffer = await renderToBuffer(
-      <EbookPdf recipes={validRecipes} templateId={templateId || '1'} />
+      <EbookPdf
+        recipes={validRecipes}
+        templateId={templateId || 'Minimalista'}
+      />
     );
 
     return new NextResponse(pdfBuffer, {

@@ -1,20 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { EbookTemplate } from 'src/ebook/templates';
-
-interface Recipe {
-  documentId: string;
-  nome: string;
-  slug: string;
-  categorias?: {
-    documentId: string;
-    nome: string;
-  }[];
-}
+import { useState, useEffect } from 'react';
+import { type EbookTemplate } from 'src/app/api/ebook/route';
+import { type SimplifiedRecipe } from 'src/cms/recipes';
 
 interface EbookSelectorProps {
-  recipes: Recipe[];
+  recipes: SimplifiedRecipe[];
   templates: EbookTemplate[];
 }
 
@@ -24,30 +15,38 @@ export default function EbookSelector({
 }: EbookSelectorProps) {
   const [selectedRecipes, setSelectedRecipes] = useState<string[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(
-    templates[0]?.id || '1'
+    templates[0]?.name || 'Minimalista'
   );
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
-  // Extrair todas as categorias únicas
-  const allCategories = recipes.reduce(
-    (categories, recipe) => {
-      recipe.categorias?.forEach((category) => {
-        if (!categories.some((cat) => cat.documentId === category.documentId)) {
-          categories.push(category);
-        }
-      });
-      return categories;
-    },
-    [] as { documentId: string; nome: string }[]
+  const [filteredRecipes, setFilteredRecipes] = useState<SimplifiedRecipe[]>(
+    []
   );
+
+  // Initialize filteredRecipes with recipes when component mounts or recipes change
+  useEffect(() => {
+    if (Array.isArray(recipes)) {
+      // Sort recipes by name in ascending order
+      const sortedRecipes = [...recipes].sort((a, b) =>
+        a.nome.localeCompare(b.nome)
+      );
+      setFilteredRecipes(sortedRecipes);
+    } else {
+      console.error('Recipes is not an array:', recipes);
+      setFilteredRecipes([]);
+    }
+  }, [recipes]);
 
   // Filtrar receitas quando os filtros mudam
   const handleFilterChange = () => {
-    let filtered = recipes;
+    if (!Array.isArray(recipes)) {
+      console.error('Recipes is not an array in handleFilterChange');
+      setFilteredRecipes([]);
+      return;
+    }
+
+    let filtered = [...recipes];
 
     // Filtrar por termo de busca
     if (searchTerm) {
@@ -56,15 +55,15 @@ export default function EbookSelector({
       );
     }
 
-    // Filtrar por categoria
-    if (activeCategory) {
-      filtered = filtered.filter((recipe) =>
-        recipe.categorias?.some((cat) => cat.documentId === activeCategory)
-      );
-    }
+    // Sort the filtered recipes alphabetically
+    filtered.sort((a, b) => a.nome.localeCompare(b.nome));
 
     setFilteredRecipes(filtered);
   };
+
+  useEffect(() => {
+    handleFilterChange();
+  }, [searchTerm]);
 
   const handleCheckboxChange = (documentId: string) => {
     setSelectedRecipes((prev) => {
@@ -86,12 +85,6 @@ export default function EbookSelector({
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setTimeout(handleFilterChange, 100);
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setActiveCategory(e.target.value || null);
-    setTimeout(handleFilterChange, 100);
   };
 
   const handleGenerateEbook = async () => {
@@ -149,28 +142,28 @@ export default function EbookSelector({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {templates.map((template) => (
             <div
-              key={template.id}
+              key={template.name}
               className={`border rounded-lg p-4 cursor-pointer ${
-                selectedTemplate === template.id
+                selectedTemplate === template.name
                   ? 'border-primary bg-primary/5'
                   : 'hover:bg-muted'
               }`}
-              onClick={() => setSelectedTemplate(template.id)}
+              onClick={() => setSelectedTemplate(template.name)}
             >
               <div className="flex items-center mb-2">
                 <input
                   type="radio"
                   name="template"
-                  id={`template${template.id}`}
-                  checked={selectedTemplate === template.id}
-                  onChange={() => setSelectedTemplate(template.id)}
+                  id={`template-${template.name}`}
+                  checked={selectedTemplate === template.name}
+                  onChange={() => setSelectedTemplate(template.name)}
                   className="mr-2"
                 />
                 <label
-                  htmlFor={`template${template.id}`}
+                  htmlFor={`template-${template.name}`}
                   className="font-medium cursor-pointer"
                 >
-                  Template {template.id}: {template.name}
+                  {template.name}
                 </label>
               </div>
               <p className="text-sm text-text-light">{template.description}</p>
@@ -182,7 +175,7 @@ export default function EbookSelector({
       {/* Filtros */}
       <div className="bg-white shadow-sm rounded-lg p-6 mb-6">
         <div className="flex flex-col md:flex-row justify-between gap-4 mb-4">
-          <div className="w-full md:w-1/2">
+          <div className="w-full">
             <label htmlFor="search" className="block text-sm font-medium mb-1">
               Buscar receitas
             </label>
@@ -195,33 +188,12 @@ export default function EbookSelector({
               onChange={handleSearchChange}
             />
           </div>
-
-          <div className="w-full md:w-1/2">
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium mb-1"
-            >
-              Filtrar por categoria
-            </label>
-            <select
-              id="category"
-              className="w-full p-2 border rounded"
-              value={activeCategory || ''}
-              onChange={handleCategoryChange}
-            >
-              <option value="">Todas as categorias</option>
-              {allCategories.map((category) => (
-                <option key={category.documentId} value={category.documentId}>
-                  {category.nome}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
 
         <div className="flex justify-between items-center">
           <span className="text-sm">
-            Mostrando {filteredRecipes.length} de {recipes.length} receitas
+            Mostrando {filteredRecipes.length} de{' '}
+            {Array.isArray(recipes) ? recipes.length : 0} receitas
           </span>
 
           <button
@@ -246,7 +218,7 @@ export default function EbookSelector({
         <h2 className="text-lg font-semibold mb-4">Selecione as receitas</h2>
 
         <div className="border rounded-lg divide-y overflow-hidden">
-          {filteredRecipes.length === 0 ? (
+          {!Array.isArray(filteredRecipes) || filteredRecipes.length === 0 ? (
             <div className="p-4 text-center text-text-light">
               Nenhuma receita encontrada com os filtros aplicados.
             </div>
@@ -269,16 +241,6 @@ export default function EbookSelector({
                   className="cursor-pointer flex-1"
                 >
                   <div className="font-medium">{recipe.nome}</div>
-                  <div className="text-xs text-text-light flex flex-wrap gap-1 mt-1">
-                    {recipe.categorias?.map((cat) => (
-                      <span
-                        key={cat.documentId}
-                        className="bg-muted px-2 py-0.5 rounded-full"
-                      >
-                        {cat.nome}
-                      </span>
-                    ))}
-                  </div>
                 </label>
               </div>
             ))
@@ -291,7 +253,7 @@ export default function EbookSelector({
         <div className="text-sm">
           <span className="font-medium">{selectedRecipes.length}</span>{' '}
           receita(s) selecionada(s) • Template:{' '}
-          {templates.find((t) => t.id === selectedTemplate)?.name ||
+          {templates.find((t) => t.name === selectedTemplate)?.name ||
             'Selecionado'}
         </div>
         <button
