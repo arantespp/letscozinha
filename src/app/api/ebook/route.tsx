@@ -506,7 +506,7 @@ export const ebookTemplates: EbookTemplate[] = [
   {
     name: 'Elegante',
     description:
-      'Layout sofisticado com estilo gourmet: combina tipografia refinada, elementos decorativos sutis e layout em duas colunas para ingredientes e modo de preparo.',
+      'Layout sofisticado com estilo gourmet: combina tipografia refinada, elementos decorativos sutis e layout limpo para ingredientes e modo de preparo.',
     styles: StyleSheet.create({
       page: {
         ...baseStyles.page,
@@ -538,17 +538,16 @@ export const ebookTemplates: EbookTemplate[] = [
         marginBottom: 20,
       },
       sectionContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        marginBottom: 20,
       },
       ingredientsListContainer: {
-        width: '45%',
+        width: '100%',
         backgroundColor: THEME.colors.muted,
         padding: 10,
         borderRadius: THEME.radius,
       },
       stepsListContainer: {
-        width: '45%',
+        width: '100%',
       },
       separator: {
         borderBottomWidth: 1,
@@ -629,6 +628,87 @@ export const ebookTemplates: EbookTemplate[] = [
       },
     }),
     title: 'Livro de Receitas do Lets Cozinha',
+  },
+  {
+    name: 'Premium Lets Cozinha',
+    description:
+      'Template premium que une o melhor dos estilos: visual marcante, imagens grandes, layout limpo para ingredientes e preparo, cores da marca Lets Cozinha e detalhes elegantes.',
+    styles: StyleSheet.create({
+      page: {
+        ...baseStyles.page,
+        padding: 48,
+        backgroundColor: THEME.colors.neutral,
+      },
+      recipeSection: {
+        marginBottom: 32,
+        padding: 28,
+        backgroundColor: THEME.colors.neutral,
+        borderRadius: 12,
+        borderTopWidth: 6,
+        borderTopColor: THEME.colors.primary,
+        borderTopStyle: 'solid',
+        borderLeftWidth: 3,
+        borderLeftColor: THEME.colors.secondary,
+        borderLeftStyle: 'solid',
+        borderRightWidth: 1,
+        borderRightColor: THEME.colors.muted,
+        borderRightStyle: 'solid',
+        borderBottomWidth: 1,
+        borderBottomColor: THEME.colors.muted,
+        borderBottomStyle: 'solid',
+        boxShadow: '0 2px 8px rgba(250,178,0,0.04)',
+      },
+      recipeHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        borderBottomColor: THEME.colors.primary,
+        borderBottomStyle: 'solid',
+        paddingBottom: 12,
+        marginBottom: 18,
+      },
+      recipeImage: {
+        width: '100%',
+        height: 230,
+        objectFit: 'cover',
+        borderRadius: THEME.radius,
+        marginBottom: 22,
+        borderWidth: 2,
+        borderColor: THEME.colors.primary,
+        borderStyle: 'solid',
+      },
+      sectionContainer: {
+        marginBottom: 20,
+      },
+      ingredientsListContainer: {
+        width: '100%',
+        backgroundColor: THEME.colors.muted,
+        padding: 14,
+        borderRadius: THEME.radius,
+        borderLeftWidth: 4,
+        borderLeftColor: THEME.colors.secondary,
+        borderLeftStyle: 'solid',
+        marginBottom: 0,
+      },
+      stepsListContainer: {
+        width: '100%',
+        backgroundColor: '#FAFAFA',
+        padding: 14,
+        borderRadius: THEME.radius,
+        borderLeftWidth: 4,
+        borderLeftColor: THEME.colors.accent,
+        borderLeftStyle: 'solid',
+        marginBottom: 0,
+      },
+      separator: {
+        borderBottomWidth: 1,
+        borderBottomColor: THEME.colors.primary,
+        borderBottomStyle: 'dashed',
+        marginVertical: 22,
+      },
+    }),
+    title: 'Ebook Premium Lets Cozinha',
   },
 ];
 
