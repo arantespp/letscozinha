@@ -94,7 +94,7 @@ async function SearchResults({
           <h2 className="text-2xl md:text-3xl font-heading mb-md">
             {searchTitle}
           </h2>
-          <div className="bg-muted p-lg rounded-lg shadow-sm max-w-xl mx-auto">
+          <div className="bg-muted p-lg rounded-lg shadow-sm mx-auto">
             <p className="text-lg mb-md">
               Não encontramos receitas para "{searchParams.search}"
             </p>
