@@ -27,14 +27,30 @@ export function Breadcrumbs({
   const breadcrumbSchema = getBreadcrumbSchema(normalizedItems);
 
   return (
-    <nav aria-label="breadcrumb">
+    <nav aria-label="breadcrumb" className="py-2">
       <script type="application/ld+json">
         {JSON.stringify(breadcrumbSchema)}
       </script>
-      <ol className="breadcrumb">
+      <ol className="flex flex-wrap items-center text-sm text-gray-600">
         {normalizedItems.map((breadcrumb, index) => (
-          <li key={index} className="breadcrumb-item">
-            <a href={breadcrumb.url}>{breadcrumb.name}</a>
+          <li
+            key={index}
+            className={`flex items-center ${
+              index < normalizedItems.length - 1
+                ? 'after:content-["/"] after:mx-2 after:text-gray-400'
+                : ''
+            }`}
+          >
+            <a
+              href={breadcrumb.url}
+              className={`hover:text-gray-900 ${
+                index === normalizedItems.length - 1
+                  ? 'text-gray-900 font-medium'
+                  : ''
+              }`}
+            >
+              {breadcrumb.name}
+            </a>
           </li>
         ))}
       </ol>
