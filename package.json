@@ -28,7 +28,6 @@
     "react": "19.1.0",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "19.1.0",
-    "react-markdown": "^10.1.0",
     "react-share": "^5.2.2",
     "remark-parse": "^11.0.0",
     "rss": "^1.2.2",
