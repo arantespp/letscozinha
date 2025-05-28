@@ -47,7 +47,7 @@ export const getRecipes = async (args: {
   };
 }) => {
   const url = (() => {
-    let filters: any | undefined;
+    let filters: any | undefined = {};
 
     if (args.documentIds) {
       filters = {

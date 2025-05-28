@@ -25,6 +25,7 @@ export default async function StatusDasReceitas() {
         const recipe = await getRecipe({
           documentId: simplifiedRecipe.documentId,
         });
+
         const schema = await getRecipeSchema(recipe);
 
         const noFormatted = (() => {
@@ -59,6 +60,7 @@ export default async function StatusDasReceitas() {
           noCategories: false,
           noInstagram: false,
           badSlug: false,
+          noRecipe: false,
         };
 
         if (!recipe.imagens || recipe.imagens.length === 0) {
@@ -79,6 +81,10 @@ export default async function StatusDasReceitas() {
 
         if (checkIfBadSlug(recipe.slug)) {
           status.badSlug = true;
+        }
+
+        if (!recipe.receita || recipe.receita.trim() === '') {
+          status.noRecipe = true;
         }
 
         return { ...recipe, status };
@@ -262,6 +268,7 @@ export default async function StatusDasReceitas() {
             <th>Receita</th>
             <th>Imagens</th>
             <th>Formatação</th>
+            <th>Conteúdo</th>
             <th>Categorias</th>
             <th>Instagram</th>
             <th>Slug</th>
@@ -282,6 +289,9 @@ export default async function StatusDasReceitas() {
                 </td>
                 <td className="text-center">
                   {recipe.status.noFormatted ? '❌' : '✅'}
+                </td>
+                <td className="text-center">
+                  {recipe.status.noRecipe ? '❌' : '✅'}
                 </td>
                 <td className="text-center">
                   {recipe.status.noCategories ? '❌' : '✅'}
