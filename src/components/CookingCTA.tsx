@@ -1,5 +1,6 @@
 import { LinkButton } from './LinkButton';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 
 export async function CookingCTA() {
@@ -8,10 +9,6 @@ export async function CookingCTA() {
   return (
     <section className="my-lg md:my-xl overflow-hidden md:px-0">
       <div className="bg-gradient-to-r from-primary/20 to-accent/20 rounded-xl p-md md:p-xl relative">
-        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10">
-          <div className="w-full h-full bg-[url('/cooking-pattern.svg')] bg-repeat" />
-        </div>
-
         <div className="grid md:grid-cols-2 gap-lg md:gap-xl items-center">
           <div className="flex flex-col gap-md text-center md:text-left">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-0">
@@ -38,17 +35,19 @@ export async function CookingCTA() {
           </div>
 
           <div className="relative mx-auto mt-md md:mt-0">
-            <div className="relative aspect-square w-52 md:w-64 lg:w-80 overflow-hidden rounded-full">
-              <div className="absolute inset-0 border-6 md:border-8 border-neutral rounded-full z-10" />
-              <Image
-                src={letsCozinhaLets.imagem.url}
-                alt="Cozinhando com a Lets"
-                fill
-                sizes="(max-width: 640px) 208px, (max-width: 768px) 256px, 320px"
-                className="object-cover"
-                priority={false}
-              />
-            </div>
+            <Link href="/conheca-a-lets" className="block">
+              <div className="relative aspect-square w-52 md:w-64 lg:w-80 overflow-hidden rounded-full cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="absolute inset-0 border-6 md:border-8 border-neutral rounded-full z-10" />
+                <Image
+                  src={letsCozinhaLets.imagem.url}
+                  alt="Cozinhando com a Lets"
+                  fill
+                  sizes="(max-width: 640px) 208px, (max-width: 768px) 256px, 320px"
+                  className="object-cover"
+                  priority={false}
+                />
+              </div>
+            </Link>
           </div>
         </div>
       </div>

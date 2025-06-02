@@ -40,7 +40,7 @@ export default async function ConhecaALets() {
   const letsSchema = await getLetsSchema();
 
   return (
-    <div className="container px-sm md:px-0 py-lg flex flex-col gap-xl flex-1">
+    <div className="md:px-0 py-lg flex flex-col gap-xl flex-1">
       <JsonLd schema={letsSchema} />
 
       {/* Hero Section */}

@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 function HeroImages({ featuredRecipes }: { featuredRecipes: any[] }) {
   return (
     <div className="relative order-1 md:order-2 md:h-[450px] mb-md md:mb-0 flex justify-center">
-      <div className="ml-lg md:ml-0 grid grid-cols-[55%_45%] gap-xs md:gap-md h-full w-full max-w-[380px] md:max-w-full">
+      <div className="grid grid-cols-[55%_45%] gap-md md:gap-md h-full w-full max-w-[380px] md:max-w-full">
         <div className="h-[240px] md:h-full aspect-[3/4] md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-2">
           {featuredRecipes[0]?.imagens?.[0] ? (
             <Image
@@ -27,7 +27,7 @@ function HeroImages({ featuredRecipes }: { featuredRecipes: any[] }) {
         </div>
 
         <div className="grid gap-sm">
-          <div className="h-[115px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-2 ml-xs">
+          <div className="h-[115px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-2">
             {featuredRecipes[1]?.imagens?.[0] ? (
               <Image
                 src={featuredRecipes[1].imagens[0].url}
@@ -44,7 +44,7 @@ function HeroImages({ featuredRecipes }: { featuredRecipes: any[] }) {
             )}
           </div>
 
-          <div className="h-[115px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-1">
+          <div className="h-[115px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform">
             {featuredRecipes[2]?.imagens?.[0] ? (
               <Image
                 src={featuredRecipes[2].imagens[0].url}
