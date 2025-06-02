@@ -29,7 +29,7 @@ const ImageSection = async () => {
 const PageNavSection = () => {
   return (
     <section className="flex flex-col items-center lg:items-start">
-      <h4 className="text-lg font-bold mb-md">Links Rápidos</h4>
+      <h4 className="text-lg font-heading mb-md">Links Rápidos</h4>
       <PagesNav className="flex flex-col gap-xs items-center lg:items-start [&>a]:text-text-dark/80 [&>a]:no-underline [&>a:hover]:text-primary" />
     </section>
   );
