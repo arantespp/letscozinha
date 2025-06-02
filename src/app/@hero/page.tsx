@@ -8,14 +8,14 @@ import { Suspense } from 'react';
 function HeroImages({ featuredRecipes }: { featuredRecipes: any[] }) {
   return (
     <div className="relative order-1 md:order-2 md:h-[450px] mb-md md:mb-0 flex justify-center">
-      <div className="grid grid-cols-2 gap-sm h-full w-full max-w-[280px] md:max-w-full">
-        <div className="h-[160px] md:h-full aspect-[3/4] md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-2">
+      <div className="ml-lg md:ml-0 grid grid-cols-[55%_45%] gap-xs md:gap-md h-full w-full max-w-[380px] md:max-w-full">
+        <div className="h-[240px] md:h-full aspect-[3/4] md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-2">
           {featuredRecipes[0]?.imagens?.[0] ? (
             <Image
               src={featuredRecipes[0].imagens[0].url}
               alt={featuredRecipes[0].nome || 'Receita destaque'}
               fill
-              sizes="(max-width: 768px) 140px, (max-width: 1200px) 300px, 350px"
+              sizes="(max-width: 768px) 170px, (max-width: 1200px) 300px, 350px"
               style={{ objectFit: 'cover', objectPosition: 'center' }}
               priority
               loading="eager"
@@ -27,13 +27,13 @@ function HeroImages({ featuredRecipes }: { featuredRecipes: any[] }) {
         </div>
 
         <div className="grid gap-sm">
-          <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-1">
+          <div className="h-[115px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-2 ml-xs">
             {featuredRecipes[1]?.imagens?.[0] ? (
               <Image
                 src={featuredRecipes[1].imagens[0].url}
                 alt={featuredRecipes[1].nome || 'Receita destaque'}
                 fill
-                sizes="(max-width: 768px) 75px, 220px"
+                sizes="(max-width: 768px) 95px, 220px"
                 style={{ objectFit: 'cover', objectPosition: 'center' }}
                 priority
                 loading="eager"
@@ -44,13 +44,13 @@ function HeroImages({ featuredRecipes }: { featuredRecipes: any[] }) {
             )}
           </div>
 
-          <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-1">
+          <div className="h-[115px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-1">
             {featuredRecipes[2]?.imagens?.[0] ? (
               <Image
                 src={featuredRecipes[2].imagens[0].url}
                 alt={featuredRecipes[2].nome || 'Receita destaque'}
                 fill
-                sizes="(max-width: 768px) 75px, 220px"
+                sizes="(max-width: 768px) 95px, 220px"
                 style={{ objectFit: 'cover', objectPosition: 'center' }}
                 priority
                 loading="eager"
@@ -103,11 +103,11 @@ export default async function Hero() {
           <Suspense
             fallback={
               <div className="relative order-1 md:order-2 md:h-[450px] mb-md md:mb-0 flex justify-center">
-                <div className="grid grid-cols-2 gap-sm h-full w-full max-w-[280px] md:max-w-full">
-                  <div className="h-[160px] md:h-full aspect-[3/4] md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-2 bg-gray-200 animate-pulse"></div>
+                <div className="grid grid-cols-2 gap-sm h-full w-full max-w-[380px] md:max-w-full">
+                  <div className="h-[240px] md:h-full aspect-[3/4] md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-2 bg-gray-200 animate-pulse"></div>
                   <div className="grid gap-sm">
-                    <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-1 bg-gray-200 animate-pulse"></div>
-                    <div className="h-[75px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-1 bg-gray-200 animate-pulse"></div>
+                    <div className="h-[115px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform -rotate-1 bg-gray-200 animate-pulse"></div>
+                    <div className="h-[115px] md:h-[220px] aspect-square md:aspect-auto relative rounded-lg overflow-hidden shadow-md transform rotate-1 bg-gray-200 animate-pulse"></div>
                   </div>
                 </div>
               </div>

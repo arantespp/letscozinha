@@ -10,8 +10,6 @@ import type { Metadata } from 'next';
 import { getRecipes } from 'src/cms/recipes';
 import type { WebSite } from 'schema-dts';
 import { LinkButton } from 'src/components/LinkButton';
-import { CategoryTag } from 'src/components/CategoryTag';
-import { getAllCategories } from 'src/cms/categories';
 import { getCategories } from 'src/cms/categories';
 import { CookingCTA } from 'src/components/CookingCTA';
 import { CategoriesList } from 'src/components/CategoriesList';
