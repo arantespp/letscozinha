@@ -21,8 +21,8 @@ export type EbookAttributes = {
   meta_descricao: string;
   keywords: string;
   pagina_website: string;
-  imagem?: CMSImage;
-  pdf?: {
+  imagem: CMSImage;
+  pdf: {
     url: string;
   };
   checkout_url: string | null;
@@ -32,6 +32,24 @@ export type EbookAttributes = {
 export type CMSEbooksResponse = CMSDataArrayResponse<EbookAttributes>;
 
 export type Ebook = CMSData<EbookAttributes>;
+
+export const ebookQueryFilters = {
+  imagem: {
+    $notNull: true,
+  },
+  pdf: {
+    $notNull: true,
+  },
+  checkout_url: {
+    $notNull: true,
+  },
+  pagina_website: {
+    $notNull: true,
+  },
+  descricao: {
+    $notNull: true,
+  },
+};
 
 const getAllEbooksWithoutCache = async () => {
   let allEbooks: Ebook[] = [];
@@ -46,21 +64,7 @@ const getAllEbooksWithoutCache = async () => {
       },
       populate: EBOOK_POPULATE,
       filters: {
-        imagem: {
-          $notNull: true,
-        },
-        pdf: {
-          $notNull: true,
-        },
-        checkout_url: {
-          $notNull: true,
-        },
-        pagina_website: {
-          $notNull: true,
-        },
-        descricao: {
-          $notNull: true,
-        },
+        ...ebookQueryFilters,
       },
     });
 

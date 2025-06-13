@@ -5,7 +5,6 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { Header } from 'src/components/Header';
 import { LayoutAside } from 'src/components/LayoutAside';
 import { Lora, Playfair_Display } from 'next/font/google';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getWebsiteName } from 'src/methods/getWebsiteName';
 import './fa.css';
@@ -86,7 +85,6 @@ export default function RootLayout({
           </div>
         </main>
         <Footer />
-        {isProduction && <SpeedInsights />}
       </body>
       {isProduction && <GoogleAnalytics gaId="G-KBBBK8ZDJG" />}
     </html>

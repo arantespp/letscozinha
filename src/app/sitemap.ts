@@ -2,6 +2,7 @@ import { BASE_URL } from 'src/constants';
 import { MetadataRoute } from 'next';
 import { getAllCategories } from 'src/cms/categories';
 import { getAllSimplifiedRecipes } from 'src/cms/recipes';
+import { getAllEbooks } from 'src/cms/ebooks';
 import { getUrl } from 'src/methods/getUrl';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -19,20 +20,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: category.updatedAt,
   }));
 
-  const lastModified = [...recipesSitemap, ...categoriesSitemap].reduce(
-    (acc, d) => {
-      if (!acc) {
-        return d.lastModified;
-      }
+  const { allEbooks } = await getAllEbooks();
 
-      if (d.lastModified > acc) {
-        return d.lastModified;
-      }
+  const ebooksSitemap = allEbooks.map((ebook) => ({
+    url: `${BASE_URL}/ebooks/${ebook.slug}`,
+    lastModified: ebook.updatedAt,
+  }));
 
-      return acc;
-    },
-    ''
-  );
+  const lastModified = [
+    ...recipesSitemap,
+    ...categoriesSitemap,
+    ...ebooksSitemap,
+  ].reduce((acc, d) => {
+    if (!acc) {
+      return d.lastModified;
+    }
+
+    if (d.lastModified > acc) {
+      return d.lastModified;
+    }
+
+    return acc;
+  }, '');
 
   const sortByUrl = (a: { url: string }, b: { url: string }) =>
     a.url.localeCompare(b.url);
@@ -45,6 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/termos-de-uso',
     '/categorias',
     '/receitas',
+    '/ebooks',
   ];
 
   return [
@@ -58,5 +68,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...categoriesSitemap.sort(sortByUrl),
     ...recipesSitemap.sort(sortByUrl),
+    ...ebooksSitemap.sort(sortByUrl),
   ];
 }

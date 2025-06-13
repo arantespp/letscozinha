@@ -11,6 +11,10 @@ const navs = [
     label: 'Receitas',
   },
   {
+    href: '/ebooks',
+    label: 'E-books',
+  },
+  {
     href: '/conheca-a-lets',
     label: 'Conheça a Lets',
   },

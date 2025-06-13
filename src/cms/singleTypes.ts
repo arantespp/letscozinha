@@ -2,12 +2,15 @@ import { type Recipe, RECIPES_POPULATE } from './recipes';
 import { CMS_TOKEN, CMS_URL } from './config';
 import qs from 'qs';
 import type { CMSImage, CMSSingleDataResponse } from './types';
+import { EBOOK_POPULATE, type Ebook, ebookQueryFilters } from './ebooks';
 
 type LetsCozinhaCMSResponse = CMSSingleDataResponse<{
   titulo: string;
   descricao?: string;
   receitas_favoritas_titulo: string;
   receitas_favoritas: Recipe[];
+  ebooks_favoritos_titulo: string;
+  ebooks_favoritos: Ebook[];
 }>;
 
 export const getLetsCozinha = async () => {
@@ -15,6 +18,14 @@ export const getLetsCozinha = async () => {
     populate: {
       receitas_favoritas: {
         populate: RECIPES_POPULATE,
+      },
+      ebooks_favoritos: {
+        populate: EBOOK_POPULATE,
+      },
+    },
+    filter: {
+      ebooks_favoritos: {
+        ...ebookQueryFilters,
       },
     },
   });
