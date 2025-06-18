@@ -5,6 +5,7 @@ import { FooterNewsletterSection } from './FooterNewsletterSection';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from 'public/logo-texto.png';
+import { Container } from './Container';
 
 const ImageSection = async () => {
   const { letsCozinha } = await getLetsCozinha();
@@ -40,37 +41,41 @@ export async function Footer() {
 
   return (
     <footer className="bg-muted/50 border-t border-gray-100">
-      <div className="container py-xl gap-lg grid grid-cols-1 md:grid-cols-12 items-start px-sm md:px-0">
-        <div className="md:col-span-6 lg:col-span-5 xl:col-span-4">
-          <ImageSection />
-        </div>
-        <div className="md:col-span-6 lg:col-span-3 xl:col-span-3">
-          <PageNavSection />
-        </div>
-        <div className="md:col-span-12 lg:col-span-4 xl:col-span-5">
-          <FooterNewsletterSection />
-        </div>
-      </div>
-      <div className="bg-primary/10 border-t border-primary/20">
-        <div className="container py-md flex flex-col md:flex-row justify-between items-center gap-md px-sm md:px-0">
-          <span className="text-text-dark/80 text-sm">
-            © {currentYear} Lets Cozinha - Todos os direitos reservados
-          </span>
-          <div className="flex gap-md text-sm">
-            <Link
-              className="text-text-dark/80 hover:text-primary hover:no-underline transition-colors"
-              href="/politica-de-privacidade"
-            >
-              Política de Privacidade
-            </Link>
-            <Link
-              className="text-text-dark/80 hover:text-primary hover:no-underline transition-colors"
-              href="/termos-de-uso"
-            >
-              Termos de Uso
-            </Link>
+      <Container>
+        <div className="py-xl gap-lg grid grid-cols-1 md:grid-cols-12 items-start px-sm md:px-0">
+          <div className="md:col-span-6 lg:col-span-5 xl:col-span-4">
+            <ImageSection />
+          </div>
+          <div className="md:col-span-6 lg:col-span-3 xl:col-span-3">
+            <PageNavSection />
+          </div>
+          <div className="md:col-span-12 lg:col-span-4 xl:col-span-5">
+            <FooterNewsletterSection />
           </div>
         </div>
+      </Container>
+      <div className="bg-primary/10 border-t border-primary/20">
+        <Container>
+          <div className="py-md flex flex-col md:flex-row justify-between items-center gap-md px-sm md:px-0">
+            <span className="text-text-dark/80 text-sm">
+              © {currentYear} Lets Cozinha - Todos os direitos reservados
+            </span>
+            <div className="flex gap-md text-sm">
+              <Link
+                className="text-text-dark/80 hover:text-primary hover:no-underline transition-colors"
+                href="/politica-de-privacidade"
+              >
+                Política de Privacidade
+              </Link>
+              <Link
+                className="text-text-dark/80 hover:text-primary hover:no-underline transition-colors"
+                href="/termos-de-uso"
+              >
+                Termos de Uso
+              </Link>
+            </div>
+          </div>
+        </Container>
       </div>
     </footer>
   );

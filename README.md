@@ -22,6 +22,38 @@
 
 ---
 
+## 🏗️ Princípios de Desenvolvimento
+
+### Componentização Obrigatória
+
+**REQUISITO FUNDAMENTAL**: Todo bloco de código reutilizável DEVE ser componentizado.
+
+#### Regras de Componentização
+
+- ✅ **Componentizar blocos reutilizáveis** - Qualquer elemento que apareça em mais de um local
+- ✅ **Separar responsabilidades** - Um componente, uma responsabilidade clara
+- ✅ **Props tipadas** - Sempre usar TypeScript interfaces para props
+- ✅ **JSDoc obrigatório** - Documentar propósito, props e uso de cada componente
+- ✅ **Reutilização antes de duplicação** - Sempre verificar se existe componente similar antes de criar novo
+
+#### Exemplos de Componentização
+
+- **Botões** → `LinkButton`, `CookingCTA`
+- **Cards** → `RecipeCard`, `CategoryCard`, `EbookCard`
+- **Formulários** → `EmailSubscription`, `RecipeEmailSubscription`
+- **Navegação** → `HeaderNav`, `SocialNav`, `PagesNav`
+- **Layout** → `Container`, `Main`, `Aside`
+
+#### Benefícios
+
+- **Consistência**: Design system uniforme
+- **Manutenibilidade**: Alterações centralizadas
+- **Testabilidade**: Componentes isolados
+- **Performance**: Reutilização otimizada
+- **Escalabilidade**: Fácil expansão do projeto
+
+---
+
 ## 🎯 Objetivo Principal
 
 **Vender e-books culinários** através de conteúdo gratuito e conversões estratégicas.
@@ -312,26 +344,30 @@ app/
 
 ### Comportamento Responsivo
 
-**Desktop (1024px+)**:
+**Desktop (`lg`: 1024px+)**:
 
 - Header fixo no topo
 - Hero full-width (quando aplicável)
 - Main (70%) + Aside (30%) em duas colunas
 - Footer com múltiplas colunas
 
-**Tablet (768px - 1023px)**:
+**Tablet (`md`: 768px - 1023px)**:
 
 - Header fixo no topo
 - Hero full-width (quando aplicável)
 - Main (100%) + Aside abaixo em coluna única
 - Footer com 2 colunas
 
-**Mobile (<768px)**:
+**Mobile (`sm` e menor: <768px)**:
 
 - Header compacto fixo
 - Hero full-width (quando aplicável)
 - Main (100%) + Aside em coluna única
 - Footer em coluna única
+
+**Breakpoints Tailwind padrão**:
+
+- `sm`: 640px | `md`: 768px | `lg`: 1024px | `xl`: 1280px | `2xl`: 1536px
 
 ### Estratégia de Layout por Página
 
@@ -367,13 +403,21 @@ app/
 
 ### Considerações Técnicas
 
+#### Componentização (Obrigatório)
+
+- **Blocos reutilizáveis** - SEMPRE componentizar elementos que aparecem em múltiplos locais
+- **Responsabilidade única** - Um componente, uma função específica
+- **Props tipadas** - TypeScript interfaces obrigatórias
+- **JSDoc completo** - Documentação de propósito, props e exemplos de uso
+- **Composição sobre duplicação** - Reutilizar componentes existentes antes de criar novos
+
 #### CSS/Styling
 
 - **Tema centralizado** - Todos os estilos devem vir do tema definido em `globals.css`
 - **Classes nativas do Tailwind** - Componentes devem usar apenas classes padrão do Tailwind CSS
 - **Mobile-first approach** - CSS responsivo partindo do mobile
 - **Flexbox/CSS Grid** para layouts estruturais
-- **Breakpoints**: 768px (tablet) e 1024px (desktop)
+- **Breakpoints padrão do Tailwind** - Usar os breakpoints nativos: `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px), `2xl` (1536px)
 - **Sistema de espaçamento consistente** - Usar classes padrão do Tailwind (p-4, px-5, etc.)
 - **Design tokens** - Cores, tipografia e espaçamentos padronizados no tema
 
@@ -507,14 +551,12 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 
 - [ ] **globals.css Theme Setup** - Definir variáveis CSS, cores, tipografia
 - [ ] **Design Tokens** - Sistema de espaçamento, cores primárias/secundárias
-- [ ] **Responsive Breakpoints** - Configurar breakpoints 768px e 1024px
-- [ ] **Component Styling Strategy** - Usar apenas classes nativas do Tailwind CSS
 
 #### 1.1 Layout Principal
 
-- [ ] **Container Component** - Wrapper com max-width 1200px e padding responsivo
-- [ ] **Header Component** - Logo + navegação + busca + CTA
-- [ ] **Footer Component** - Links + newsletter + redes sociais + copyright
+- [x] **Container Component** - Wrapper com max-width 1200px e padding responsivo
+- [x] **Header Component** - Logo + navegação + busca + CTA
+- [x] **Footer Component** - Links + newsletter + redes sociais + copyright
 - [ ] **Main Component** - Área de conteúdo principal com semântica adequada
 - [ ] **Main.Section Component** - Seções organizadas com espaçamento consistente
 - [ ] **Aside Component** - Sidebar de conversão
