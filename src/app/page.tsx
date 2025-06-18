@@ -20,84 +20,11 @@ export const metadata: Metadata = {
   },
 };
 
-async function HeroSection() {
-  try {
-    const { letsCozinha } = await getLetsCozinha();
-    const featuredRecipe = letsCozinha.receitas_favoritas[0];
-
-    if (!featuredRecipe) {
-      return null;
-    }
-
-    const image = featuredRecipe.imagens?.[0];
-
-    return (
-      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 mb-xl">
-        <div className="container py-xl md:py-2xl grid md:grid-cols-2 gap-lg items-center">
-          <div className="flex flex-col gap-md">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-sm">
-                Lets Cozinha
-              </h1>
-              <p className="text-xl text-text-dark/80 mb-md">
-                Explore receitas deliciosas e fáceis de preparar para todos os
-                momentos.
-              </p>
-            </div>
-            <div className="flex flex-col gap-sm">
-              <h2 className="text-xl mb-0">Receita em Destaque</h2>
-              <Link
-                href={`/receitas/${featuredRecipe.slug}`}
-                className="font-heading text-2xl no-underline hover:text-primary transition-colors"
-              >
-                {featuredRecipe.nome}
-              </Link>
-              <p className="line-clamp-3">{featuredRecipe.meta_descricao}</p>
-              <div className="flex gap-xs mt-sm">
-                <LinkButton
-                  href={`/receitas/${featuredRecipe.slug}`}
-                  className="bg-primary hover:bg-primary/80 text-text-dark font-medium transition-colors"
-                >
-                  Ver Receita
-                </LinkButton>
-                <LinkButton
-                  href="/receitas"
-                  className="bg-transparent border border-primary text-text-dark hover:bg-primary/10 transition-colors"
-                >
-                  Ver Todas
-                </LinkButton>
-              </div>
-            </div>
-          </div>
-          <div className="relative aspect-square max-w-[400px] mx-auto w-full">
-            {image && (
-              <Link
-                href={`/receitas/${featuredRecipe.slug}`}
-                className="block w-full h-full overflow-hidden rounded-lg shadow-lg transform md:rotate-2 transition-transform hover:rotate-0"
-              >
-                <img
-                  src={image.url}
-                  alt={featuredRecipe.nome}
-                  className="w-full h-full object-cover object-center"
-                />
-              </Link>
-            )}
-          </div>
-        </div>
-      </section>
-    );
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
 async function FavoriteRecipes() {
   try {
     const { letsCozinha } = await getLetsCozinha();
 
-    // Skip the first recipe if it's used in the hero
-    const recipes = letsCozinha.receitas_favoritas.slice(1);
+    const recipes = letsCozinha.receitas_favoritas;
 
     return (
       <section className="mb-xl">
@@ -225,10 +152,6 @@ export default async function Home() {
   return (
     <div className="flex flex-col gap-xl flex-1">
       <JsonLd schema={websiteSchema} />
-
-      <React.Suspense fallback={<Loading />}>
-        <HeroSection />
-      </React.Suspense>
 
       <React.Suspense fallback={<Loading />}>
         <FavoriteRecipes />
