@@ -91,22 +91,28 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 ## 📱 Estrutura Base
 
 ```
-┌─────────────────────────────────────┐
-│              HEADER                 │
-├─────────────────────────────────────┤
-│              HERO                   │
-│         (quando aplicável)          │
-├─────────────────────────────────────┤
-│  ┌─────────────────┬─────────────┐  │
-│  │      MAIN       │    ASIDE    │  │
-│  │   (Conteúdo)    │ (Conversão) │  │
-│  └─────────────────┴─────────────┘  │
-├─────────────────────────────────────┤
-│              FOOTER                 │
-└─────────────────────────────────────┘
+┌───────────────────────────────────────┐
+│              HEADER                   │ ← Fora do <main>
+├───────────────────────────────────────┤
+│ <main>                                │
+│ ┌───────────────────────────────────┐ │
+│ │             HERO                  │ |
+│ │       (quando aplicável)          │ │
+│ ├───────────────────────────────────┤ │
+│ │ ┌─────────────┬─────────────────┐ │ │
+│ │ │   CONTENT   │     ASIDE       │ | │
+│ │ │ (Conteúdo)  │  (Conversão)    │ | │
+│ │ └─────────────┴─────────────────┘ | │
+│ └───────────────────────────────────┘ │
+│ </main>                               │
+├───────────────────────────────────────┤
+│              FOOTER                   │ ← Fora do <main>
+└───────────────────────────────────────┘
 ```
 
-**Responsivo**: Mobile-first, breakpoints em 768px (tablet) e 1024px (desktop)
+**Responsivo**: Mobile-first com breakpoints Tailwind padrão: `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px), `2xl` (1536px)
+
+**Semântica HTML**: O `<main>` contém apenas o conteúdo principal da página para otimizar acessibilidade e SEO. Header e Footer ficam fora do `<main>` por serem elementos de navegação/informação global.
 
 ---
 
@@ -119,7 +125,7 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 **Estrutura**:
 
 - **Hero**: E-book principal + headline impactante + CTA grande
-- **Main**: E-books em destaque (3-4) + newsletter + receitas populares
+- **Content**: E-books em destaque (3-4) + newsletter + receitas populares
 - **Aside**: Categorias + sobre a autora + redes sociais
 
 ### 2. **Receitas (`/receitas`)**
@@ -128,7 +134,7 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Estrutura**:
 
-- **Main**: Busca + filtros + lista com scroll infinito
+- **Content**: Busca + filtros + lista com scroll infinito
 - **Aside**: E-book contextual + newsletter + categorias
 - **Conversão**: Banner de e-book a cada 6-8 receitas
 
@@ -138,7 +144,7 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Estrutura**:
 
-- **Main**: Breadcrumb + receita completa + receitas similares
+- **Content**: Breadcrumb + receita completa + receitas similares
 - **Aside**: E-book relacionado + newsletter + compartilhamento
 - **Conversão**: Após usuário ver a receita completa
 
@@ -148,7 +154,7 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Estrutura**:
 
-- **Main**: Grid de categorias + contador de receitas
+- **Content**: Grid de categorias + contador de receitas
 - **Conversão**: Banner central com e-book relacionado
 
 ### 5. **Categoria (`/categorias/:slug`)**
@@ -157,7 +163,7 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Estrutura**:
 
-- **Main**: Lista de receitas + filtros básicos
+- **Content**: Lista de receitas + filtros básicos
 - **Conversão**: Banner contextual a cada 8-10 receitas
 
 ### 6. **E-books (`/ebooks`)**
@@ -166,7 +172,7 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Estrutura**:
 
-- **Main**: Grid comercial + testemunhos + newsletter específica
+- **Content**: Grid comercial + testemunhos + newsletter específica
 - **Aside**: Prova social + categorias + mais vendidos
 
 ### 7. **E-book (`/ebooks/:slug`)**
@@ -176,7 +182,7 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 **Estrutura**:
 
 - **Hero**: Capa + título + preço + CTA principal
-- **Main**: Benefícios + testemunhos + FAQ + CTA final
+- **Content**: Benefícios + testemunhos + FAQ + CTA final
 - **Aside**: Minimal (não distrair da venda)
 
 ---
@@ -234,28 +240,99 @@ app/
 
 #### Container ✅
 
-- Max-width: 1200px
-- Padding: 20px (mobile) / 40px (desktop)
+- Max-width: 80rem (1280px)
+- Padding: 1.25rem (20px) na horizontal
 - Margin: 0 auto
 
-#### Main ✅
+#### Content ✅
 
-- **Tag semântica**: `<main>` para acessibilidade
-- **Responsabilidade**: Wrapper para conteúdo principal (70% desktop)
-- **Compound Pattern**: `Main.Section` para seções organizadas
-- **Props**: `children`, `className` opcional
+- **Tag semântica**: `<div>` com área de conteúdo principal (70% desktop)
+- **Responsabilidade**: Wrapper inteligente para conteúdo das páginas
+- **Funcionalidades integradas**: Breadcrumb manual + Título + Descrição
+- **Compound Pattern**: `Content.Section` para seções organizadas
+- **Props**: `title`, `description`, `breadcrumb`, `children`, `className`
 
-#### Main.Section ✅
+**Funcionalidades do Content:**
+
+- **Breadcrumb manual** - Array de objetos com `label` e `href` opcional
+- **Header inteligente** - Props `title` e `description` geram header padronizado
+- **Layout responsivo** - 70% desktop, 100% mobile com stack vertical
+- **Espaçamento consistente** - Sistema de padding/margin otimizado
+- **SEO otimizado** - Structured data para breadcrumbs quando fornecidos
+- **A11y compliant** - Navegação por teclado e screen readers
+
+**Breadcrumb Manual:**
+
+O componente `Content` aceita um array de breadcrumbs que você define manualmente:
+
+**Estrutura do Breadcrumb:**
+
+```tsx
+interface BreadcrumbItem {
+  name: string; // Texto exibido no breadcrumb
+  href?: string; // URL (opcional para página atual)
+  url?: string; // Alternativa para href
+  current?: boolean; // Marca item atual (opcional)
+}
+
+// Exemplo de breadcrumb para uma receita:
+const breadcrumb = [
+  { name: 'Home', href: '/' },
+  { name: 'Receitas', href: '/receitas' },
+  { name: 'Sobremesas', href: '/categorias/sobremesas' },
+  { name: 'Bolo de Chocolate' }, // Página atual (sem href)
+];
+```
+
+**Exemplo de uso:**
+
+```tsx
+<Content
+  title="Bolo de Chocolate"
+  description="Uma receita deliciosa para toda família"
+  breadcrumb={[
+    { name: 'Home', href: '/' },
+    { name: 'Receitas', href: '/receitas' },
+    { name: 'Sobremesas', href: '/categorias/sobremesas' },
+    { name: 'Bolo de Chocolate' },
+  ]}
+>
+  <Content.Section variant="content">
+    {/* Conteúdo da receita */}
+  </Content.Section>
+</Content>
+```
+
+**Interface do Content:**
+
+```tsx
+interface BreadcrumbItem {
+  name: string; // Texto exibido no breadcrumb
+  href?: string; // URL (opcional para página atual)
+  url?: string; // Alternativa para href
+  current?: boolean; // Marca item atual (opcional)
+}
+
+interface ContentProps {
+  title: string;
+  description?: string;
+  breadcrumb?: BreadcrumbItem[]; // Array manual de breadcrumbs
+  children: React.ReactNode;
+  className?: string;
+}
+```
+
+#### Content.Section ✅
 
 - **Tag semântica**: `<section>` para estrutura clara
 - **Variants**: `default` (py-lg), `hero` (py-xl), `content` (py-md), `list` (py-sm)
-- **Auto-header**: Props `title` e `description` geram header automaticamente
+- **Auto-spacing**: Espaçamento otimizado entre seções
 - **UX Laws**: Implementa Chunking, Cognitive Load, Law of Proximity
 
-#### Main/Aside Grid ⏳
+#### Content/Aside Grid ⏳
 
-- **Desktop**: 70% Main + 30% Aside
-- **Mobile**: Stack vertical (Aside após Main)
+- **Desktop**: 70% Content + 30% Aside
+- **Mobile**: Stack vertical (Aside após Content)
 
 #### Footer ✅
 
@@ -374,31 +451,31 @@ app/
 #### Home
 
 - **Hero**: E-book principal + headline + CTA
-- **Main**: E-books + Newsletter + Receitas Populares
+- **Content**: E-books + Newsletter + Receitas Populares
 - **Aside**: Categorias + Autora + Redes sociais
 
 #### /receitas
 
 - **Hero**: Não possui (título direto)
-- **Main**: Busca + Filtros + Lista de Receitas
+- **Content**: Busca + Filtros + Lista de Receitas
 - **Aside**: E-book destaque + Newsletter + Categorias
 
 #### /receitas/:slug
 
 - **Hero**: Não possui (breadcrumb + título)
-- **Main**: Receita completa + Receitas similares
+- **Content**: Receita completa + Receitas similares
 - **Aside**: E-book relacionado + Newsletter + Compartilhamento
 
 #### /ebooks
 
 - **Hero**: Não possui (título comercial direto)
-- **Main**: Grid de e-books + Testemunhos
+- **Content**: Grid de e-books + Testemunhos
 - **Aside**: Newsletter + Categorias + Prova social
 
 #### /ebooks/:slug
 
 - **Hero**: Página de vendas (capa + preço + CTA)
-- **Main**: Benefícios + Testemunhos + FAQ + CTA final
+- **Content**: Benefícios + Testemunhos + FAQ + CTA final
 - **Aside**: Minimizada (apenas newsletter e contato)
 
 ### Considerações Técnicas
@@ -534,7 +611,7 @@ app/
 3. **Benefícios** - Lista clara do que o cliente vai receber
 4. **Prova Social** - Depoimentos específicos + números de vendas
 5. **Sobre a Autora** - Credibilidade + expertise
-6. **FAQ** - Remove objeções comuns de compra
+6. **FAQ** - Removes objeções comuns de compra
 7. **CTA Final** - Botão repetido + garantias/bônus
 
 ---
@@ -557,8 +634,8 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 - [x] **Container Component** - Wrapper com max-width 1200px e padding responsivo
 - [x] **Header Component** - Logo + navegação + busca + CTA
 - [x] **Footer Component** - Links + newsletter + redes sociais + copyright
-- [ ] **Main Component** - Área de conteúdo principal com semântica adequada
-- [ ] **Main.Section Component** - Seções organizadas com espaçamento consistente
+- [ ] **Content Component** - Wrapper com breadcrumb manual + título + descrição
+- [ ] **Content.Section Component** - Seções organizadas com espaçamento consistente
 - [ ] **Aside Component** - Sidebar de conversão
 
 #### 1.2 Configuração Parallel Routes
@@ -571,7 +648,7 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 
 #### 1.3 Componentes de Navegação
 
-- [ ] **Breadcrumb Component** - Navegação hierárquica (via @breadcrumbs slot)
+- [x] **Breadcrumb Component** - Navegação hierárquica com structured data e acessibilidade ✅
 - [ ] **HeaderNav Component** - Menu principal (5 itens)
 - [ ] **HeaderSearch Component** - Busca expansível
 - [ ] **SocialNav Component** - Links redes sociais
@@ -610,7 +687,7 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 
 #### 3.1 Home Page
 
-- [ ] **app/page.tsx** - Main content da home
+- [ ] **app/page.tsx** - Content da home
 - [ ] **app/@hero/page.tsx** - Hero com e-book principal
 - [ ] **app/@aside/page.tsx** - Aside com categorias + autora
 - [ ] **Integração completa** - Testar layout responsivo
@@ -662,7 +739,7 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 
 #### 5.1 Mobile Optimization
 
-- [ ] **Mobile-first CSS** - Breakpoints 768px e 1024px
+- [ ] **Mobile-first CSS** - Breakpoints Tailwind padrão (`sm`, `md`, `lg`, `xl`, `2xl`)
 - [ ] **Touch-friendly CTAs** - Botões grandes (44px+)
 - [ ] **Mobile navigation** - Menu hamburger
 - [ ] **Mobile search** - Busca em modal
@@ -724,5 +801,3 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 - Parallel Routes setup necessário antes dos heroes contextuais
 - RecipeCard necessário antes de RecipesList
 - Layout base necessário antes de qualquer página
-
----
