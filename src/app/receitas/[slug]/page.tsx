@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Content } from 'src/components/Content';
+import { Card } from 'src/components/Card';
 import { CategoryTag } from 'src/components/CategoryTag';
 import { JsonLd } from 'src/components/JsonLd';
 import { Markdown } from 'src/components/Markdown';
@@ -151,27 +152,23 @@ export default async function Page(props: Props) {
           </div>
         </Content.Section>
 
-        {/* Imagens da Receita */}
+        {/* Imagens da Receita - sem visual, apenas espaçamento */}
         {images.length > 0 && (
           <Content.Section variant="tight">
-            <div className="bg-white rounded-lg shadow-sm p-md overflow-hidden">
-              <RecipeImages images={images} />
-            </div>
+            <RecipeImages images={images} />
           </Content.Section>
         )}
 
-        {/* Receita (Texto Principal) - Conteúdo mais importante */}
+        {/* Receita (Texto Principal) - Conteúdo limpo sem distrações */}
         <Content.Section variant="content">
-          <article className="bg-white rounded-lg shadow-sm p-md">
-            <Markdown source={recipe.receita} />
-          </article>
+          <Markdown source={recipe.receita} />
         </Content.Section>
 
-        {/* Compartilhamento - Próximo ao conteúdo */}
+        {/* Compartilhamento - Background sutil */}
         <Content.Section variant="tight">
-          <div className="bg-muted p-md rounded-lg">
+          <Card variant="subtle" padding="md">
             <RecipeShare recipe={recipe} />
-          </div>
+          </Card>
         </Content.Section>
 
         {/* Newsletter - Separação maior pois é conversão */}

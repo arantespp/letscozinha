@@ -660,6 +660,7 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 - [ ] **EmailSubscription Component** - Newsletter signup
 - [ ] **RecipeEmailSubscription Component** - Newsletter contextual
 - [ ] **CookingCTA Component** - Calls-to-action culinários
+- [x] **Card Component** - Container simples para destacar conteúdo (uso moderado)
 
 #### 2.2 Componentes de Conteúdo
 
