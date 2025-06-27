@@ -10,6 +10,7 @@ import { getWebsiteName } from 'src/methods/getWebsiteName';
 import './fa.css';
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
+import { Container } from 'src/components/Container';
 
 /**
  * Headers
@@ -62,9 +63,11 @@ const isProduction = process.env.NODE_ENV === 'production';
 export default function RootLayout({
   children,
   hero,
+  aside,
 }: Readonly<{
   children: React.ReactNode;
   hero: React.ReactNode;
+  aside?: React.ReactNode;
 }>) {
   return (
     <html
@@ -77,12 +80,18 @@ export default function RootLayout({
           <React.Suspense fallback={<div className="h-[200px]"></div>}>
             {hero}
           </React.Suspense>
-          <div className="container mx-auto my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl">
-            <div className="flex-1">
-              <React.Suspense fallback={null}>{children}</React.Suspense>
+          <Container>
+            <div className="mx-auto my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl">
+              <div className="w-full md:w-[70%]">
+                <React.Suspense fallback={null}>{children}</React.Suspense>
+              </div>
+              <div className="w-full md:w-[30%]">
+                <React.Suspense fallback={null}>
+                  {aside || <LayoutAside />}
+                </React.Suspense>
+              </div>
             </div>
-            <LayoutAside />
-          </div>
+          </Container>
         </main>
         <Footer />
       </body>

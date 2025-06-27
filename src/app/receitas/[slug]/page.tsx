@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { Content } from 'src/components/Content';
 import { CategoryTag } from 'src/components/CategoryTag';
 import { JsonLd } from 'src/components/JsonLd';
 import { Markdown } from 'src/components/Markdown';
@@ -79,8 +79,10 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
   }
 
   return (
-    <div className="md:mt-lg">
-      <h2>Confira também</h2>
+    <div>
+      <h2 className="text-2xl md:text-3xl font-playfair font-bold text-gray-900 mb-md">
+        Confira também
+      </h2>
       <RecipesList recipes={similarRecipes} />
     </div>
   );
@@ -109,83 +111,81 @@ export default async function Page(props: Props) {
       };
     }) || [];
 
+  // Breadcrumb para a receita
+  const breadcrumb = [
+    { name: 'Home', href: '/' },
+    { name: 'Receitas', href: '/receitas' },
+    { name: recipe.nome },
+  ];
+
   return (
-    <div className="pb-xl">
+    <>
       <JsonLd schema={recipeSchema} />
 
-      <div className="bg-gradient-to-b from-muted/50 to-neutral pt-md pb-lg">
-        <div className="container">
-          <Breadcrumbs
-            items={[
-              { name: 'Home', href: '/' },
-              { name: 'Receitas', href: '/receitas' },
-              {
-                name: recipe.nome,
-                href: `/receitas/${recipe.slug}`,
-                current: true,
-              },
-            ]}
-          />
-
-          <div className="mt-md max-w-3xl">
-            <h1 className="text-3xl md:text-4xl font-bold mb-sm">
-              {recipe.nome}
-            </h1>
-            <p className="text-text-light text-lg mb-md">{recipe.descricao}</p>
-
-            <div className="flex flex-wrap gap-xs mb-lg">
-              {recipe.categorias?.map((categoria) => (
-                <CategoryTag
-                  key={categoria.slug}
-                  nome={categoria.nome}
-                  slug={categoria.slug}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <article className="">
-        <div className="grid md:grid-cols-[2fr_1fr] gap-xl">
-          <div className="flex flex-col gap-lg order-2 md:order-1">
-            {/* Recipe content */}
-            <div className="bg-white rounded-lg shadow-sm p-md">
-              <Markdown source={recipe.receita} />
-            </div>
-
-            {/* Recipe sharing */}
-            <div className="bg-muted p-md rounded-lg">
-              <RecipeShare recipe={recipe} />
-            </div>
-          </div>
-
-          <div className="order-1 md:order-2">
-            {/* Recipe images */}
-            <div className="sticky top-24">
-              <div className="bg-white rounded-lg shadow-sm p-md mb-lg overflow-hidden">
-                <RecipeImages images={images} />
+      <Content
+        title={recipe.nome}
+        description={recipe.descricao}
+        breadcrumb={breadcrumb}
+      >
+        {/* Categorias e Instagram - elementos meta próximos ao header */}
+        <Content.Section variant="meta">
+          <div className="space-y-sm">
+            {/* Categorias */}
+            {recipe.categorias && recipe.categorias.length > 0 && (
+              <div className="flex flex-wrap gap-xs">
+                {recipe.categorias.map((categoria) => (
+                  <CategoryTag
+                    key={categoria.slug}
+                    nome={categoria.nome}
+                    slug={categoria.slug}
+                  />
+                ))}
               </div>
+            )}
 
-              <RecipeInstagramLinks
-                instagram_posts={recipe.instagram_posts}
-                slug={recipe.slug}
-              />
-            </div>
+            {/* Link para Instagram */}
+            <RecipeInstagramLinks
+              instagram_posts={recipe.instagram_posts}
+              slug={recipe.slug}
+            />
           </div>
-        </div>
-      </article>
+        </Content.Section>
 
-      {/* Removed the hr element and improved spacing */}
-      <div className="mx-auto">
-        <RecipeEmailSubscription />
-      </div>
+        {/* Imagens da Receita */}
+        {images.length > 0 && (
+          <Content.Section variant="tight">
+            <div className="bg-white rounded-lg shadow-sm p-md overflow-hidden">
+              <RecipeImages images={images} />
+            </div>
+          </Content.Section>
+        )}
 
-      <div className="">
-        <React.Suspense fallback={null}>
-          <SimilarRecipes recipe={recipe} />
-        </React.Suspense>
-      </div>
-    </div>
+        {/* Receita (Texto Principal) - Conteúdo mais importante */}
+        <Content.Section variant="content">
+          <article className="bg-white rounded-lg shadow-sm p-md">
+            <Markdown source={recipe.receita} />
+          </article>
+        </Content.Section>
+
+        {/* Compartilhamento - Próximo ao conteúdo */}
+        <Content.Section variant="tight">
+          <div className="bg-muted p-md rounded-lg">
+            <RecipeShare recipe={recipe} />
+          </div>
+        </Content.Section>
+
+        {/* Newsletter - Separação maior pois é conversão */}
+        <Content.Section variant="loose">
+          <RecipeEmailSubscription />
+        </Content.Section>
+
+        {/* Receitas Similares - Separação maior pois é seção nova */}
+        <Content.Section variant="loose">
+          <React.Suspense fallback={null}>
+            <SimilarRecipes recipe={recipe} />
+          </React.Suspense>
+        </Content.Section>
+      </Content>
+    </>
   );
 }

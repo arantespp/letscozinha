@@ -199,12 +199,10 @@ app/
 │   ├── default.tsx           # Sem hero (null)
 │   ├── page.tsx              # Hero da home
 │   └── ebooks/[slug]/page.tsx # Hero de vendas
-├── @breadcrumbs/              # Slot dos breadcrumbs
-│   ├── default.tsx           # Sem breadcrumbs (null)
-│   ├── receitas/page.tsx     # Breadcrumbs das receitas
-│   └── categorias/[slug]/page.tsx # Breadcrumbs da categoria
 ├── @aside/                    # Slot do aside
-│   └── ...
+│   ├── default.tsx           # Aside padrão (LayoutAside)
+│   ├── page.tsx              # Aside da home
+│   └── ebooks/[slug]/page.tsx # Aside de vendas
 └── receitas/
     └── [slug]/page.tsx       # Main da receita
 ```
@@ -215,7 +213,9 @@ app/
 - Performance otimizada (streaming separado)
 - A/B testing mais fácil
 - Heroes contextuais por página
-- Breadcrumbs automáticos e contextuais
+- Asides contextuais por página
+
+**Breadcrumbs**: Gerenciados pelo componente `Content` através de props manuais, não por parallel routes.
 
 ### Componentes Base
 
@@ -634,21 +634,20 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 - [x] **Container Component** - Wrapper com max-width 1200px e padding responsivo
 - [x] **Header Component** - Logo + navegação + busca + CTA
 - [x] **Footer Component** - Links + newsletter + redes sociais + copyright
-- [ ] **Content Component** - Wrapper com breadcrumb manual + título + descrição
-- [ ] **Content.Section Component** - Seções organizadas com espaçamento consistente
+- [x] **Content Component** - Wrapper com breadcrumb manual + título + descrição
+- [x] **Content.Section Component** - Seções organizadas com espaçamento consistente
 - [ ] **Aside Component** - Sidebar de conversão
 
 #### 1.2 Configuração Parallel Routes
 
-- [ ] **Setup app/layout.tsx** - Layout principal com slots hero e breadcrumbs
+- [ ] **Setup app/layout.tsx** - Layout principal com slots hero e aside
 - [ ] **Criar @hero slot** - Estrutura de pastas para heroes contextuais
-- [ ] **Criar @breadcrumbs slot** - Estrutura de pastas para breadcrumbs contextuais
 - [ ] **Criar @aside slot** - Estrutura de pastas para asides contextuais
 - [ ] **default.tsx files** - Fallbacks para slots não utilizados
 
 #### 1.3 Componentes de Navegação
 
-- [x] **Breadcrumb Component** - Navegação hierárquica com structured data e acessibilidade ✅
+- [x] **Breadcrumb Component** - Navegação hierárquica com structured data e acessibilidade (integrado ao Content) ✅
 - [ ] **HeaderNav Component** - Menu principal (5 itens)
 - [ ] **HeaderSearch Component** - Busca expansível
 - [ ] **SocialNav Component** - Links redes sociais
