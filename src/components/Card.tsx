@@ -84,8 +84,8 @@ export function Card({
 
   const backgroundClasses = {
     white: 'bg-white',
-    subtle: 'bg-gray-50',
-    'gradient-primary': 'bg-gradient-to-br from-primary/10 to-accent/10',
+    subtle: 'bg-gray-100',
+    'gradient-primary': 'bg-gradient-to-br from-primary/10 to-secondary/5',
     'gradient-muted': 'bg-gradient-to-b from-muted/50 to-neutral',
     transparent: 'bg-transparent',
   };

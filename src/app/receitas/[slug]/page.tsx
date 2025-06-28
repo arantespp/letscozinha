@@ -13,7 +13,7 @@ import { RecipeImages } from 'src/components/RecipeImages';
 import { RecipeInstagramLinks } from 'src/components/RecipeInstagramLinks';
 import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
-import { RecipeEmailSubscription } from 'src/components/RecipeEmailSubscription';
+import { EmailSubscription } from 'src/components/EmailSubscription';
 import { getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
@@ -80,7 +80,7 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
 
   return (
     <div>
-      <h2 className="text-2xl md:text-3xl font-playfair font-bold text-text-strong mb-md">
+      <h2 className="text-2xl md:text-3xl font-playfair text-text-strong mb-sm">
         Confira também
       </h2>
       <RecipesList recipes={similarRecipes} />
@@ -170,7 +170,7 @@ export default async function Page(props: Props) {
 
         {/* Newsletter - Separação maior pois é conversão */}
         <Content.Section variant="loose">
-          <RecipeEmailSubscription />
+          <EmailSubscription />
         </Content.Section>
 
         {/* Receitas Similares - Separação maior pois é seção nova */}

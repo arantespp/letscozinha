@@ -22,6 +22,39 @@
 
 ---
 
+### 🎯 **Encapsulação de Componentes - Padrão Implementado**
+
+**Princípio**: Componentes devem encapsular sua própria apresentação visual, incluindo Cards quando necessário.
+
+**Implementações Completas:**
+
+#### LinkButton ✅
+
+- **Centralização Perfeita**: Flex layout com items-center e justify-center para texto sempre centralizado
+- **Touch-Friendly**: Compatible com min-height 44px+ quando aplicado externamente
+- **Variants System**: Primary e secondary variants com hover states otimizados
+- **Consistência**: Base sólida para todos os CTAs do projeto
+- **Fitts's Law Ready**: Pronto para receber dimensões mínimas adequadas
+
+#### RecipeCard ✅
+
+- **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
+- **Encapsulação**: Card component integrado internamente seguindo padrão do projeto
+- **Fitts's Law**: CTA com min-height 44px+ para touch-friendly interaction
+- **Acessibilidade**: ARIA labels descritivos para melhor navegação
+- **UX Otimizada**: Hover animations, responsive images e Von Restorff Effect no badge de categoria
+- **Laws of UX**: Aesthetic-Usability com design limpo e espaçamento consistente
+
+#### EmailSubscription ✅
+
+- **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
+- **Acessibilidade**: ARIA labels, roles e live regions para feedback
+- **Fitts's Law**: CTAs com min-height 44px+ e min-width adequado
+- **Encapsulação**: Card integrado internamente seguindo padrão do projeto
+- **UX Otimizada**: Estados de loading, feedback de sucesso/erro contextual
+
+---
+
 ## 🏗️ Princípios de Desenvolvimento
 
 ### Componentização Obrigatória
@@ -482,7 +515,7 @@ Hero de vendas + benefícios + testemunhos + FAQ + CTA final
 - **Tema Tailwind CSS v4** - Usando nova sintaxe `@theme` para definição de variáveis
 - **7 Cores de Texto Essenciais** - Sistema enxuto com apenas cores realmente utilizadas
 - **Substituição de Classes Hardcoded** - Todos os `text-gray-*`, `text-red-*`, etc. foram substituídos
-- **Componentes Atualizados** - RecipeImages, Breadcrumbs, EmailSubscription, e páginas
+- **Componentes Atualizados** - RecipeImages, Breadcrumbs, EmailSubscription (com melhorias UX/acessibilidade), RecipeCard (com Card encapsulado), LinkButton (com centralização perfeita), e páginas
 - **Regra Obrigatória** - NUNCA usar cores hardcoded como `text-gray-500`, sempre usar cores do tema
 
 **Cores Implementadas:**
@@ -518,15 +551,15 @@ Hero de vendas + benefícios + testemunhos + FAQ + CTA final
 
 #### 2.1 Componentes de Conversão
 
-- [x] **LinkButton Component** - CTAs padronizados (44px+) ✅
-- [x] **EmailSubscription Component** - Newsletter signup ✅
+- [x] **LinkButton Component** - CTAs padronizados (44px+) com centralização perfeita de texto ✅
+- [x] **EmailSubscription Component** - Newsletter signup com JSDoc completo, acessibilidade e Fitts's Law (44px+ CTAs) ✅
 - [x] **RecipeEmailSubscription Component** - Newsletter contextual usando Card com background gradiente ✅
 - [ ] **CookingCTA Component** - Calls-to-action culinários
 - [x] **Card Component** - Container flexível com variants (usado em RecipeEmailSubscription e RecipeShare) ✅
 
 #### 2.2 Componentes de Conteúdo
 
-- [ ] **RecipeCard Component** - Card de receita para listas
+- [x] **RecipeCard Component** - Card de receita com encapsulação Card, JSDoc completo e Fitts's Law (44px+ CTAs) ✅
 - [ ] **RecipesList Component** - Grid responsivo de receitas
 - [ ] **EbooksList Component** - Grid comercial de e-books
 - [ ] **CategoriesList Component** - Grid de categorias
@@ -616,9 +649,9 @@ Hero de vendas + benefícios + testemunhos + FAQ + CTA final
 
 #### 6.1 Testes de UX
 
+- [x] **Fitts's Law compliance** - CTAs grandes e próximos (implementado em EmailSubscription, RecipeCard e LinkButton) ✅
 - [ ] **Hick's Law compliance** - Máximo 5 opções por decisão
 - [ ] **Miller's Law compliance** - Máximo 7 itens por grupo
-- [ ] **Fitts's Law compliance** - CTAs grandes e próximos
 - [ ] **Cognitive Load test** - Uma ação principal por página
 
 #### 6.2 Testes Técnicos
@@ -651,6 +684,14 @@ Hero de vendas + benefícios + testemunhos + FAQ + CTA final
 **Princípio**: Componentes devem encapsular sua própria apresentação visual, incluindo Cards quando necessário.
 
 **Implementações Completas:**
+
+#### EmailSubscription ✅
+
+- **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
+- **Acessibilidade**: ARIA labels, roles e live regions para feedback
+- **Fitts's Law**: CTAs com min-height 44px+ e min-width adequado
+- **Encapsulação**: Card integrado internalmente seguindo padrão do projeto
+- **UX Otimizada**: Estados de loading, feedback de sucesso/erro contextual
 
 #### RecipeEmailSubscription ✅
 

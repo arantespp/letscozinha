@@ -42,7 +42,7 @@ export async function Footer() {
   return (
     <footer className="bg-muted/50 border-t border-gray-100">
       <Container>
-        <div className="py-xl gap-lg grid grid-cols-1 md:grid-cols-12 items-start px-sm md:px-0">
+        <div className="py-xl gap-lg grid grid-cols-1 md:grid-cols-12 items-start">
           <div className="md:col-span-6 lg:col-span-5 xl:col-span-4">
             <ImageSection />
           </div>
@@ -56,8 +56,8 @@ export async function Footer() {
       </Container>
       <div className="bg-primary/10 border-t border-primary/20">
         <Container>
-          <div className="py-md flex flex-col md:flex-row justify-between items-center gap-md px-sm md:px-0">
-            <span className="text-text-dark/80 text-sm">
+          <div className="py-md flex flex-col md:flex-row justify-between items-center gap-md">
+            <span className="text-text-dark/80 text-sm text-center md:text-left">
               © {currentYear} Lets Cozinha - Todos os direitos reservados
             </span>
             <div className="flex gap-md text-sm">

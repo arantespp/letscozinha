@@ -17,9 +17,9 @@
   --color-neutral: #ffffff;
   --color-muted: rgb(243 244 246);
 
-  --color-text-light: #737373;
-  --color-text-dark: #333333;
   --color-text-strong: #111827;
+  --color-text-dark: #333333;
+  --color-text-light: #737373;
   --color-text-muted: #9ca3af;
   --color-text-success: #059669;
   --color-text-error: #dc2626;

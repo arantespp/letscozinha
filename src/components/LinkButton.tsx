@@ -23,7 +23,7 @@ export function LinkButton({
   return (
     <Link
       href={href}
-      className={`bg-primary text-text-dark hover:text-neutral rounded p-xs hover:bg-secondary text-center no-underline ${variantClass} ${className}`}
+      className={`bg-primary text-text-dark hover:text-neutral rounded p-xs hover:bg-secondary text-center no-underline flex items-center justify-center ${variantClass} ${className}`}
     >
       {children}
     </Link>

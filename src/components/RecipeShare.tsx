@@ -52,8 +52,6 @@ export const RecipeShare = ({ recipe }: { recipe: Recipe }) => {
     () => ({
       round: true,
       size,
-      bgStyle: { fill: 'var(--color-text-dark)' },
-      iconFillColor: 'white',
     }),
     []
   );
