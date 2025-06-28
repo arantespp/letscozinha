@@ -4,7 +4,8 @@ import { CategoryTag } from 'src/components/CategoryTag';
 import { JsonLd } from 'src/components/JsonLd';
 import { Markdown } from 'src/components/Markdown';
 import {
-  Recipe,
+  type Recipe,
+  getRecommendedEbook,
   getRecipe,
   getAllSimplifiedRecipes,
   searchSimilarRecipes,
@@ -22,6 +23,7 @@ import { getWebsiteName } from 'src/methods/getWebsiteName';
 import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { FB_APP_ID } from 'src/constants';
+import { EbookCard } from 'src/components/EbookCard';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -84,6 +86,28 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
         Confira também
       </h2>
       <RecipesList recipes={similarRecipes} />
+    </div>
+  );
+}
+
+async function RecommendedEbook({ recipe }: { recipe: Recipe }) {
+  const ebook = await getRecommendedEbook(recipe);
+
+  if (!ebook) {
+    return null;
+  }
+
+  return (
+    <div>
+      <h2 className="text-2xl md:text-3xl font-playfair text-text-strong mb-sm">
+        Para você que ama cozinhar
+      </h2>
+      <p className="text-text-light mb-md leading-relaxed">
+        Um e-book especialmente selecionado para complementar sua experiência
+        com
+        <strong className="text-text-dark"> {recipe.nome}</strong>!
+      </p>
+      <EbookCard ebook={ebook} variant="featured" priority />
     </div>
   );
 }
@@ -158,22 +182,29 @@ export default async function Page(props: Props) {
           </Content.Section>
         )}
 
-        {/* Receita (Texto Principal) - Conteúdo limpo sem distrações */}
+        {/* Receita (Ingredientes + Modo de Preparo) - Conteúdo principal sem distrações */}
         <Content.Section variant="content">
           <Markdown source={recipe.receita} />
         </Content.Section>
 
-        {/* Compartilhamento - Background sutil encapsulado no componente */}
+        {/* Compartilhamento - Após o usuário ler toda a receita (timing ideal) */}
         <Content.Section variant="tight">
           <RecipeShare recipe={recipe} />
         </Content.Section>
 
-        {/* Newsletter - Separação maior pois é conversão */}
+        {/* Newsletter - Após entregar valor completo (Peak-End Rule) */}
         <Content.Section variant="loose">
           <EmailSubscription />
         </Content.Section>
 
-        {/* Receitas Similares - Separação maior pois é seção nova */}
+        {/* E-book Recomendado - Conversão principal no momento ideal */}
+        <Content.Section variant="loose">
+          <React.Suspense fallback={null}>
+            <RecommendedEbook recipe={recipe} />
+          </React.Suspense>
+        </Content.Section>
+
+        {/* Receitas Similares - Manter engajamento após conversão */}
         <Content.Section variant="loose">
           <React.Suspense fallback={null}>
             <SimilarRecipes recipe={recipe} />

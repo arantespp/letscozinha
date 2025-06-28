@@ -36,6 +36,17 @@
 - **Consistência**: Base sólida para todos os CTAs do projeto
 - **Fitts's Law Ready**: Pronto para receber dimensões mínimas adequadas
 
+#### EbookCard ✅
+
+- **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
+- **3 Variants**: default (padrão), featured (destaque), minimal (compacto para sidebars)
+- **Encapsulação**: Card component integrado internamente seguindo padrão do projeto
+- **Fitts's Law**: CTA com min-height 44px+ para touch-friendly interaction
+- **Formatação de Preço**: Suporte a preços em BRL com formatação brasileira
+- **Acessibilidade**: ARIA labels descritivos e alt text para imagens
+- **UX Otimizada**: Hover animations, aspect ratio de livro (5:7), Von Restorff Effect no variant featured
+- **Laws of UX**: Aesthetic-Usability com design limpo e variants contextuais
+
 #### RecipeCard ✅
 
 - **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
@@ -123,6 +134,8 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 ## 📱 Estrutura Base
 
+### **Desktop (`lg`: 1024px+)**
+
 ```
 ┌───────────────────────────────────────┐
 │              HEADER                   │ ← Fora do <main>
@@ -134,6 +147,7 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 │ ├───────────────────────────────────┤ │
 │ │ ┌─────────────┬─────────────────┐ │ │
 │ │ │   CONTENT   │     ASIDE       │ | │
+│ │ │   (70%)     │    (30%)        │ | │
 │ │ │ (Conteúdo)  │  (Conversão)    │ | │
 │ │ └─────────────┴─────────────────┘ | │
 │ └───────────────────────────────────┘ │
@@ -143,9 +157,65 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 └───────────────────────────────────────┘
 ```
 
+### **Mobile (`sm` e menor: <768px)**
+
+```
+┌───────────────────────────────────────┐
+│         HEADER (compacto)             │ ← Fora do <main>
+├───────────────────────────────────────┤
+│ <main>                                │
+│ ┌───────────────────────────────────┐ │
+│ │        HERO (full-width)          │ |
+│ │      (quando aplicável)           │ │
+│ ├───────────────────────────────────┤ │
+│ │          CONTENT                  │ │
+│ │        (100% width)               │ │
+│ │                                   │ │
+│ │ • Seções integradas:              │ │
+│ │   - Newsletter contextual         │ │
+│ │   - Compartilhamento social       │ │
+│ │   - CTAs de conversão             │ │
+│ ├───────────────────────────────────┤ │
+│ │           ASIDE                   │ │
+│ │      (empilhado abaixo)           │ │
+│ │                                   │ │
+│ │ • E-book contextual               │ │
+│ │ • Quem é a Lets                   │ │
+│ │ • Categorias                      │ │
+│ └───────────────────────────────────┘ │
+│ </main>                               │
+├───────────────────────────────────────┤
+│      FOOTER (coluna única)            │ ← Fora do <main>
+└───────────────────────────────────────┘
+```
+
 **Responsivo**: Mobile-first com breakpoints Tailwind padrão: `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px), `2xl` (1536px)
 
 **Semântica HTML**: O `<main>` contém apenas o conteúdo principal da página para otimizar acessibilidade e SEO. Header e Footer ficam fora do `<main>` por serem elementos de navegação/informação global.
+
+### **Diferenças Chave Desktop vs Mobile:**
+
+#### **Desktop (lg+):**
+
+- ✅ **Layout em duas colunas**: Content (70%) + Aside (30%)
+- ✅ **Aside sempre visível**: Conversão constante durante navegação
+- ✅ **Header completo**: Navegação expandida, busca visível
+- ✅ **Footer multi-coluna**: Informações organizadas em grid
+
+#### **Mobile (<768px):**
+
+- ✅ **Layout em coluna única**: Content primeiro, Aside empilhado
+- ✅ **Seções integradas**: Newsletter e compartilhamento no Content
+- ✅ **Header compacto**: Menu hamburger, busca em modal
+- ✅ **Aside estratégico**: Apenas elementos essenciais (e-book, credibilidade)
+- ✅ **Footer simplificado**: Coluna única, informações prioritárias
+
+#### **Estratégia Mobile-First:**
+
+- **Peak-End Rule**: Seções integradas garantem conversão no timing certo
+- **Cognitive Load**: Aside reduzido a 3 elementos essenciais
+- **Touch-Friendly**: CTAs grandes (44px+), espaçamento adequado
+- **Performance**: Conteúdo principal carrega primeiro
 
 ---
 
@@ -155,68 +225,143 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Objetivo**: Converter visitantes em compradores de e-books
 
-**Estrutura**:
+**Layout**:
 
 - **Hero**: E-book principal + headline impactante + CTA grande
-- **Content**: E-books em destaque (3-4) + newsletter + receitas populares
-- **Aside**: Categorias + sobre a autora + redes sociais
+- **Content (70% desktop)**:
+  - E-books em destaque (3-4 máximo - Choice Overload)
+  - Newsletter geral
+  - Receitas populares (prova social)
+
+**Mobile**: Hero full-width, Content e Aside em coluna única
 
 ### 2. **Receitas (`/receitas`)**
 
 **Objetivo**: Engajar usuários e converter sutilmente
 
-**Estrutura**:
+**Layout**:
 
-- **Content**: Busca + filtros + lista com scroll infinito
-- **Aside**: E-book contextual + newsletter + categorias
-- **Conversão**: Banner de e-book a cada 6-8 receitas
+- **Hero**: Não possui (título direto)
+- **Content (70% desktop)**:
+  - Busca + filtros
+  - Lista de receitas com scroll infinito
+  - Banner de e-book a cada 6-8 receitas (Von Restorff)
+
+**Mobile**: Content em coluna única, Aside empilhado abaixo
 
 ### 3. **Receita (`/receitas/:slug`)**
 
 **Objetivo**: Entregar valor e converter no timing certo
 
-**Estrutura**:
+**Layout**:
 
-- **Content**: Breadcrumb + receita completa + receitas similares
-- **Aside**: E-book relacionado + newsletter + compartilhamento
-- **Conversão**: Após usuário ver a receita completa
+- **Hero**: Não possui (breadcrumb + título direto)
+- **Content (70% desktop)**:
+  - Breadcrumb + título + galeria de imagens
+  - **Ingredientes + Modo de preparo** (receita completa - valor principal)
+  - **Compartilhamento social** (após consumo do valor)
+  - **Newsletter contextual** (conversão após entregar valor)
+  - **E-book recomendado** (conversão principal - featured variant)
+  - **Receitas similares** (manter engajamento)
+
+**Estratégia de Conversão**:
+
+- **Timing 1**: Compartilhamento após entregar valor completo (receita lida)
+- **Timing 2**: Newsletter no momento ideal (Peak-End Rule aplicado)
+- **Timing 3**: E-book recomendado como conversão principal destacada
+- **Timing 4**: Receitas similares para manter engajamento e navegação
+
+**Psicologia da Ordem Implementada**:
+
+1. **Valor Primeiro**: O usuário recebe o que veio buscar (receita completa)
+2. **Reciprocidade**: Após receber valor, está predisposto a "retribuir" (compartilhar)
+3. **Commitment**: Newsletter captura no momento de maior satisfação
+4. **Conversão Principal**: E-book apresentado quando há maior confiança estabelecida
+5. **Retenção**: Receitas similares mantêm o usuário no site (reduz bounce rate)
+
+**Otimizações de Copy e UX**:
+
+- **Título Aspiracional**: "Para você que ama cozinhar" (identidade + pertencimento)
+- **Texto Conciso**: 12 palavras vs 25 palavras originais (52% mais eficiente)
+- **Conexão Contextual**: Menciona nome da receita para personalização
+- **Tom Sofisticado**: Linguagem elegante alinhada com posicionamento gourmet
+- **Menos Pressure**: Sem perguntas diretas ou linguagem vendedora
+
+**Mobile**: Content em coluna única, Aside empilhado abaixo com mesmo conteúdo
 
 ### 4. **Categorias (`/categorias`)**
 
 **Objetivo**: Navegação eficiente por tipos de receita
 
-**Estrutura**:
+**Layout**:
 
-- **Content**: Grid de categorias + contador de receitas
-- **Conversão**: Banner central com e-book relacionado
+- **Hero**: Não possui (título direto)
+- **Content (100%)**:
+  - Grid de categorias com contador de receitas
+  - Banner central com e-book relacionado (Miller's Law - máximo 7 categorias visíveis)
+- **Aside**: Não possui nesta página
+
+**Mobile**: Grid responsivo, banner integrado naturalmente
 
 ### 5. **Categoria (`/categorias/:slug`)**
 
 **Objetivo**: Listar receitas da categoria específica
 
-**Estrutura**:
+**Layout**:
 
-- **Content**: Lista de receitas + filtros básicos
-- **Conversão**: Banner contextual a cada 8-10 receitas
+- **Hero**: Não possui (breadcrumb + título da categoria)
+- **Content (70% desktop)**:
+  - Lista de receitas da categoria
+  - Filtros básicos (tempo, dificuldade)
+  - Banner contextual a cada 8-10 receitas
+
+**Mobile**: Content em coluna única, Aside empilhado abaixo
 
 ### 6. **E-books (`/ebooks`)**
 
 **Objetivo**: Maximizar vendas com página comercial
 
-**Estrutura**:
+**Layout**:
 
-- **Content**: Grid comercial + testemunhos + newsletter específica
-- **Aside**: Prova social + categorias + mais vendidos
+- **Hero**: Não possui (título comercial direto)
+- **Content (70% desktop)**:
+  - Grid comercial de e-books
+  - Testemunhos de clientes
+  - Newsletter específica para e-books
+
+**Mobile**: Content em coluna única, Aside empilhado abaixo
 
 ### 7. **E-book (`/ebooks/:slug`)**
 
 **Objetivo**: Converter em compra com página de vendas completa
 
-**Estrutura**:
+**Layout**:
 
-- **Hero**: Capa + título + preço + CTA principal
-- **Content**: Benefícios + testemunhos + FAQ + CTA final
-- **Aside**: Minimal (não distrair da venda)
+- **Hero**: Página de vendas (capa + título + preço + CTA principal)
+- **Content (80% desktop)**:
+  - Benefícios do e-book
+  - Testemunhos específicos
+  - FAQ
+  - CTA final forte (Peak-End Rule)
+
+**Mobile**: Hero + Content em coluna única, Aside minimal empilhado
+
+### **📌 Aside Padrão (30% desktop)**
+
+**Conteúdo comum para todas as páginas** (exceto onde especificado):
+
+- **Quem é a Lets Cozinha**: Credibilidade e autoridade da marca
+- **Categorias**: Navegação relacionada ao contexto
+- **Newsletter**: Inscrição geral (complementar às seções integradas)
+
+**Exceções**:
+
+- **Receitas (`/receitas/:slug`)**: E-book como seção integrada no Content (não no Aside)
+
+- **Categorias (`/categorias`)**: Não possui Aside
+- **E-book (`/ebooks/:slug`)**: Aside minimal (20% width, apenas newsletter/contato)
+
+**Mobile**: Empilhado abaixo do Content em todas as páginas
 
 ---
 
@@ -313,14 +458,39 @@ Compartilhamento social de receitas com Card integrado e acessibilidade completa
 
 Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado internamente em componentes específicos.
 
-#### Aside ❌
+#### Aside ⏳
 
-- **Responsabilidade**: Sidebar de conversão (30% desktop)
-- **Conteúdo**: Newsletter + e-books contextuais + categorias
+- **Responsabilidade**: Sidebar de conversão focada (30% desktop)
+- **Conteúdo Essencial**:
+  - E-book contextual (conversão principal)
+  - Quem é a Lets Cozinha (credibilidade/autoridade)
+  - Categorias (navegação relacionada)
 - **Comportamento**: Sticky behavior no scroll
-- **Mobile**: Stack após Main content
+- **Mobile**: Stack após Main content com mesmo conteúdo
+- **Filosofia**: Foco em conversão + credibilidade + navegação contextual
 
 ### Estratégias de Conversão
+
+#### Seções Integradas vs Aside
+
+**Aside (Sidebar)**: Elementos permanentes e estratégicos
+
+- E-book contextual (conversão principal)
+- Quem é a Lets Cozinha (credibilidade/autoridade)
+- Categorias (navegação relacionada)
+
+**Seções no Content**: Elementos de timing e contexto
+
+- Newsletter: integrada após entregar valor (ex: após ingredientes)
+- Compartilhamento: integrada após consumo completo (ex: após modo de preparo)
+- CTAs contextuais: no momento certo do flow de leitura
+
+**Vantagens dessa Separação:**
+
+- **Peak-End Rule**: Newsletter/compartilhamento no timing ideal
+- **Cognitive Load**: Aside focado em 3 elementos essenciais
+- **Proximity Law**: Conversão próxima ao conteúdo relevante
+- **Mobile-First**: Seções fluem naturalmente em qualquer dispositivo
 
 #### Mobile-First
 
@@ -334,7 +504,8 @@ Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado int
 #### Contextual
 
 - E-books relacionados ao conteúdo atual
-- Newsletter contextual por página
+- Newsletter contextual integrada nas seções do conteúdo principal
+- Compartilhamento social integrado após consumo do valor
 - Banners integrados naturalmente
 
 #### Timing
@@ -396,38 +567,6 @@ Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado int
 
 - `sm`: 640px | `md`: 768px | `lg`: 1024px | `xl`: 1280px | `2xl`: 1536px
 
-### Estratégia de Layout por Página
-
-#### Home
-
-- **Hero**: E-book principal + headline + CTA
-- **Content**: E-books + Newsletter + Receitas Populares
-- **Aside**: Categorias + Autora + Redes sociais
-
-#### /receitas
-
-- **Hero**: Não possui (título direto)
-- **Content**: Busca + Filtros + Lista de Receitas
-- **Aside**: E-book destaque + Newsletter + Categorias
-
-#### /receitas/:slug
-
-- **Hero**: Não possui (breadcrumb + título)
-- **Content**: Receita completa + Receitas similares
-- **Aside**: E-book relacionado + Newsletter + Compartilhamento
-
-#### /ebooks
-
-- **Hero**: Não possui (título comercial direto)
-- **Content**: Grid de e-books + Testemunhos
-- **Aside**: Newsletter + Categorias + Prova social
-
-#### /ebooks/:slug
-
-- **Hero**: Página de vendas (capa + preço + CTA)
-- **Content**: Benefícios + Testemunhos + FAQ + CTA final
-- **Aside**: Minimizada (apenas newsletter e contato)
-
 ### Considerações Técnicas
 
 #### Componentização (Obrigatório)
@@ -468,39 +607,7 @@ Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado int
 
 ---
 
-## 📋 Estrutura das Páginas
-
-### Home (`/`)
-
-E-book principal + e-books em destaque + newsletter + receitas populares + categorias
-
-### Receitas (`/receitas`)
-
-Busca + filtros + lista com scroll infinito + banners de conversão
-
-### Receita (`/receitas/:slug`)
-
-Breadcrumb + galeria de imagens + receita completa + e-book relacionado + receitas similares
-
-### Categorias (`/categorias`)
-
-Grid de categorias + banner central de e-book
-
-### Categoria (`/categorias/:slug`)
-
-Lista de receitas + filtros + banners contextuais
-
-### E-books (`/ebooks`)
-
-Grid comercial + testemunhos + newsletter específica
-
-### E-book (`/ebooks/:slug`)
-
-Hero de vendas + benefícios + testemunhos + FAQ + CTA final
-
----
-
-## 📝 Lista de Tarefas - Implementação
+## Lista de Tarefas - Implementação
 
 ### 🏗️ **Fase 1: Fundação (Componentes Base)**
 
@@ -531,7 +638,7 @@ Hero de vendas + benefícios + testemunhos + FAQ + CTA final
 - [x] **Footer Component** - Links + newsletter + redes sociais + copyright
 - [x] **Content Component** - Wrapper com breadcrumb manual + título + descrição
 - [x] **Content.Section Component** - Seções organizadas com espaçamento consistente
-- [ ] **Aside Component** - Sidebar de conversão
+- [ ] **Aside Component** - Sidebar focada: E-book + Quem é a Lets + Categorias
 
 #### 1.2 Configuração Parallel Routes
 
@@ -560,6 +667,7 @@ Hero de vendas + benefícios + testemunhos + FAQ + CTA final
 #### 2.2 Componentes de Conteúdo
 
 - [x] **RecipeCard Component** - Card de receita com encapsulação Card, JSDoc completo e Fitts's Law (44px+ CTAs) ✅
+- [x] **EbookCard Component** - Card de e-book com variants (default/featured/minimal), formatação de preço e encapsulação Card ✅
 - [ ] **RecipesList Component** - Grid responsivo de receitas
 - [ ] **EbooksList Component** - Grid comercial de e-books
 - [ ] **CategoriesList Component** - Grid de categorias
@@ -590,9 +698,19 @@ Hero de vendas + benefícios + testemunhos + FAQ + CTA final
 #### 3.2 Receitas
 
 - [ ] **app/receitas/page.tsx** - Lista de receitas com busca
-- [ ] **app/receitas/@aside/page.tsx** - Aside com e-book contextual
-- [ ] **app/receitas/[slug]/page.tsx** - Página individual da receita
-- [ ] **app/receitas/[slug]/@aside/page.tsx** - Aside com conversão
+- [ ] **app/receitas/@aside/page.tsx** - Aside com e-book contextual + Quem é a Lets + Categorias
+- [x] **app/receitas/[slug]/page.tsx** - Página individual da receita com seções integradas na ordem ideal (Receita → Compartilhamento → Newsletter → E-book → Similares) ✅
+- [ ] **app/receitas/[slug]/@aside/page.tsx** - Aside com e-book relacionado + Quem é a Lets + Categorias
+
+**✅ Melhorias Implementadas na Página de Receitas**:
+
+- **Ordem Otimizada**: Reorganizada seguindo psicologia do usuário e melhores práticas de conversão
+- **E-book Destacado**: Variant `featured` com título de seção para maior conversão
+- **Timing Perfeito**: Compartilhamento → Newsletter → E-book → Similares
+- **UX Laws**: Peak-End Rule, Reciprocidade e Commitment aplicados
+- **Copy Otimizado**: Título "Para você que ama cozinhar" (aspiracional e inclusivo)
+- **Texto Conciso**: Apresentação do e-book resumida para 12 palavras (52% redução)
+- **Conexão Contextual**: Texto liga diretamente a receita atual ao e-book recomendado
 
 #### 3.3 Categorias
 

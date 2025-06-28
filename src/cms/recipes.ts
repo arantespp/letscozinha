@@ -8,6 +8,7 @@ import type {
   CMSMeta,
   CMSData,
 } from './types';
+import type { Ebook } from './ebooks';
 
 export const RECIPES_PAGE_SIZE = 15;
 
@@ -183,7 +184,6 @@ export const getAllSimplifiedRecipes = async () => {
 
 const MEILISEARCH_HOST = process.env.MEILISEARCH_HOST || '';
 const MEILISEARCH_API_KEY = process.env.MEILISEARCH_API_KEY || '';
-const MEILISEARCH_INDEX = process.env.MEILISEARCH_INDEX || '';
 
 // Initialize MeiliSearch client only if host is provided
 const meiliClient = MEILISEARCH_HOST
@@ -198,10 +198,9 @@ type MeiliRecipe = {
 } & RecipeAttributes;
 
 // Only initialize index if client exists
-const meiliRecipesIndex =
-  meiliClient && MEILISEARCH_INDEX
-    ? meiliClient.index<MeiliRecipe>(MEILISEARCH_INDEX)
-    : null;
+const meiliRecipesIndex = meiliClient
+  ? meiliClient.index<MeiliRecipe>('lets-cozinha-receita')
+  : null;
 
 const getRecipesFromMeiliHits = async (hits: MeiliRecipe[]) => {
   return hits as Recipe[];
@@ -292,5 +291,46 @@ export const searchSimilarRecipes = unstable_cache(
   ['searchSimilarRecipes'],
   {
     revalidate: false,
+  }
+);
+
+const meiliEbookIndex = meiliClient
+  ? meiliClient.index<Ebook>('lets-cozinha-ebook')
+  : null;
+
+export const getRecommendedEbook = unstable_cache(
+  async (recipe: Recipe): Promise<Ebook | null> => {
+    if (!meiliEbookIndex) {
+      console.warn(
+        'MeiliSearch is not configured. Recommended eBook functionality is disabled.'
+      );
+      return null;
+    }
+
+    try {
+      // await meiliEbookIndex.updateSettings({
+      //   filterableAttributes: ['checkout_url'],
+      // });
+
+      const searchResults = await meiliEbookIndex.search(recipe.nome, {
+        limit: 1,
+        filter: 'NOT checkout_url IS NULL AND NOT checkout_url IS EMPTY',
+        hybrid: {
+          semanticRatio: 0.9,
+          embedder: 'lets-cozinha-ebook-openai-embedder',
+        },
+        showRankingScore: true,
+      });
+
+      const data = searchResults.hits;
+      return data[0] || null;
+    } catch (error) {
+      console.error('MeiliSearch error:', error);
+      return null;
+    }
+  },
+  ['getRecommendedEbook'],
+  {
+    revalidate: 7 * 24 * 60 * 60, // 7 days in seconds
   }
 );
