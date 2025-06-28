@@ -2,7 +2,7 @@
 
 import { getOptimizedImageProps } from 'src/methods/generateNextImageSizesString';
 import Image from 'next/image';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { ImageAttributes } from 'src/cms/types';
 import { getImageSchema } from 'src/methods/getImageSchema';
 
@@ -18,19 +18,66 @@ const mainImageSizes = [
 
 export function RecipeImages({ images }: { images: ImageProps[] }) {
   const [activeImage, setActiveImage] = useState(0);
+  const thumbnailsContainerRef = useRef<HTMLDivElement>(null);
+  const thumbnailRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
-  // Navegação por teclado (UX Law: Fitts's Law - atalhos eficientes)
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
+  // Função para fazer scroll até a thumbnail ativa
+  const scrollToActiveThumbnail = useCallback(() => {
+    if (
+      !thumbnailsContainerRef.current ||
+      !thumbnailRefs.current[activeImage]
+    ) {
+      return;
+    }
+
+    const container = thumbnailsContainerRef.current;
+    const activeThumbnail = thumbnailRefs.current[activeImage];
+
+    if (activeThumbnail) {
+      activeThumbnail.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      });
+    }
+  }, [activeImage]);
+
+  // Executa o scroll sempre que a imagem ativa mudar
+  useEffect(() => {
+    scrollToActiveThumbnail();
+  }, [scrollToActiveThumbnail]);
+
+  // Handlers para touch/swipe na imagem principal
+  const handleTouchStart = useCallback(
+    (event: React.TouchEvent) => {
       if (images.length <= 1) return;
 
-      switch (event.key) {
-        case 'ArrowLeft':
+      const touch = event.touches[0];
+      touchStartX.current = touch.clientX;
+      touchStartY.current = touch.clientY;
+    },
+    [images.length]
+  );
+
+  const handleTouchEnd = useCallback(
+    (event: React.TouchEvent) => {
+      if (images.length <= 1) return;
+
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX.current;
+      const deltaY = touch.clientY - touchStartY.current;
+
+      // Verifica se o movimento é mais horizontal que vertical (swipe horizontal)
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+        if (deltaX > 0) {
+          // Swipe para a direita - imagem anterior
           setActiveImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-          break;
-        case 'ArrowRight':
+        } else {
+          // Swipe para a esquerda - próxima imagem
           setActiveImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-          break;
+        }
       }
     },
     [images.length]
@@ -55,11 +102,6 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
     },
     [images.length]
   );
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
 
   if (images.length === 0) {
     return null;
@@ -91,7 +133,7 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
             {activeImage + 1} de {images.length}
           </span>
           <div className="text-xs text-gray-400">
-            Toque nas laterais para navegar
+            Deslize ou toque nas laterais para navegar
           </div>
         </div>
       )}
@@ -104,6 +146,8 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
         role="img"
         aria-label={`Imagem ${activeImage + 1} de ${images.length}: ${activeImageData.alt || 'Imagem da receita'}`}
         onClick={handleImageClick}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         <Image
           className="object-cover object-center transition-all duration-300 group-hover:scale-[1.02]"
@@ -136,7 +180,10 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
 
       {/* Thumbnails - Implementação Limpa e Simples */}
       {images.length > 1 && (
-        <div className="flex gap-4 overflow-x-auto py-3 px-2">
+        <div
+          ref={thumbnailsContainerRef}
+          className="flex gap-4 overflow-x-auto py-3 px-2"
+        >
           {images.map((image, index) => {
             const thumbProps = getOptimizedImageProps(image, {
               defaultWidth: 80,
@@ -151,7 +198,10 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
             return (
               <div
                 key={image.url}
-                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden cursor-pointer transition-all duration-200 ${
+                ref={(el) => {
+                  thumbnailRefs.current[index] = el;
+                }}
+                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden cursor-pointer transition-all duration-200 mb-xs ${
                   isActive
                     ? 'ring-4 ring-primary ring-offset-2 transform scale-105'
                     : 'opacity-60 hover:opacity-100 hover:transform hover:scale-105'
