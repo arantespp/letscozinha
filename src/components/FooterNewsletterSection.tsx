@@ -8,7 +8,6 @@ export function FooterNewsletterSection() {
     <EmailSubscription
       title="Receba Nossas Novidades"
       description="Cadastre seu email para receber nossas receitas e dicas culinárias."
-      containerClassName="flex flex-col w-full"
       formLayout="row"
       textAlignment="center"
     />

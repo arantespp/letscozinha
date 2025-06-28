@@ -58,8 +58,6 @@ export default async function Page(props: Props) {
   const params = await props.params;
   const ebook = await getEbook({ slug: params.slug });
 
-  console.log('Ebook:', ebook);
-
   if (!ebook) {
     notFound();
   }
