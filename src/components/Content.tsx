@@ -79,11 +79,11 @@ export function Content({
 
       {/* Page Header */}
       <div className="mb-lg">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-playfair font-bold text-gray-900 mb-sm">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-playfair font-bold mb-sm">
           {title}
         </h1>
         {description && (
-          <p className="text-lg text-gray-600 leading-relaxed">{description}</p>
+          <p className="text-text-light leading-relaxed">{description}</p>
         )}
       </div>
 

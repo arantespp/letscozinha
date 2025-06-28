@@ -109,7 +109,7 @@ async function HomeHero() {
               {/* Social Proof */}
               <div className="flex items-center gap-md text-sm text-text-dark/70">
                 <div className="flex items-center gap-xs">
-                  <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                  <span className="text-text-warning">⭐⭐⭐⭐⭐</span>
                   <span>Mais de 500 clientes satisfeitos</span>
                 </div>
               </div>

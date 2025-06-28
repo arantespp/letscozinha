@@ -31,21 +31,21 @@ export function Breadcrumbs({
       <script type="application/ld+json">
         {JSON.stringify(breadcrumbSchema)}
       </script>
-      <ol className="flex flex-wrap items-center text-sm text-gray-600">
+      <ol className="flex flex-wrap items-center text-sm text-text-light">
         {normalizedItems.map((breadcrumb, index) => (
           <li
             key={index}
             className={`flex items-center ${
               index < normalizedItems.length - 1
-                ? 'after:content-["/"] after:mx-2 after:text-gray-400'
+                ? 'after:content-["/"] after:mx-2 after:text-text-muted'
                 : ''
             }`}
           >
             <a
               href={breadcrumb.url}
-              className={`hover:text-gray-900 ${
+              className={`hover:text-text-strong ${
                 index === normalizedItems.length - 1
-                  ? 'text-gray-900 font-medium'
+                  ? 'text-text-strong font-medium'
                   : ''
               }`}
             >

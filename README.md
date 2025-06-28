@@ -223,13 +223,6 @@ app/
 
 #### Header ✅
 
-**Conteúdo**:
-
-- Logo Lets Cozinha (link home)
-- Menu principal (5 itens max)
-- Busca rápida (expansível)
-- CTA de e-book destacado
-
 **Navegação**:
 
 - Receitas (`/receitas`)
@@ -240,49 +233,13 @@ app/
 
 #### Container ✅
 
-- Max-width: 80rem (1280px)
-- Padding: 1.25rem (20px) na horizontal
-- Margin: 0 auto
+Wrapper com max-width 80rem (1280px) e padding responsivo.
 
 #### Content ✅
 
-- **Tag semântica**: `<div>` com área de conteúdo principal (70% desktop)
-- **Responsabilidade**: Wrapper inteligente para conteúdo das páginas
-- **Funcionalidades integradas**: Breadcrumb manual + Título + Descrição
-- **Compound Pattern**: `Content.Section` para seções organizadas
-- **Props**: `title`, `description`, `breadcrumb`, `children`, `className`
+Wrapper inteligente para conteúdo das páginas com breadcrumb manual, título e descrição integrados.
 
-**Funcionalidades do Content:**
-
-- **Breadcrumb manual** - Array de objetos com `label` e `href` opcional
-- **Header inteligente** - Props `title` e `description` geram header padronizado
-- **Layout responsivo** - 70% desktop, 100% mobile com stack vertical
-- **Espaçamento consistente** - Sistema de padding/margin otimizado
-- **SEO otimizado** - Structured data para breadcrumbs quando fornecidos
-- **A11y compliant** - Navegação por teclado e screen readers
-
-**Breadcrumb Manual:**
-
-O componente `Content` aceita um array de breadcrumbs que você define manualmente:
-
-**Estrutura do Breadcrumb:**
-
-```tsx
-interface BreadcrumbItem {
-  name: string; // Texto exibido no breadcrumb
-  href?: string; // URL (opcional para página atual)
-  url?: string; // Alternativa para href
-  current?: boolean; // Marca item atual (opcional)
-}
-
-// Exemplo de breadcrumb para uma receita:
-const breadcrumb = [
-  { name: 'Home', href: '/' },
-  { name: 'Receitas', href: '/receitas' },
-  { name: 'Sobremesas', href: '/categorias/sobremesas' },
-  { name: 'Bolo de Chocolate' }, // Página atual (sem href)
-];
-```
+**Compound Pattern**: `Content.Section` para seções organizadas.
 
 **Exemplo de uso:**
 
@@ -303,92 +260,25 @@ const breadcrumb = [
 </Content>
 ```
 
-**Interface do Content:**
-
-```tsx
-interface BreadcrumbItem {
-  name: string; // Texto exibido no breadcrumb
-  href?: string; // URL (opcional para página atual)
-  url?: string; // Alternativa para href
-  current?: boolean; // Marca item atual (opcional)
-}
-
-interface ContentProps {
-  title: string;
-  description?: string;
-  breadcrumb?: BreadcrumbItem[]; // Array manual de breadcrumbs
-  children: React.ReactNode;
-  className?: string;
-}
-```
-
 #### Content.Section ✅
 
-- **Tag semântica**: `<section>` para estrutura clara
-- **Variants**: `default` (py-lg), `hero` (py-xl), `content` (py-md), `list` (py-sm)
-- **Auto-spacing**: Espaçamento otimizado entre seções
-- **UX Laws**: Implementa Chunking, Cognitive Load, Law of Proximity
-
-#### Content/Aside Grid ⏳
-
-- **Desktop**: 70% Content + 30% Aside
-- **Mobile**: Stack vertical (Aside após Content)
+Seções organizadas com espaçamento consistente e variants: `default`, `hero`, `content`, `list`, `tight`, `loose`.
 
 #### Footer ✅
 
-- **Tag semântica**: `<footer>` com `role="contentinfo"`
-- **Responsabilidade**: Navegação secundária, conversão final e informações legais
-- **Layout**: 4 colunas no desktop, stack vertical no mobile
-- **Seções**: Sobre + Newsletter, Receitas, Institucional, Redes Sociais
-
-**Conteúdo**:
-
-- **Principal**: Descrição da marca + Newsletter CTA destacado
-- **Navegação**: Links para categorias, receitas, e-books
-- **Institucional**: Sobre, contato, políticas legais
-- **Social**: Instagram, Facebook, Pinterest, RSS
-- **Copyright**: Ano atual + direitos reservados
-
-**UX Laws**:
-
-- **Peak-End Rule**: Última impressão com newsletter e redes sociais
-- **Miller's Rule**: Máximo 7 links por seção
-- **Von Restorff Effect**: Newsletter CTA visualmente destacado
-- **Jakob's Law**: Layout familiar de footer web
+Navegação secundária, conversão final e informações legais.
 
 #### RecipeImages ✅
 
-- **Tag semântica**: `<div>` com galeria otimizada para receitas
-- **Responsabilidade**: Exibição de imagens com navegação touch-friendly
-- **Props**: `images` (array de ImageAttributes)
-- **Funcionalidades**: Swipe navigation + thumbnail scroll automático
+Galeria otimizada para mobile com swipe navigation, thumbnails interativas e scroll automático.
 
-**Funcionalidades do RecipeImages:**
+#### RecipeShare ✅
 
-- **Navegação por Swipe** - Deslizar esquerda/direita para navegar entre imagens
-- **Navegação por Clique** - Clique nas laterais da imagem principal (zonas de 40%)
-- **Thumbnails Interativas** - Scroll automático para thumbnail ativa
-- **Indicador Visual** - Contador "X de Y" e thumbnail destacada
-- **Responsive Design** - Otimizado para mobile-first (99% dos usuários)
-- **Touch-Friendly** - Thumbnails 80x80px, espaçamento generoso
-- **Performance** - Imagens otimizadas com Next.js Image e lazy loading
-- **SEO** - Structured data para imagens, alt tags descritivos
-- **Accessibility** - ARIA labels, navegação por teclado, focus management
+Compartilhamento social de receitas com Card integrado e acessibilidade completa. Suporta Facebook, WhatsApp, Twitter, Pinterest + cópia de link.
 
-**Comportamento de Navegação:**
+#### Card ✅
 
-- **Swipe Right** (deslizar direita): Imagem anterior
-- **Swipe Left** (deslizar esquerda): Próxima imagem
-- **Threshold**: Mínimo 50px de movimento para evitar ativações acidentais
-- **Scroll Automático**: Thumbnail ativa sempre visível no centro
-- **Fallback**: Clique nas zonas laterais para usuários sem touch
-
-**UX Laws Aplicadas:**
-
-- **Fitts's Law**: Thumbnails grandes (80px) e touch-friendly
-- **Hick's Law**: Navegação simples (swipe ou clique)
-- **Jakob's Law**: Padrões familiares de galeria mobile
-- **Cognitive Load**: Interface limpa, sem elementos desnecessários
+Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado internamente em componentes específicos.
 
 #### Aside ❌
 
@@ -405,9 +295,8 @@ interface ContentProps {
 - Scroll infinito em listas
 - Filtros em modals
 - Grid responsivo otimizado
-- **Galeria com swipe navigation** - RecipeImages implementa gestos touch nativos
-- **Thumbnails touch-friendly** - 80x80px com espaçamento generoso
-- **Scroll automático** - Thumbnail ativa sempre visível
+- Galeria com swipe navigation
+- Thumbnails touch-friendly (80x80px)
 
 #### Contextual
 
@@ -432,25 +321,16 @@ interface ContentProps {
 
 ## ✅ Aplicação Prática das Laws of UX
 
-### **Hick's Law** → Menu com máximo 5 itens principais + RecipeImages com navegação simples (swipe/clique)
-
-### **Miller's Law** → E-books agrupados de 3-4 por seção
-
-### **Fitts's Law** → CTAs grandes (44px+) próximos ao conteúdo + Thumbnails 80x80px touch-friendly
-
-### **Jakob's Law** → Busca no header, logo top-left, padrões familiares + Galeria mobile padrão
-
-### **Choice Overload** → Máximo 3-4 e-books em destaque na home
-
-### **Chunking** → Receitas por categoria, ingredientes listados
-
-### **Serial Position** → E-book principal primeiro, CTA final último
-
-### **Cognitive Load** → Uma ação principal por página + Interface limpa no RecipeImages
-
-### **Peak-End Rule** → Hero impactante + CTA final forte
-
-### **Von Restorff** → E-books destacados com cores/badges + Thumbnail ativa destacada
+- **Hick's Law** → Menu com máximo 5 itens principais + navegação simples
+- **Miller's Law** → E-books agrupados de 3-4 por seção
+- **Fitts's Law** → CTAs grandes (44px+) próximos ao conteúdo
+- **Jakob's Law** → Busca no header, logo top-left, padrões familiares
+- **Choice Overload** → Máximo 3-4 e-books em destaque na home
+- **Chunking** → Receitas por categoria, ingredientes listados
+- **Serial Position** → E-book principal primeiro, CTA final último
+- **Cognitive Load** → Uma ação principal por página
+- **Peak-End Rule** → Hero impactante + CTA final forte
+- **Von Restorff** → E-books destacados com cores/badges
 
 ---
 
@@ -529,26 +409,20 @@ interface ContentProps {
 
 - **Tema centralizado** - Todos os estilos devem vir do tema definido em `globals.css`
 - **Classes nativas do Tailwind** - Componentes devem usar apenas classes padrão do Tailwind CSS
+- **Cores de texto padronizadas** - OBRIGATÓRIO usar apenas cores do tema
 - **Mobile-first approach** - CSS responsivo partindo do mobile
-- **Flexbox/CSS Grid** para layouts estruturais
-- **Breakpoints padrão do Tailwind** - Usar os breakpoints nativos: `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px), `2xl` (1536px)
-- **Sistema de espaçamento consistente** - Usar classes padrão do Tailwind (p-4, px-5, etc.)
 - **Design tokens** - Cores, tipografia e espaçamentos padronizados no tema
 
-#### Performance
+**Sistema de Cores de Texto:**
 
-- Lazy loading de conteúdo do Aside
-- Componentes otimizados
-- Imagens responsivas
-- Fonts otimizadas
+- `text-text-dark` (principal), `text-text-light` (secundário)
+- `text-text-strong` (enfático), `text-text-muted` (auxiliar)
+- `text-text-success`, `text-text-error`, `text-text-warning` (feedback)
 
-#### Acessibilidade
+#### Performance & Acessibilidade
 
-- Navegação por teclado
-- Skip links
-- ARIA labels
-- Contraste adequado
-- Estrutura semântica HTML
+- Lazy loading, componentes otimizados, imagens responsivas
+- Navegação por teclado, skip links, ARIA labels, contraste adequado
 
 ---
 
@@ -561,99 +435,35 @@ interface ContentProps {
 
 ---
 
-## 📋 Estrutura Detalhada das Páginas
+## 📋 Estrutura das Páginas
 
-### `/` - Home
+### Home (`/`)
 
-**Objetivo**: Converter visitantes em compradores de e-books
+E-book principal + e-books em destaque + newsletter + receitas populares + categorias
 
-**Estrutura completa**:
+### Receitas (`/receitas`)
 
-1. **Hero Section** - E-book principal + headline impactante + CTA grande
-2. **E-books em Destaque** - 3-4 e-books com preços e benefícios claros
-3. **Newsletter** - Captura de e-mail com oferta irresistível
-4. **Conheça a Autora** - Credibilidade + link para `/conheca-a-lets`
-5. **Receitas Populares** - Social proof + conteúdo gratuito de qualidade
+Busca + filtros + lista com scroll infinito + banners de conversão
 
-### `/receitas` - Busca de Receitas
+### Receita (`/receitas/:slug`)
 
-**Objetivo**: Engajar usuários e converter sutilmente
+Breadcrumb + galeria de imagens + receita completa + e-book relacionado + receitas similares
 
-**Estrutura completa**:
+### Categorias (`/categorias`)
 
-1. **Cabeçalho** - Título + descrição (sem hero desnecessário)
-2. **Busca + Filtros** - Input com busca em tempo real + tags de categorias
-3. **Lista de Receitas** - Grid responsivo + scroll infinito
-4. **Banner de Conversão** - A cada 6-8 receitas, inserir e-book relacionado
+Grid de categorias + banner central de e-book
 
-### `/receitas/:slug` - Página da Receita
+### Categoria (`/categorias/:slug`)
 
-**Objetivo**: Entregar valor e converter no momento certo
+Lista de receitas + filtros + banners contextuais
 
-**Estrutura completa**:
+### E-books (`/ebooks`)
 
-1. **Breadcrumb** - Home > Receitas > [Categoria] > Receita
-2. **Cabeçalho** - Título + descrição + categorias + link Instagram
-3. **Imagens** - Galeria otimizada com swipe navigation, thumbnails interativas e scroll automático
-4. **Receita** - Ingredientes + preparo + tempo/rendimento
-5. **E-book Relacionado** - Contextual após o usuário ver o valor
-6. **Newsletter** - "Receba mais receitas como esta"
-7. **Receitas Similares** - 4-6 sugestões da mesma categoria
+Grid comercial + testemunhos + newsletter específica
 
-### `/categorias` - Listagem de Categorias
+### E-book (`/ebooks/:slug`)
 
-**Objetivo**: Facilitar navegação por tipo de receita
-
-**Estrutura completa**:
-
-1. **Breadcrumb** - Home > Categorias
-2. **Cabeçalho** - Título direto + descrição breve
-3. **Grid de Categorias** - Cards com imagem + nome + contador + preview
-4. **Banner Central** - E-book destacado no meio da página
-5. **Ordenação** - Por popularidade, quantidade ou alfabética
-
-### `/categorias/:slug` - Página da Categoria
-
-**Objetivo**: Mostrar receitas da categoria específica
-
-**Estrutura completa**:
-
-1. **Breadcrumb** - Home > Categorias > [Nome]
-2. **Cabeçalho** - Nome da categoria + contador de receitas
-3. **Filtros** - Ordenação por data, popularidade + filtros básicos
-4. **Lista de Receitas** - Layout consistente com `/receitas`
-5. **Banner Contextual** - E-book específico da categoria a cada 8-10 receitas
-
-### `/ebooks` - Catálogo de E-books
-
-**Objetivo**: Maximizar vendas com página comercial otimizada
-
-**Estrutura completa**:
-
-1. **Breadcrumb** - Home > E-books
-2. **Cabeçalho Comercial** - Título + valor dos e-books + contador
-3. **Filtros** - Por preço, categoria, mais vendidos
-4. **Grid de E-books** - Capas destacadas + preços + CTAs diretos
-5. **Prova Social** - Testemunhos + estatísticas de vendas
-6. **Newsletter Específica** - Novos lançamentos + ofertas exclusivas
-
-### `/ebooks/:slug` - Página de Vendas do E-book
-
-**Objetivo**: Converter visitante em comprador com página de vendas completa
-
-**Estrutura completa**:
-
-1. **Breadcrumb** - Home > E-books > [Nome]
-2. **Hero de Vendas** - Capa + título + preço + CTA principal
-3. **Benefícios** - Lista clara do que o cliente vai receber
-4. **Prova Social** - Depoimentos específicos + números de vendas
-5. **Sobre a Autora** - Credibilidade + expertise
-6. **FAQ** - Removes objeções comuns de compra
-7. **CTA Final** - Botão repetido + garantias/bônus
-
----
-
-_Design fundamentado em UX para maximizar conversões e usabilidade._
+Hero de vendas + benefícios + testemunhos + FAQ + CTA final
 
 ---
 
@@ -665,6 +475,21 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 
 - [x] **globals.css Theme Setup** - Variáveis CSS, cores, tipografia e base styles implementados ✅
 - [x] **Design Tokens** - Sistema completo de espaçamento, cores e tipografia funcionando ✅
+- [x] **Sistema de Cores de Texto** - Padronização completa das cores de texto do tema ✅
+
+**Detalhes da Implementação:**
+
+- **Tema Tailwind CSS v4** - Usando nova sintaxe `@theme` para definição de variáveis
+- **7 Cores de Texto Essenciais** - Sistema enxuto com apenas cores realmente utilizadas
+- **Substituição de Classes Hardcoded** - Todos os `text-gray-*`, `text-red-*`, etc. foram substituídos
+- **Componentes Atualizados** - RecipeImages, Breadcrumbs, EmailSubscription, e páginas
+- **Regra Obrigatória** - NUNCA usar cores hardcoded como `text-gray-500`, sempre usar cores do tema
+
+**Cores Implementadas:**
+
+- `text-text-dark` (principal), `text-text-light` (secundário)
+- `text-text-strong` (enfático), `text-text-muted` (auxiliar)
+- `text-text-success`, `text-text-error`, `text-text-warning` (feedback)
 
 #### 1.1 Layout Principal
 
@@ -693,11 +518,11 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 
 #### 2.1 Componentes de Conversão
 
-- [ ] **LinkButton Component** - CTAs padronizados (44px+)
-- [ ] **EmailSubscription Component** - Newsletter signup
-- [ ] **RecipeEmailSubscription Component** - Newsletter contextual
+- [x] **LinkButton Component** - CTAs padronizados (44px+) ✅
+- [x] **EmailSubscription Component** - Newsletter signup ✅
+- [x] **RecipeEmailSubscription Component** - Newsletter contextual usando Card com background gradiente ✅
 - [ ] **CookingCTA Component** - Calls-to-action culinários
-- [x] **Card Component** - Container simples para destacar conteúdo (uso moderado)
+- [x] **Card Component** - Container flexível com variants (usado em RecipeEmailSubscription e RecipeShare) ✅
 
 #### 2.2 Componentes de Conteúdo
 
@@ -710,7 +535,7 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 #### 2.3 Componentes de Mídia
 
 - [x] **RecipeImages Component** - Galeria otimizada para mobile com swipe/touch navigation ✅
-- [ ] **RecipeShare Component** - Compartilhamento social
+- [x] **RecipeShare Component** - Compartilhamento social com Card integrado e acessibilidade completa ✅
 - [ ] **RecipeInstagramLinks Component** - Links Instagram
 
 #### 2.4 Componentes Utilitários
@@ -818,6 +643,38 @@ _Design fundamentado em UX para maximizar conversões e usabilidade._
 - [ ] **Production deployment** - Deploy de produção
 - [ ] **Post-launch monitoring** - Monitoramento pós-launch
 - [ ] **Conversion optimization** - Otimização baseada em dados
+
+---
+
+### 🎯 **Encapsulação de Componentes - Padrão Implementado**
+
+**Princípio**: Componentes devem encapsular sua própria apresentação visual, incluindo Cards quando necessário.
+
+**Implementações Completas:**
+
+#### RecipeEmailSubscription ✅
+
+- **Antes**: `<Card variant="newsletter"><RecipeEmailSubscription /></Card>`
+- **Depois**: `<RecipeEmailSubscription />` (Card encapsulado internamente)
+- **Benefício**: Página não precisa saber sobre implementação visual do componente
+
+#### RecipeShare ✅
+
+- **Antes**: `<Card variant="subtle"><RecipeShare recipe={recipe} /></Card>`
+- **Depois**: `<RecipeShare recipe={recipe} />` (Card encapsulado internamente)
+- **Benefício**: Componente auto-contido com responsabilidade visual própria
+
+**Vantagens do Padrão:**
+
+- **Single Responsibility**: Cada componente é responsável por sua própria apresentação
+- **Encapsulação**: Detalhes de implementação não vazam para componentes pais
+- **Manutenibilidade**: Mudanças visuais ficam centralizadas no próprio componente
+- **Reutilização**: Componentes podem ser usados em qualquer contexto sem setup adicional
+- **Consistência**: Garantia de que o componente sempre terá a apresentação correta
+
+**Padrão para Novos Componentes:**
+
+Se um componente sempre precisa de um Card específico, o Card deve ser encapsulado internamente no componente, não requerido externamente.
 
 ---
 

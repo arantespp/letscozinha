@@ -19,6 +19,11 @@
 
   --color-text-light: #737373;
   --color-text-dark: #333333;
+  --color-text-strong: #111827;
+  --color-text-muted: #9ca3af;
+  --color-text-success: #059669;
+  --color-text-error: #dc2626;
+  --color-text-warning: #eab308;
 
   --spacing-none: 0;
   --spacing-xs: 0.25rem;

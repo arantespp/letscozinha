@@ -116,13 +116,13 @@ export function EmailSubscription({
       </form>
 
       {status === 'success' && (
-        <p className={`text-green-600 text-sm mt-xs ${textAlignmentClass}`}>
+        <p className={`text-text-success text-sm mt-xs ${textAlignmentClass}`}>
           Obrigado por se inscrever! Você receberá novidades e receitas
           diretamente no seu e-mail.
         </p>
       )}
       {status === 'error' && (
-        <p className={`text-red-600 text-sm mt-xs ${textAlignmentClass}`}>
+        <p className={`text-text-error text-sm mt-xs ${textAlignmentClass}`}>
           {errorMessage ||
             'Houve um erro. Por favor, tente novamente mais tarde.'}
         </p>

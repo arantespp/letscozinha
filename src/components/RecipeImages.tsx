@@ -129,10 +129,10 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
       {/* Indicador de posição (Hick's Law - clareza de contexto) */}
       {images.length > 1 && (
         <div className="flex justify-between items-center mb-xs">
-          <span className="text-sm text-gray-500" aria-live="polite">
+          <span className="text-sm text-text-light" aria-live="polite">
             {activeImage + 1} de {images.length}
           </span>
-          <div className="text-xs text-gray-400">
+          <div className="text-xs text-text-muted">
             Deslize ou toque nas laterais para navegar
           </div>
         </div>

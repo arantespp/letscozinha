@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Content } from 'src/components/Content';
-import { Card } from 'src/components/Card';
 import { CategoryTag } from 'src/components/CategoryTag';
 import { JsonLd } from 'src/components/JsonLd';
 import { Markdown } from 'src/components/Markdown';
@@ -81,7 +80,7 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
 
   return (
     <div>
-      <h2 className="text-2xl md:text-3xl font-playfair font-bold text-gray-900 mb-md">
+      <h2 className="text-2xl md:text-3xl font-playfair font-bold text-text-strong mb-md">
         Confira também
       </h2>
       <RecipesList recipes={similarRecipes} />
@@ -164,11 +163,9 @@ export default async function Page(props: Props) {
           <Markdown source={recipe.receita} />
         </Content.Section>
 
-        {/* Compartilhamento - Background sutil */}
+        {/* Compartilhamento - Background sutil encapsulado no componente */}
         <Content.Section variant="tight">
-          <Card variant="subtle" padding="md">
-            <RecipeShare recipe={recipe} />
-          </Card>
+          <RecipeShare recipe={recipe} />
         </Content.Section>
 
         {/* Newsletter - Separação maior pois é conversão */}
