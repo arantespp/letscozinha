@@ -3,7 +3,6 @@ import { BASE_URL, FB_APP_ID } from 'src/constants';
 import { Footer } from 'src/components/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Header } from 'src/components/Header';
-import { LayoutAside } from 'src/components/LayoutAside';
 import { Lora, Playfair_Display } from 'next/font/google';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getWebsiteName } from 'src/methods/getWebsiteName';
@@ -67,7 +66,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
   hero: React.ReactNode;
-  aside?: React.ReactNode;
+  aside: React.ReactNode;
 }>) {
   return (
     <html
@@ -86,9 +85,7 @@ export default function RootLayout({
                 <React.Suspense fallback={null}>{children}</React.Suspense>
               </div>
               <div className="w-full md:w-[30%]">
-                <React.Suspense fallback={null}>
-                  {aside || <LayoutAside />}
-                </React.Suspense>
+                <React.Suspense fallback={null}>{aside}</React.Suspense>
               </div>
             </div>
           </Container>

@@ -127,7 +127,7 @@ export default async function Page(props: Props) {
 
   const images =
     recipe.imagens?.map((cmsImage) => {
-      const image = cmsImage.formats.medium || cmsImage;
+      const image = cmsImage;
 
       return {
         ...image,

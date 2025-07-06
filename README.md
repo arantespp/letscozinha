@@ -64,6 +64,17 @@
 - **Encapsulação**: Card integrado internamente seguindo padrão do projeto
 - **UX Otimizada**: Estados de loading, feedback de sucesso/erro contextual
 
+#### LayoutAside ✅
+
+- **JSDoc Completo**: Documentação detalhada com estratégias de UX e Laws aplicadas
+- **Encapsulação**: Usa EbookCard variant minimal e Card components internamente
+- **Fitts's Law**: CTAs touch-friendly (44px+) para melhor usabilidade
+- **Cognitive Load**: Máximo 3 seções essenciais para não sobrecarregar
+- **Conversion Strategy**: E-book no topo, credibilidade no meio, navegação no final
+- **Laws of UX**: Miller's Law, Peak-End Rule e Von Restorff Effect implementados
+- **Parallel Route**: Integrado com @aside slot para contextos específicos
+- **Responsividade**: Layout adaptável (30% desktop, empilhado mobile)
+
 ---
 
 ## 🏗️ Princípios de Desenvolvimento
@@ -458,7 +469,7 @@ Compartilhamento social de receitas com Card integrado e acessibilidade completa
 
 Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado internamente em componentes específicos.
 
-#### Aside ⏳
+#### Aside ✅
 
 - **Responsabilidade**: Sidebar de conversão focada (30% desktop)
 - **Conteúdo Essencial**:
@@ -468,6 +479,7 @@ Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado int
 - **Comportamento**: Sticky behavior no scroll
 - **Mobile**: Stack após Main content com mesmo conteúdo
 - **Filosofia**: Foco em conversão + credibilidade + navegação contextual
+- **Implementação**: Parallel route @aside com default.tsx usando LayoutAside
 
 ### Estratégias de Conversão
 
@@ -638,21 +650,21 @@ Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado int
 - [x] **Footer Component** - Links + newsletter + redes sociais + copyright
 - [x] **Content Component** - Wrapper com breadcrumb manual + título + descrição
 - [x] **Content.Section Component** - Seções organizadas com espaçamento consistente
-- [ ] **Aside Component** - Sidebar focada: E-book + Quem é a Lets + Categorias
+- [x] **Aside Component** - Sidebar focada: E-book + Quem é a Lets + Categorias
 
 #### 1.2 Configuração Parallel Routes
 
-- [ ] **Setup app/layout.tsx** - Layout principal com slots hero e aside
+- [x] **Setup app/layout.tsx** - Layout principal com slots hero e aside ✅
 - [ ] **Criar @hero slot** - Estrutura de pastas para heroes contextuais
-- [ ] **Criar @aside slot** - Estrutura de pastas para asides contextuais
-- [ ] **default.tsx files** - Fallbacks para slots não utilizados
+- [x] **Criar @aside slot** - Estrutura de pastas para asides contextuais ✅
+- [x] **default.tsx files** - Fallbacks para slots não utilizados (aside default implementado) ✅
 
 #### 1.3 Componentes de Navegação
 
 - [x] **Breadcrumb Component** - Navegação hierárquica com structured data e acessibilidade (integrado ao Content) ✅
-- [ ] **HeaderNav Component** - Menu principal (5 itens)
-- [ ] **HeaderSearch Component** - Busca expansível
-- [ ] **SocialNav Component** - Links redes sociais
+- [x] **HeaderNav Component** - Menu principal (5 itens)
+- [x] **HeaderSearch Component** - Busca expansível
+- [x] **SocialNav Component** - Links redes sociais
 
 ### 🎨 **Fase 2: UI Components**
 

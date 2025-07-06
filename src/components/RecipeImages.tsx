@@ -3,10 +3,8 @@
 import { getOptimizedImageProps } from 'src/methods/generateNextImageSizesString';
 import Image from 'next/image';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { ImageAttributes } from 'src/cms/types';
+import { CMSImages } from 'src/cms/types';
 import { getImageSchema } from 'src/methods/getImageSchema';
-
-type ImageProps = ImageAttributes;
 
 // Configurações de tamanho específicas para imagens de receitas
 const mainImageSizes = [
@@ -16,7 +14,7 @@ const mainImageSizes = [
   { size: '672px' }, // Desktop (tamanho fixo)
 ];
 
-export function RecipeImages({ images }: { images: ImageProps[] }) {
+export function RecipeImages({ images }: { images: CMSImages }) {
   const [activeImage, setActiveImage] = useState(0);
   const thumbnailsContainerRef = useRef<HTMLDivElement>(null);
   const thumbnailRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -32,7 +30,6 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
       return;
     }
 
-    const container = thumbnailsContainerRef.current;
     const activeThumbnail = thumbnailRefs.current[activeImage];
 
     if (activeThumbnail) {
@@ -108,7 +105,8 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
   }
 
   // Utilizando a nova função para obter props otimizadas para a imagem principal
-  const activeImageData = images[activeImage];
+  const activeImageData =
+    images[activeImage].formats.small || images[activeImage];
   const mainImageProps = getOptimizedImageProps(activeImageData, {
     defaultWidth: 672,
     defaultHeight: 504, // proporção 4:3
@@ -209,7 +207,7 @@ export function RecipeImages({ images }: { images: ImageProps[] }) {
                 onClick={() => setActiveImage(index)}
               >
                 <Image
-                  src={image.url}
+                  src={image.formats.thumbnail?.url || image.url}
                   alt={`Imagem ${index + 1}`}
                   width={80}
                   height={80}

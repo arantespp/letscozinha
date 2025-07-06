@@ -51,7 +51,7 @@ export default function RecipeCard({
   recipe,
   priority = false,
 }: RecipeCardProps) {
-  const image = recipe.imagens?.[0] || recipe.imagens?.[0]?.formats?.medium;
+  const image = recipe.imagens?.[0].formats.small || recipe.imagens?.[0];
   const href = `/receitas/${recipe.slug}`;
 
   // Usando a nova função helper que retorna todas as props otimizadas
