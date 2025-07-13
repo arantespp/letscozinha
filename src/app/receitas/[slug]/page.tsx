@@ -24,6 +24,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { FB_APP_ID } from 'src/constants';
 import { EbookCard } from 'src/components/EbookCard';
+import { ExclusiveRecipePreview } from 'src/components/ExclusiveRecipePreview';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -120,6 +121,9 @@ export default async function Page(props: Props) {
     notFound();
   }
 
+  // Verificar se é uma receita exclusiva de e-book
+  const isExclusiveRecipe = !!recipe.mostrar_ebook;
+
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/recipe
    */
@@ -134,6 +138,15 @@ export default async function Page(props: Props) {
         alt: image.alt || `Imagem de ${recipe.nome}`,
       };
     }) || [];
+
+  // Para receitas exclusivas, extrair as instruções
+  let exclusiveInstructions: string[] = [];
+
+  if (isExclusiveRecipe && Array.isArray(recipeSchema?.recipeInstructions)) {
+    exclusiveInstructions = recipeSchema.recipeInstructions
+      .map((instruction) => instruction.text)
+      .slice(0, 2);
+  }
 
   // Breadcrumb para a receita
   const breadcrumb = [
@@ -184,32 +197,48 @@ export default async function Page(props: Props) {
 
         {/* Receita (Ingredientes + Modo de Preparo) - Conteúdo principal sem distrações */}
         <Content.Section variant="content">
-          <Markdown source={recipe.receita} />
+          {isExclusiveRecipe && recipe.mostrar_ebook ? (
+            <ExclusiveRecipePreview
+              instructions={exclusiveInstructions}
+              ebook={recipe.mostrar_ebook}
+              recipeName={recipe.nome}
+            />
+          ) : (
+            <Markdown source={recipe.receita} />
+          )}
         </Content.Section>
 
         {/* Compartilhamento - Após o usuário ler toda a receita (timing ideal) */}
-        <Content.Section variant="tight">
-          <RecipeShare recipe={recipe} />
-        </Content.Section>
+        {!isExclusiveRecipe && (
+          <Content.Section variant="tight">
+            <RecipeShare recipe={recipe} />
+          </Content.Section>
+        )}
 
         {/* Newsletter - Após entregar valor completo (Peak-End Rule) */}
-        <Content.Section variant="loose">
-          <EmailSubscription />
-        </Content.Section>
+        {!isExclusiveRecipe && (
+          <Content.Section variant="loose">
+            <EmailSubscription />
+          </Content.Section>
+        )}
 
         {/* E-book Recomendado - Conversão principal no momento ideal */}
-        <Content.Section variant="loose">
-          <React.Suspense fallback={null}>
-            <RecommendedEbook recipe={recipe} />
-          </React.Suspense>
-        </Content.Section>
+        {!isExclusiveRecipe && (
+          <Content.Section variant="loose">
+            <React.Suspense fallback={null}>
+              <RecommendedEbook recipe={recipe} />
+            </React.Suspense>
+          </Content.Section>
+        )}
 
         {/* Receitas Similares - Manter engajamento após conversão */}
-        <Content.Section variant="loose">
-          <React.Suspense fallback={null}>
-            <SimilarRecipes recipe={recipe} />
-          </React.Suspense>
-        </Content.Section>
+        {!isExclusiveRecipe && (
+          <Content.Section variant="loose">
+            <React.Suspense fallback={null}>
+              <SimilarRecipes recipe={recipe} />
+            </React.Suspense>
+          </Content.Section>
+        )}
       </Content>
     </>
   );

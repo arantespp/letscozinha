@@ -75,6 +75,18 @@
 - **Parallel Route**: Integrado com @aside slot para contextos específicos
 - **Responsividade**: Layout adaptável (30% desktop, empilhado mobile)
 
+#### ExclusiveRecipePreview ✅
+
+- **JSDoc Completo**: Documentação detalhada com propósito e estratégias UX
+- **Receitas Exclusivas**: Mostra preview limitado (2 parágrafos) para receitas de e-book
+- **Gradiente Visual**: Efeito fade-out no segundo parágrafo para criar curiosidade
+- **Conversão Estratégica**: E-book em destaque após preview limitado
+- **Von Restorff Effect**: Design diferenciado com background gradiente e ícone de cadeado
+- **Peak-End Rule**: Timing ideal para conversão após entregar valor parcial
+- **Scarcity Principle**: Texto sobre exclusividade e receitas limitadas
+- **Laws of UX**: Aesthetic-Usability com design atrativo e hierarquia visual clara
+- **Personalização**: Texto contextual com nome da receita e quantidade dinâmica
+
 ---
 
 ## 🏗️ Princípios de Desenvolvimento
@@ -264,7 +276,9 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Objetivo**: Entregar valor e converter no timing certo
 
-**Layout**:
+**Layout Dinâmico por Tipo de Receita**:
+
+#### **Receitas Completas (Padrão)**
 
 - **Hero**: Não possui (breadcrumb + título direto)
 - **Content (70% desktop)**:
@@ -275,12 +289,29 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
   - **E-book recomendado** (conversão principal - featured variant)
   - **Receitas similares** (manter engajamento)
 
-**Estratégia de Conversão**:
+#### **Receitas Exclusivas (`mostrar_ebook` definido) ✅**
+
+- **Hero**: Não possui (breadcrumb + título direto)
+- **Content (70% desktop)**:
+  - Breadcrumb + título + galeria de imagens
+  - **Preview Limitado**: Apenas 2 parágrafos do modo de preparo
+  - **Gradiente Visual**: Segundo parágrafo com fade-out para criar curiosidade
+  - **Conversão Exclusiva**: E-book específico com texto persuasivo sobre exclusividade
+  - **Seções Removidas**: Compartilhamento, newsletter, recomendações e similares
+
+**Estratégia de Conversão (Receitas Completas)**:
 
 - **Timing 1**: Compartilhamento após entregar valor completo (receita lida)
 - **Timing 2**: Newsletter no momento ideal (Peak-End Rule aplicado)
 - **Timing 3**: E-book recomendado como conversão principal destacada
 - **Timing 4**: Receitas similares para manter engajamento e navegação
+
+**Estratégia de Conversão (Receitas Exclusivas)**:
+
+- **Scarcity Principle**: Preview limitado cria sensação de exclusividade
+- **Curiosity Gap**: Gradiente visual no texto gera necessidade de completude
+- **Single CTA**: Foco total na conversão do e-book específico
+- **Zero Distrações**: Remove todas as outras opções para maximizar conversão
 
 **Psicologia da Ordem Implementada**:
 

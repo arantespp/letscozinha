@@ -173,7 +173,7 @@ export function EbookCard({
 
           <LinkButton
             href={href}
-            variant={variant === 'featured' ? 'secondary' : 'primary'}
+            variant="primary"
             className="mt-2 text-center font-medium transition-colors min-h-[44px]"
             aria-label={`Ver detalhes do e-book: ${ebook.titulo}`}
           >

@@ -12,7 +12,13 @@ import type { Ebook } from './ebooks';
 
 export const RECIPES_PAGE_SIZE = 15;
 
-export const RECIPES_POPULATE = ['categorias', 'imagens', 'instagram_posts'];
+export const RECIPES_POPULATE = [
+  'categorias',
+  'imagens',
+  'instagram_posts',
+  // 'mostrar_ebook',
+  'mostrar_ebook.imagem',
+];
 
 export type RecipeAttributes = {
   nome: string;
@@ -32,6 +38,7 @@ export type RecipeAttributes = {
     nome: string;
     slug: string;
   }[];
+  mostrar_ebook?: Ebook;
 };
 
 export type CMSRecipesResponse = CMSDataArrayResponse<RecipeAttributes>;
