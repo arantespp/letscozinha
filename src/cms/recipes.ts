@@ -237,7 +237,7 @@ export const searchRecipes = async (args: {
 
   try {
     const searchResults = await meiliRecipesIndex.search(args.search, {
-      limit: RECIPES_PAGE_SIZE,
+      limit: args.limit || RECIPES_PAGE_SIZE,
     });
 
     const data = await getRecipesFromMeiliHits(searchResults.hits);
