@@ -1,8 +1,8 @@
 import { headers } from 'next/headers';
-import { HeaderNav } from 'src/components/HeaderNav';
 import { RecipesList } from 'src/components/RecipesList';
 import { getLetsCozinha } from 'src/cms/singleTypes';
 import { searchRecipes } from 'src/cms/recipes';
+import * as React from 'react';
 
 function extractKeywordsFromPath(path: string): string {
   return path
@@ -17,14 +17,12 @@ function extractKeywordsFromPath(path: string): string {
     .trim();
 }
 
-export default async function NotFound() {
+async function NotFoundRecipes() {
   const { letsCozinha } = await getLetsCozinha();
   const headersList = await headers();
   const pathname = headersList.get('x-pathname') || '';
 
   const searchTerm = extractKeywordsFromPath(pathname);
-
-  console.log('Search term extracted from path:', searchTerm);
 
   let relatedRecipes: any[] = [];
   if (searchTerm) {
@@ -43,15 +41,23 @@ export default async function NotFound() {
       : 'Aproveite para ver as nossas receitas favoritas';
 
   return (
-    <div className="flex flex-col gap-sm mt-md items-center text-center">
+    <div className="">
+      <h3>{recipesTitle}</h3>
+      <RecipesList recipes={recipesToShow} firstRecipePriority />
+    </div>
+  );
+}
+
+export default async function NotFound() {
+  return (
+    <div className="flex flex-col gap-md mt-md items-center text-center">
       <h2>Ops, página não encontrada</h2>
       <p className="max-w-[30rem]">
         Desculpe, mas a página que você está procurando não foi encontrada.
       </p>
-      <div className="my-md">
-        <h2>{recipesTitle}</h2>
-        <RecipesList recipes={recipesToShow} firstRecipePriority />
-      </div>
+      <React.Suspense fallback={null}>
+        <NotFoundRecipes />
+      </React.Suspense>
     </div>
   );
 }
