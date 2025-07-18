@@ -64,15 +64,6 @@ export default async function EbooksPage() {
           </div>
         )}
       </Content.Section>
-
-      <Content.Section variant="content">
-        <EmailSubscription
-          title="Novos E-books em Primeira Mão"
-          description="Seja o primeiro a saber sobre nossos novos lançamentos e receba conteúdo exclusivo sobre culinária."
-          formLayout="row"
-          textAlignment="center"
-        />
-      </Content.Section>
     </Content>
   );
 }
