@@ -27,6 +27,9 @@ async function WhoIsLets() {
 
   const summary = `"${letsCozinhaLets.resumo}"`;
 
+  const src =
+    letsCozinhaLets.imagem.formats.small?.url || letsCozinhaLets.imagem.url;
+
   return (
     <Card className="h-full">
       <div className="flex flex-col gap-sm items-center text-center">
@@ -37,7 +40,7 @@ async function WhoIsLets() {
           <div className="size-image-sm relative">
             <Image
               className="size-image-sm rounded-full object-cover"
-              src={letsCozinhaLets.imagem.url}
+              src={src}
               alt="Foto da Lets"
               fill
             />

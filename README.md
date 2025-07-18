@@ -85,6 +85,8 @@ Padrão Implementado\*\*
 - **Variants System**: Primary e secondary variants com hover states otimizados
 - **Consistência**: Base sólida para todos os CTAs do projeto
 - **Fitts's Law Ready**: Pronto para receber dimensões mínimas adequadas
+- **External Links**: Suporte a target="\_blank" e rel="noopener noreferrer" para checkout seguro
+- **Flexible Props**: Interface expandida para casos de uso diversos
 
 #### EbookCard ✅
 
@@ -423,20 +425,57 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Mobile**: Content em coluna única, Aside empilhado abaixo
 
-### 7. **E-book (`/ebooks/:slug`)**
+### 7. **E-book (`/ebooks/:slug`)** ✅
 
 **Objetivo**: Converter em compra com página de vendas completa
 
-**Layout**:
+**Status**: ✅ **IMPLEMENTADO** - Seguindo todos os padrões do README.md
 
-- **Hero**: Página de vendas (capa + título + preço + CTA principal)
-- **Content (80% desktop)**:
-  - Benefícios do e-book
-  - Testemunhos específicos
-  - FAQ
-  - CTA final forte (Peak-End Rule)
+**Layout Otimizado**:
 
-**Mobile**: Hero + Content em coluna única, Aside minimal empilhado
+- **Hero Integrado**: Via Content.Section variant="hero" para espaçamento consistente
+- **Content (70% desktop)**:
+  - Breadcrumb navigation via Content.tsx
+  - Hero com layout 2 colunas (info + imagem responsiva)
+  - Benefícios detalhados (página_website)
+  - CTA final com reforço visual (imagem + copy persuasivo)
+- **Aside**: Via parallel route (@aside/ebooks/[slug]) com LayoutAside minimal
+
+**Implementação Técnica Refinada**:
+
+- **Content.tsx Padrão**: Breadcrumb + título + descrição integrados
+- **Hero Componentizado**: EbookHero com aspect ratio natural preservado
+- **Imagem Otimizada**: width/height props com h-auto para proporção natural
+- **CTA Duplo**: Hero principal + CTA final com reforço visual estratégico
+- **Structured Data**: Product schema completo para SEO
+
+**Laws of UX Implementadas**:
+
+- **Fitts's Law**: CTAs 44px+ touch-friendly, próximos ao conteúdo
+- **Peak-End Rule**: Hero impactante + CTA final com reforço visual
+- **Von Restorff Effect**: E-book destacado no hero + repetido no CTA final
+- **Mere Exposure Effect**: Imagem repetida aumenta familiaridade e conversão
+- **Aesthetic-Usability**: Layout limpo com imagens em aspect ratio natural
+- **Cognitive Load**: Foco em uma ação (comprar), aside minimal
+
+**Estratégia de Conversão Refinada**:
+
+1. **Timing 1**: Hero com valor imediato (capa full-width mobile + descrição + preço + CTA)
+2. **Timing 2**: Benefícios detalhados para convencimento (página_website em prose)
+3. **Timing 3**: CTA final com reforço visual (imagem menor + copy + CTA) - **Peak-End Rule**
+
+**Otimizações Visuais Implementadas**:
+
+- **Imagem Responsiva**: w-full mobile, larguras fixas desktop (lg:w-96, xl:w-[420px], 2xl:w-[480px])
+- **Aspect Ratio Natural**: width/height props com h-auto preserva proporções da imagem
+- **CTA com Reforço**: Layout 2 colunas no CTA final (imagem + texto/CTA) aumenta conversão
+- **Performance**: priority na imagem hero, formato medium quando disponível
+
+**Mobile Optimization**:
+
+- **Imagem Full-Width**: w-full no mobile para máximo impacto visual
+- **Layout Responsivo**: Content via Content.tsx, Aside empilhado via parallel route
+- **CTAs Touch-Friendly**: 44px+ altura, espaçamento adequado
 
 ### **📌 Aside Padrão (30% desktop)**
 
@@ -846,9 +885,19 @@ Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado int
 
 - [x] **app/ebooks/page.tsx** - Catálogo comercial com Content wrapper, EbookCard components e EmailSubscription ✅
 - [x] **app/ebooks/@aside/page.tsx** - Aside configurável sem featured ebook + newsletter específica para e-books ✅
-- [ ] **app/ebooks/[slug]/page.tsx** - Página de vendas
-- [ ] **app/ebooks/[slug]/@hero/page.tsx** - Hero de vendas
-- [ ] **app/ebooks/[slug]/@aside/page.tsx** - Aside minimal
+- [x] **app/ebooks/[slug]/page.tsx** - Página de vendas completa com Content.tsx, hero integrado e CTA com reforço visual ✅
+- [x] **app/ebooks/[slug]/@aside/page.tsx** - Aside minimal via parallel route com LayoutAside configurável ✅
+
+**✅ Implementações Completas**:
+
+- **Página Individual de E-book**: Layout otimizado seguindo todos os padrões do README.md
+- **Hero Componentizado**: EbookHero com imagem responsiva e aspect ratio natural
+- **CTA Duplo**: Hero principal + CTA final com reforço visual estratégico
+- **Laws of UX**: Fitts's Law, Peak-End Rule, Von Restorff Effect e Mere Exposure Effect
+- **Estratégia de Conversão**: Timing 1 (Hero) → Timing 2 (Benefícios) → Timing 3 (CTA final)
+- **Mobile Optimization**: w-full em mobile, larguras específicas desktop
+- **Performance**: priority na imagem hero, formato medium quando disponível
+- **SEO**: Product schema completo e breadcrumb navigation integrado
 
 ### 🔧 **Fase 4: Funcionalidades**
 

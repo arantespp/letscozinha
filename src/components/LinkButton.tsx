@@ -5,11 +5,15 @@ export function LinkButton({
   children,
   className,
   variant = 'primary',
+  target,
+  rel,
 }: {
   href: string;
   children: React.ReactNode;
   className?: string;
   variant?: 'primary' | 'secondary';
+  target?: string;
+  rel?: string;
 }) {
   const variantClass = (() => {
     switch (variant) {
@@ -23,6 +27,8 @@ export function LinkButton({
   return (
     <Link
       href={href}
+      target={target}
+      rel={rel}
       className={`bg-primary text-text-dark hover:text-neutral rounded p-xs hover:bg-secondary text-center no-underline flex items-center justify-center ${variantClass} ${className}`}
     >
       {children}

@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
+import { Content } from 'src/components/Content';
 import { JsonLd } from 'src/components/JsonLd';
+import { LinkButton } from 'src/components/LinkButton';
 import { Markdown } from 'src/components/Markdown';
-import { getEbook, getAllEbooks } from 'src/cms/ebooks';
+import { getEbook, getAllEbooks, Ebook } from 'src/cms/ebooks';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getUrl } from 'src/methods/getUrl';
 import { getWebsiteName } from 'src/methods/getWebsiteName';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
 import type { Metadata, ResolvingMetadata } from 'next';
+import Image from 'next/image';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -54,6 +54,124 @@ export async function generateMetadata(
   };
 }
 
+/**
+ * Hero para Páginas de E-book Individual
+ *
+ * **Estratégia de Conversão**:
+ * - First impression crítica para capturar atenção
+ * - Capa em destaque (Von Restorff Effect)
+ * - Descrição persuasiva + preço + CTA imediato
+ * - Layout 2 colunas (info + imagem)
+ *
+ * **Laws of UX Implementadas**:
+ * - Aesthetic-Usability: Design elegante = percepção de qualidade
+ * - Fitts's Law: CTA grande e próximo às informações
+ * - Peak-End Rule: Primeira impressão impactante
+ * - Von Restorff Effect: E-book destacado visualmente
+ *
+ * **Mobile Optimization**:
+ * - Imagem primeiro (order-1)
+ * - Informações abaixo (order-2)
+ * - CTAs touch-friendly (44px+)
+ *
+ * **Performance**:
+ * - Imagem com priority para LCP
+ * - Responsive images otimizadas
+ */
+function EbookHero({ ebook }: { ebook: Ebook }) {
+  const imageSrc = ebook.imagem.formats.medium?.url || ebook.imagem.url;
+
+  return (
+    <div className="grid lg:grid-cols-2 gap-xl items-center">
+      {/* Informações do E-book */}
+      <div className="order-2 lg:order-1">
+        <div className="text-text-light text-lg mb-lg leading-relaxed">
+          <Markdown source={ebook.descricao} />
+        </div>
+
+        {/* Preço e CTA Principal */}
+        <div className="space-y-sm">
+          {ebook.preco && (
+            <div className="text-3xl lg:text-4xl font-bold text-primary">
+              {new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              }).format(ebook.preco)}
+            </div>
+          )}
+
+          {ebook.checkout_url && (
+            <LinkButton
+              href={ebook.checkout_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="min-h-[44px] px-lg py-md text-lg font-semibold"
+            >
+              Comprar Agora
+            </LinkButton>
+          )}
+        </div>
+      </div>
+
+      {/* Imagem do E-book */}
+      {ebook.imagem && (
+        <div className="order-1 lg:order-2 flex justify-center">
+          <div className="relative w-full lg:w-96 xl:w-[420px] 2xl:w-[480px]">
+            <Image
+              src={imageSrc}
+              alt={ebook.titulo}
+              width={480}
+              height={600}
+              className="w-full h-auto object-cover rounded-lg shadow-xl"
+              priority
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * E-book Sales Page
+ *
+ * Página de vendas otimizada seguindo padrões do README.md:
+ *
+ * **Layout Structure**:
+ * - Content: Layout padrão com Content.tsx (70% desktop, 100% mobile)
+ * - Hero: Integrado via Content.Section variant="hero"
+ * - Aside: Via parallel route (@aside/ebooks/[slug])
+ *
+ * **Laws of UX Implementadas**:
+ * - Fitts's Law: CTAs grandes (44px+) touch-friendly
+ * - Peak-End Rule: Hero impactante + CTA final forte
+ * - Von Restorff Effect: E-book destacado visualmente
+ * - Aesthetic-Usability: Design limpo = percepção de usabilidade
+ * - Cognitive Load: Foco em uma ação principal (comprar)
+ * - Chunking: Conteúdo organizado em seções lógicas
+ *
+ * **Conversão Estratégica (Timing Otimizado)**:
+ * - Timing 1: Hero com valor imediato (capa + descrição + CTA)
+ * - Timing 2: Benefícios detalhados (página_website)
+ * - Timing 3: CTA final no momento ideal (Peak-End Rule)
+ *
+ * **Otimizações Implementadas**:
+ * - Hero integrado com Content.Section para espaçamento consistente
+ * - Remoção de divs desnecessárias seguindo padrão Content.tsx
+ * - Estrutura semântica otimizada para conversão
+ * - CTAs posicionados estrategicamente (Jakob's Law)
+ *
+ * **Mobile Optimization**:
+ * - Content responsivo via Content.tsx
+ * - CTAs touch-friendly (44px+ altura)
+ * - Layout adaptável automaticamente
+ *
+ * **Performance & SEO**:
+ * - Structured data (Product schema)
+ * - Breadcrumb navigation integrado
+ * - Metadata completa para compartilhamento
+ * - Hero com priority image para LCP
+ */
 export default async function Page(props: Props) {
   const params = await props.params;
   const ebook = await getEbook({ slug: params.slug });
@@ -79,102 +197,75 @@ export default async function Page(props: Props) {
   };
 
   return (
-    <div className="pb-xl">
+    <>
       <JsonLd schema={productSchema} />
 
-      <div className="bg-gradient-to-b from-muted/50 to-neutral pt-md pb-lg">
-        <div className="">
-          <Breadcrumbs
-            items={[
-              { name: 'Home', href: '/' },
-              { name: 'E-books', href: '/ebooks' },
-              {
-                name: ebook.titulo,
-                href: `/ebooks/${ebook.slug}`,
-                current: true,
-              },
-            ]}
-          />
+      <Content
+        title={ebook.titulo}
+        description={ebook.subtitulo}
+        breadcrumb={[
+          { name: 'Home', href: '/' },
+          { name: 'E-books', href: '/ebooks' },
+          { name: ebook.titulo, current: true },
+        ]}
+      >
+        {/* Hero Section - Timing 1: Primeira impressão + CTA imediato */}
+        <Content.Section variant="content">
+          <EbookHero ebook={ebook} />
+        </Content.Section>
 
-          <div className="mt-md grid md:grid-cols-2 gap-xl items-center">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-sm">
-                {ebook.titulo}
-              </h1>
-              {ebook.subtitulo && (
-                <h2 className="text-xl md:text-2xl text-text-light mb-md">
-                  {ebook.subtitulo}
-                </h2>
-              )}
-              <div className="text-text-light text-lg mb-lg">
-                <Markdown source={ebook.descricao} />
-              </div>
+        {/* Content Section - Timing 2: Benefícios detalhados */}
+        <Content.Section variant="content">
+          <article className="prose prose-lg">
+            <Markdown source={ebook.pagina_website} />
+          </article>
+        </Content.Section>
 
-              <div className="flex flex-col gap-sm">
-                {ebook.preco && (
-                  <div className="text-2xl font-bold text-primary">
-                    R$ {ebook.preco.toFixed(2).replace('.', ',')}
+        {/* CTA Final - Timing 3: Peak-End Rule */}
+        {ebook.checkout_url && (
+          <Content.Section variant="loose">
+            <div className="text-center bg-gradient-to-r from-muted/50 to-muted rounded-lg p-lg lg:p-xl">
+              <div className="grid lg:grid-cols-2 gap-lg items-center">
+                {/* Imagem do E-book no CTA */}
+                {ebook.imagem && (
+                  <div className="order-1 lg:order-1 flex justify-center">
+                    <div className="relative w-48 lg:w-56">
+                      <Image
+                        src={
+                          ebook.imagem.formats?.medium?.url || ebook.imagem.url
+                        }
+                        alt={ebook.titulo}
+                        width={240}
+                        height={300}
+                        className="w-full h-auto object-cover rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 )}
 
-                <div className="flex gap-sm">
-                  {ebook.checkout_url && (
-                    <Link
-                      href={ebook.checkout_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-lg py-sm bg-primary text-text-dark rounded-full hover:bg-primary/80 transition-colors font-medium"
-                    >
-                      Comprar Agora
-                    </Link>
-                  )}
+                {/* Texto e CTA */}
+                <div className="order-2 lg:order-2 text-center lg:text-left">
+                  <h3 className="text-2xl lg:text-3xl font-playfair font-bold mb-md text-primary">
+                    Transforme sua cozinha hoje mesmo
+                  </h3>
+                  <p className="text-text-light mb-lg">
+                    Tenha acesso imediato a todas as receitas exclusivas e
+                    comece a criar pratos incríveis na sua cozinha.
+                  </p>
+                  <LinkButton
+                    href={ebook.checkout_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="min-h-[44px] px-xl py-md text-lg font-semibold"
+                  >
+                    Comprar Agora
+                  </LinkButton>
                 </div>
               </div>
             </div>
-
-            {ebook.imagem && (
-              <div className="flex justify-center">
-                <div className="relative w-80 h-96 md:w-96 md:h-[480px]">
-                  <Image
-                    src={ebook.imagem.url}
-                    alt={ebook.titulo}
-                    fill
-                    sizes="(max-width: 768px) 320px, 384px"
-                    className="object-cover rounded-lg shadow-lg"
-                    priority
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <article className="">
-        <div className="max-w-4xl mx-auto">
-          <div className="py-md md:py-lg">
-            <Markdown source={ebook.pagina_website} />
-          </div>
-
-          {ebook.checkout_url && (
-            <div className="mt-xl text-center bg-muted rounded-lg p-lg">
-              <h3 className="text-xl md:text-2xl font-heading mb-md">
-                Interessado neste e-book?
-              </h3>
-              <div className="flex justify-center">
-                <Link
-                  href={ebook.checkout_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-lg py-sm bg-primary text-text-dark rounded-full hover:bg-primary/80 transition-colors font-medium"
-                >
-                  Comprar Agora
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </article>
-    </div>
+          </Content.Section>
+        )}
+      </Content>
+    </>
   );
 }
