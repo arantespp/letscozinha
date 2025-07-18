@@ -22,122 +22,33 @@
 
 ---
 
-### 🎯 **Encapsulação de Compo**Padrão para Novos Componentes:\*\*
+## 🎯 Objetivo Principal
 
-Se um componente sempre precisa de um Card específico, o Card deve ser encapsulado internamente no componente, não requerido externamente.
-
----
-
-### 🎯 **Unificação dos Asides - Implementação Concluída** ✅
-
-**Problema Anterior**: Múltiplos asides com código duplicado e manutenção fragmentada.
-
-**Solução Implementada**: Componente `LayoutAside` configurável que unifica todos os asides do projeto.
-
-#### **Arquitetura da Solução**
-
-```tsx
-interface LayoutAsideProps {
-  sections?: {
-    featuredEbook?: boolean; // E-book em destaque
-    whoIsLets?: boolean; // Seção "Quem é a Lets"
-    categories?: boolean; // Lista de categorias
-    newsletter?: {
-      // Newsletter personalizada
-      title: string;
-      description: string;
-      formLayout?: 'row' | 'column';
-      textAlignment?: 'left' | 'center';
-    };
-  };
-}
-```
-
-#### **Configurações por Página**
-
-- **Padrão** (`/@aside/page.tsx`): Todas as seções ativas
-- **E-books** (`/@aside/ebooks/page.tsx`): Newsletter específica + credibilidade + categorias (sem featured ebook)
-- **Fallback** (`/@aside/default.tsx`): Configuração padrão para rotas sem aside específico
-
-#### **Benefícios Alcançados**
-
-- ✅ **Código Unificado**: 80% redução de duplicação entre asides
-- ✅ **Manutenção Centralizada**: Mudanças visuais em um único componente
-- ✅ **Flexibilidade**: Cada rota pode configurar suas seções específicas
-- ✅ **Consistência**: Comportamento idêntico em todas as páginas
-- ✅ **Tipagem**: Interface TypeScript garante uso correto
-- ✅ **Performance**: Componentes reutilizáveis otimizados
+**Vender e-books culinários** através de conteúdo gratuito e conversões estratégicas.
 
 ---
 
-### 📊 **Ordem de Execução Recomendada**
+## 🧠 Laws of UX (Obrigatórias)
 
-Padrão Implementado\*\*
+### Conversão
 
-**Princípio**: Componentes devem encapsular sua própria apresentação visual, incluindo Cards quando necessário.
+- **Jakob's Law**: Interface familiar (padrões web conhecidos)
+- **Hick's Law**: Máximo 5 opções por decisão para acelerar escolhas
+- **Miller's Law**: Máximo 7 itens por grupo/menu
+- **Fitts's Law**: CTAs grandes (44px+) próximos ao conteúdo relevante
+- **Serial Position**: E-books principais no início e fim das listas
 
-**Implementações Completas:**
+### Performance Cognitiva
 
-#### LinkButton ✅
+- **Cognitive Load**: Uma ação principal por página, reduzir esforço mental
+- **Chunking**: Agrupar informações relacionadas (receitas por categoria)
+- **Choice Overload**: Máximo 3-4 e-books em destaque na home
 
-- **Centralização Perfeita**: Flex layout com items-center e justify-center para texto sempre centralizado
-- **Touch-Friendly**: Compatible com min-height 44px+ quando aplicado externamente
-- **Variants System**: Primary e secondary variants com hover states otimizados
-- **Consistência**: Base sólida para todos os CTAs do projeto
-- **Fitts's Law Ready**: Pronto para receber dimensões mínimas adequadas
-- **External Links**: Suporte a target="\_blank" e rel="noopener noreferrer" para checkout seguro
-- **Flexible Props**: Interface expandida para casos de uso diversos
+### Experiência
 
-#### EbookCard ✅
-
-- **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
-- **3 Variants**: default (padrão), featured (destaque), minimal (compacto para sidebars)
-- **Encapsulação**: Card component integrado internamente seguindo padrão do projeto
-- **Fitts's Law**: CTA com min-height 44px+ para touch-friendly interaction
-- **Formatação de Preço**: Suporte a preços em BRL com formatação brasileira
-- **Acessibilidade**: ARIA labels descritivos e alt text para imagens
-- **UX Otimizada**: Hover animations, aspect ratio de livro (5:7), Von Restorff Effect no variant featured
-- **Laws of UX**: Aesthetic-Usability com design limpo e variants contextuais
-
-#### RecipeCard ✅
-
-- **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
-- **Encapsulação**: Card component integrado internamente seguindo padrão do projeto
-- **Fitts's Law**: CTA com min-height 44px+ para touch-friendly interaction
-- **Acessibilidade**: ARIA labels descritivos para melhor navegação
-- **UX Otimizada**: Hover animations, responsive images e Von Restorff Effect no badge de categoria
-- **Laws of UX**: Aesthetic-Usability com design limpo e espaçamento consistente
-
-#### EmailSubscription ✅
-
-- **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
-- **Acessibilidade**: ARIA labels, roles e live regions para feedback
-- **Fitts's Law**: CTAs com min-height 44px+ e min-width adequado
-- **Encapsulação**: Card integrado internamente seguindo padrão do projeto
-- **UX Otimizada**: Estados de loading, feedback de sucesso/erro contextual
-
-#### LayoutAside ✅
-
-- **JSDoc Completo**: Documentação detalhada com estratégias de UX e Laws aplicadas
-- **Encapsulação**: Usa EbookCard variant minimal e Card components internamente
-- **Fitts's Law**: CTAs touch-friendly (44px+) para melhor usabilidade
-- **Cognitive Load**: Máximo 3 seções essenciais para não sobrecarregar
-- **Conversion Strategy**: E-book no topo, credibilidade no meio, navegação no final
-- **Laws of UX**: Miller's Law, Peak-End Rule e Von Restorff Effect implementados
-- **Parallel Route**: Integrado com @aside slot para contextos específicos
-- **Responsividade**: Layout adaptável (30% desktop, empilhado mobile)
-
-#### ExclusiveRecipePreview ✅
-
-- **JSDoc Completo**: Documentação detalhada com propósito e estratégias UX
-- **Receitas Exclusivas**: Mostra preview limitado (2 parágrafos) para receitas de e-book
-- **Gradiente Visual**: Efeito fade-out no segundo parágrafo para criar curiosidade
-- **Conversão Estratégica**: E-book em destaque após preview limitado
-- **Von Restorff Effect**: Design diferenciado com background gradiente e ícone de cadeado
-- **Peak-End Rule**: Timing ideal para conversão após entregar valor parcial
-- **Scarcity Principle**: Texto sobre exclusividade e receitas limitadas
-- **Laws of UX**: Aesthetic-Usability com design atrativo e hierarquia visual clara
-- **Personalização**: Texto contextual com nome da receita e quantidade dinâmica
+- **Peak-End Rule**: Hero impactante + CTA final forte
+- **Von Restorff Effect**: E-books destacados visualmente
+- **Aesthetic-Usability**: Design belo = percepção de usabilidade
 
 ---
 
@@ -155,55 +66,31 @@ Padrão Implementado\*\*
 - ✅ **JSDoc obrigatório** - Documentar propósito, props e uso de cada componente
 - ✅ **Reutilização antes de duplicação** - Sempre verificar se existe componente similar antes de criar novo
 
-#### Exemplos de Componentização
+#### Padrão de Encapsulação ✅
 
-- **Botões** → `LinkButton`, `CookingCTA`
-- **Cards** → `RecipeCard`, `CategoryCard`, `EbookCard`
-- **Formulários** → `EmailSubscription`, `RecipeEmailSubscription`
-- **Navegação** → `HeaderNav`, `SocialNav`, `PagesNav`
-- **Layout** → `Container`, `Main`, `Aside`
+**Princípio**: Componentes devem encapsular sua própria apresentação visual, incluindo Cards quando necessário.
 
-#### Benefícios
+**Implementações Completas:**
 
-- **Consistência**: Design system uniforme
-- **Manutenibilidade**: Alterações centralizadas
-- **Testabilidade**: Componentes isolados
-- **Performance**: Reutilização otimizada
-- **Escalabilidade**: Fácil expansão do projeto
+- **EmailSubscription** ✅: Card integrado internamente
+- **RecipeEmailSubscription** ✅: Card com background gradiente encapsulado
+- **RecipeShare** ✅: Card subtle integrado internamente
+- **LayoutAside** ✅: Usa componentes internos com configuração flexível
 
----
+### CSS/Styling
 
-## 🎯 Objetivo Principal
+#### Tema Centralizado ✅
 
-**Vender e-books culinários** através de conteúdo gratuito e conversões estratégicas.
+- **Design Tokens**: Cores, tipografia e espaçamentos padronizados
+- **Sistema de Cores de Texto**: 7 cores essenciais do tema
+- **Classes Tailwind**: Apenas classes padrão, sem CSS customizado
+- **Mobile-first**: CSS responsivo partindo do mobile
 
----
+**Sistema de Cores de Texto:**
 
-## 🧠 Laws of UX (Obrigatórias)
-
-O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
-
-### Conversão
-
-- **Jakob's Law**: Interface familiar (padrões web conhecidos)
-- **Hick's Law**: Máximo 5 opções por decisão para acelerar escolhas
-- **Miller's Law**: Máximo 7 itens por grupo/menu
-- **Fitts's Law**: CTAs grandes (44px+) próximos ao conteúdo relevante
-- **Serial Position**: E-books principais no início e fim das listas
-
-### Performance Cognitiva
-
-- **Cognitive Load**: Uma ação principal por página, reduzir esforço mental
-- **Chunking**: Agrupar informações relacionadas (receitas por categoria)
-- **Choice Overload**: Máximo 3-4 e-books em destaque na home
-- **Law of Proximity**: Elementos relacionados próximos
-
-### Experiência
-
-- **Peak-End Rule**: Hero impactante + CTA final forte
-- **Von Restorff Effect**: E-books destacados visualmente
-- **Goal-Gradient**: Mostrar progresso em formulários
-- **Aesthetic-Usability**: Design belo = percepção de usabilidade
+- `text-text-dark` (principal), `text-text-light` (secundário)
+- `text-text-strong` (enfático), `text-text-muted` (auxiliar)
+- `text-text-success`, `text-text-error`, `text-text-warning` (feedback)
 
 ---
 
@@ -266,32 +153,6 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Responsivo**: Mobile-first com breakpoints Tailwind padrão: `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px), `2xl` (1536px)
 
-**Semântica HTML**: O `<main>` contém apenas o conteúdo principal da página para otimizar acessibilidade e SEO. Header e Footer ficam fora do `<main>` por serem elementos de navegação/informação global.
-
-### **Diferenças Chave Desktop vs Mobile:**
-
-#### **Desktop (lg+):**
-
-- ✅ **Layout em duas colunas**: Content (70%) + Aside (30%)
-- ✅ **Aside sempre visível**: Conversão constante durante navegação
-- ✅ **Header completo**: Navegação expandida, busca visível
-- ✅ **Footer multi-coluna**: Informações organizadas em grid
-
-#### **Mobile (<768px):**
-
-- ✅ **Layout em coluna única**: Content primeiro, Aside empilhado
-- ✅ **Seções integradas**: Newsletter e compartilhamento no Content
-- ✅ **Header compacto**: Menu hamburger, busca em modal
-- ✅ **Aside estratégico**: Apenas elementos essenciais (e-book, credibilidade)
-- ✅ **Footer simplificado**: Coluna única, informações prioritárias
-
-#### **Estratégia Mobile-First:**
-
-- **Peak-End Rule**: Seções integradas garantem conversão no timing certo
-- **Cognitive Load**: Aside reduzido a 3 elementos essenciais
-- **Touch-Friendly**: CTAs grandes (44px+), espaçamento adequado
-- **Performance**: Conteúdo principal carrega primeiro
-
 ---
 
 ## 🏠 Páginas Principais
@@ -316,7 +177,6 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Layout**:
 
-- **Hero**: Não possui (título direto)
 - **Content (70% desktop)**:
   - Busca + filtros
   - Lista de receitas com scroll infinito
@@ -328,11 +188,8 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Objetivo**: Entregar valor e converter no timing certo
 
-**Layout Dinâmico por Tipo de Receita**:
-
 #### **Receitas Completas (Padrão)**
 
-- **Hero**: Não possui (breadcrumb + título direto)
 - **Content (70% desktop)**:
   - Breadcrumb + título + galeria de imagens
   - **Ingredientes + Modo de preparo** (receita completa - valor principal)
@@ -343,13 +200,11 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 #### **Receitas Exclusivas (`mostrar_ebook` definido) ✅**
 
-- **Hero**: Não possui (breadcrumb + título direto)
 - **Content (70% desktop)**:
   - Breadcrumb + título + galeria de imagens
   - **Preview Limitado**: Apenas 2 parágrafos do modo de preparo
   - **Gradiente Visual**: Segundo parágrafo com fade-out para criar curiosidade
   - **Conversão Exclusiva**: E-book específico com texto persuasivo sobre exclusividade
-  - **Seções Removidas**: Compartilhamento, newsletter, recomendações e similares
 
 **Estratégia de Conversão (Receitas Completas)**:
 
@@ -389,7 +244,6 @@ O projeto **DEVE** seguir estas leis de UX para maximizar conversões:
 
 **Layout**:
 
-- **Hero**: Não possui (título direto)
 - **Content (100%)**:
   - Grid de categorias com contador de receitas
   - Banner central com e-book relacionado (Miller's Law - máximo 7 categorias visíveis)
@@ -502,13 +356,11 @@ Todos os asides agora usam o componente `LayoutAside` configurável, permitindo:
 - **E-books (`/ebooks`)**: Newsletter específica para e-books, sem featured ebook (via `LayoutAside` configurável)
 - **E-book (`/ebooks/:slug`)**: Aside minimal (20% width, apenas newsletter/contato)
 
-**Mobile**: Empilhado abaixo do Content em todas as páginas usando `LayoutAside`
-
 ---
 
 ## ⚡ Implementação Técnica
 
-### Parallel Routes (Recomendado)
+### Parallel Routes
 
 ```
 app/
@@ -521,240 +373,38 @@ app/
 ├── @aside/                    # Slot do aside (UNIFICADO)
 │   ├── default.tsx           # Fallback padrão (LayoutAside completo)
 │   ├── page.tsx              # Aside padrão (LayoutAside completo)
-│   └── ebooks/page.tsx       # Aside e-books (LayoutAside sem featured ebook)
+│   └── ebooks/page.tsx       # Aside e-books (LayoutAside configurável)
 └── receitas/
     └── [slug]/page.tsx       # Main da receita
 ```
-
-**Status da Unificação**: ✅ **COMPLETO**
-
-Todos os asides agora usam o componente `LayoutAside` configurável:
-
-- **Configuração flexível**: Cada rota pode escolher suas seções
-- **Manutenção centralizada**: Mudanças visuais em um só lugar
-- **Consistência garantida**: Comportamento idêntico em todas as páginas
-- **Código reduzido**: Eliminação de duplicação entre asides
-
-**Vantagens dos Slots**:
-
-- Separação de responsabilidades
-- Performance otimizada (streaming separado)
-- A/B testing mais fácil
-- Heroes contextuais por página
-- Asides contextuais por página
-
-**Breadcrumbs**: Gerenciados pelo componente `Content` através de props manuais, não por parallel routes.
 
 ### Componentes Base
 
 > **Status**: ✅ = Implementado | ⏳ = Em desenvolvimento | ❌ = Pendente
 
-#### Header ✅
+#### Layout ✅
 
-**Navegação**:
+- **Container**: Wrapper com max-width 80rem (1280px) e padding responsivo
+- **Content**: Wrapper inteligente com breadcrumb manual, título e descrição integrados
+- **Content.Section**: Seções organizadas com variants: `default`, `hero`, `content`, `list`, `tight`, `loose`
+- **Header**: Navegação principal com 5 itens
+- **Footer**: Navegação secundária, conversão final e informações legais
+- **LayoutAside**: Sidebar configurável unificada (30% desktop)
 
-- Receitas (`/receitas`)
-- Categorias (`/categorias`)
-- E-books (`/ebooks`)
-- Sobre (`/conheca-a-lets`)
-- Contato (`/contato`)
+#### UI Components ✅
 
-#### Container ✅
+- **LinkButton**: CTAs padronizados com centralização perfeita (44px+)
+- **Card**: Container flexível com 3 variants: `default`, `subtle`, `newsletter`
+- **EmailSubscription**: Newsletter com acessibilidade completa e estados de loading
+- **RecipeEmailSubscription**: Newsletter contextual com Card encapsulado
 
-Wrapper com max-width 80rem (1280px) e padding responsivo.
+#### Content Components ✅
 
-#### Content ✅
-
-Wrapper inteligente para conteúdo das páginas com breadcrumb manual, título e descrição integrados.
-
-**Compound Pattern**: `Content.Section` para seções organizadas.
-
-**Exemplo de uso:**
-
-```tsx
-<Content
-  title="Bolo de Chocolate"
-  description="Uma receita deliciosa para toda família"
-  breadcrumb={[
-    { name: 'Home', href: '/' },
-    { name: 'Receitas', href: '/receitas' },
-    { name: 'Sobremesas', href: '/categorias/sobremesas' },
-    { name: 'Bolo de Chocolate' },
-  ]}
->
-  <Content.Section variant="content">
-    {/* Conteúdo da receita */}
-  </Content.Section>
-</Content>
-```
-
-#### Content.Section ✅
-
-Seções organizadas com espaçamento consistente e variants: `default`, `hero`, `content`, `list`, `tight`, `loose`.
-
-#### Footer ✅
-
-Navegação secundária, conversão final e informações legais.
-
-#### RecipeImages ✅
-
-Galeria otimizada para mobile com swipe navigation, thumbnails interativas e scroll automático.
-
-#### RecipeShare ✅
-
-Compartilhamento social de receitas com Card integrado e acessibilidade completa. Suporta Facebook, WhatsApp, Twitter, Pinterest + cópia de link.
-
-#### Card ✅
-
-Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado internamente em componentes específicos.
-
-#### LayoutAside (Aside Unificado) ✅
-
-- **Responsabilidade**: Sidebar de conversão focada (30% desktop) - UNIFICADO
-- **Arquitetura**: Componente configurável que substitui todos os asides específicos
-- **Seções Configuráveis**:
-  - `featuredEbook`: E-book contextual (conversão principal) - padrão: true
-  - `whoIsLets`: Quem é a Lets Cozinha (credibilidade/autoridade) - padrão: true
-  - `categories`: Navegação relacionada ao contexto - padrão: true
-  - `newsletter`: Newsletter personalizada - padrão: null
-- **Comportamento**: Sticky behavior no scroll, responsivo automático
-- **Mobile**: Stack após Main content com mesma configuração
-- **Filosofia**: Foco em conversão + credibilidade + navegação contextual
-- **Implementação**: Parallel route @aside com LayoutAside configurável
-- **Vantagens**: Manutenção centralizada, configuração flexível, código reutilizável
-
-**Exemplos de Configuração**:
-
-- **Padrão**: Todas as seções ativas (home, receitas, categorias)
-- **E-books**: Newsletter específica + credibilidade + categorias (sem featured ebook)
-- **Receitas individuais**: E-book integrado no content (aside com configuração padrão)
-
-### Estratégias de Conversão
-
-#### Seções Integradas vs Aside
-
-**Aside (Sidebar)**: Elementos permanentes e estratégicos
-
-- E-book contextual (conversão principal)
-- Quem é a Lets Cozinha (credibilidade/autoridade)
-- Categorias (navegação relacionada)
-
-**Seções no Content**: Elementos de timing e contexto
-
-- Newsletter: integrada após entregar valor (ex: após ingredientes)
-- Compartilhamento: integrada após consumo completo (ex: após modo de preparo)
-- CTAs contextuais: no momento certo do flow de leitura
-
-**Vantagens dessa Separação:**
-
-- **Peak-End Rule**: Newsletter/compartilhamento no timing ideal
-- **Cognitive Load**: Aside focado em 3 elementos essenciais
-- **Proximity Law**: Conversão próxima ao conteúdo relevante
-- **Mobile-First**: Seções fluem naturalmente em qualquer dispositivo
-
-#### Mobile-First
-
-- CTAs grandes e touch-friendly (44px+)
-- Scroll infinito em listas
-- Filtros em modals
-- Grid responsivo otimizado
-- Galeria com swipe navigation
-- Thumbnails touch-friendly (80x80px)
-
-#### Contextual
-
-- E-books relacionados ao conteúdo atual
-- Newsletter contextual integrada nas seções do conteúdo principal
-- Compartilhamento social integrado após consumo do valor
-- Banners integrados naturalmente
-
-#### Timing
-
-- Conversão após entregar valor
-- Hero impactante no início
-- CTA final forte (Peak-End Rule)
-
-#### Prova Social
-
-- Receitas populares (analytics)
-- Testemunhos de clientes
-- Números de vendas
-- Credibilidade da autora
-
----
-
-## ✅ Aplicação Prática das Laws of UX
-
-- **Hick's Law** → Menu com máximo 5 itens principais + navegação simples
-- **Miller's Law** → E-books agrupados de 3-4 por seção
-- **Fitts's Law** → CTAs grandes (44px+) próximos ao conteúdo
-- **Jakob's Law** → Busca no header, logo top-left, padrões familiares
-- **Choice Overload** → Máximo 3-4 e-books em destaque na home
-- **Chunking** → Receitas por categoria, ingredientes listados
-- **Serial Position** → E-book principal primeiro, CTA final último
-- **Cognitive Load** → Uma ação principal por página
-- **Peak-End Rule** → Hero impactante + CTA final forte
-- **Von Restorff** → E-books destacados com cores/badges
-
----
-
-## 🎨 Layout e Componentes Detalhados
-
-### Comportamento Responsivo
-
-**Desktop (`lg`: 1024px+)**:
-
-- Header fixo no topo
-- Hero full-width (quando aplicável)
-- Main (70%) + Aside (30%) em duas colunas
-- Footer com múltiplas colunas
-
-**Tablet (`md`: 768px - 1023px)**:
-
-- Header fixo no topo
-- Hero full-width (quando aplicável)
-- Main (100%) + Aside abaixo em coluna única
-- Footer com 2 colunas
-
-**Mobile (`sm` e menor: <768px)**:
-
-- Header compacto fixo
-- Hero full-width (quando aplicável)
-- Main (100%) + Aside em coluna única
-- Footer em coluna única
-
-**Breakpoints Tailwind padrão**:
-
-- `sm`: 640px | `md`: 768px | `lg`: 1024px | `xl`: 1280px | `2xl`: 1536px
-
-### Considerações Técnicas
-
-#### Componentização (Obrigatório)
-
-- **Blocos reutilizáveis** - SEMPRE componentizar elementos que aparecem em múltiplos locais
-- **Responsabilidade única** - Um componente, uma função específica
-- **Props tipadas** - TypeScript interfaces obrigatórias
-- **JSDoc completo** - Documentação de propósito, props e exemplos de uso
-- **Composição sobre duplicação** - Reutilizar componentes existentes antes de criar novos
-
-#### CSS/Styling
-
-- **Tema centralizado** - Todos os estilos devem vir do tema definido em `globals.css`
-- **Classes nativas do Tailwind** - Componentes devem usar apenas classes padrão do Tailwind CSS
-- **Cores de texto padronizadas** - OBRIGATÓRIO usar apenas cores do tema
-- **Mobile-first approach** - CSS responsivo partindo do mobile
-- **Design tokens** - Cores, tipografia e espaçamentos padronizados no tema
-
-**Sistema de Cores de Texto:**
-
-- `text-text-dark` (principal), `text-text-light` (secundário)
-- `text-text-strong` (enfático), `text-text-muted` (auxiliar)
-- `text-text-success`, `text-text-error`, `text-text-warning` (feedback)
-
-#### Performance & Acessibilidade
-
-- Lazy loading, componentes otimizados, imagens responsivas
-- Navegação por teclado, skip links, ARIA labels, contraste adequado
+- **RecipeCard**: Card de receita com encapsulação Card e Fitts's Law
+- **EbookCard**: Card de e-book com variants (default/featured/minimal)
+- **RecipeImages**: Galeria otimizada para mobile com swipe navigation
+- **RecipeShare**: Compartilhamento social com Card integrado
+- **ExclusiveRecipePreview**: Preview limitado para receitas de e-book
 
 ---
 
@@ -769,281 +419,97 @@ Container flexível com 3 variants: `default`, `subtle`, `newsletter`. Usado int
 
 ## Lista de Tarefas - Implementação
 
-### 🏗️ **Fase 1: Fundação (Componentes Base)**
+### 🏗️ **Fase 1: Fundação (Componentes Base)** ✅
 
-#### 1.0 Configuração do Tema
+#### 1.0 Configuração do Tema ✅
 
-- [x] **globals.css Theme Setup** - Variáveis CSS, cores, tipografia e base styles implementados ✅
-- [x] **Design Tokens** - Sistema completo de espaçamento, cores e tipografia funcionando ✅
-- [x] **Sistema de Cores de Texto** - Padronização completa das cores de texto do tema ✅
+- [x] **globals.css Theme Setup** - Variáveis CSS, cores, tipografia implementados
+- [x] **Design Tokens** - Sistema completo funcionando
+- [x] **Sistema de Cores de Texto** - Padronização completa
 
-**Detalhes da Implementação:**
+#### 1.1 Layout Principal ✅
 
-- **Tema Tailwind CSS v4** - Usando nova sintaxe `@theme` para definição de variáveis
-- **7 Cores de Texto Essenciais** - Sistema enxuto com apenas cores realmente utilizadas
-- **Substituição de Classes Hardcoded** - Todos os `text-gray-*`, `text-red-*`, etc. foram substituídos
-- **Componentes Atualizados** - RecipeImages, Breadcrumbs, EmailSubscription (com melhorias UX/acessibilidade), RecipeCard (com Card encapsulado), LinkButton (com centralização perfeita), e páginas
-- **Regra Obrigatória** - NUNCA usar cores hardcoded como `text-gray-500`, sempre usar cores do tema
-
-**Cores Implementadas:**
-
-- `text-text-dark` (principal), `text-text-light` (secundário)
-- `text-text-strong` (enfático), `text-text-muted` (auxiliar)
-- `text-text-success`, `text-text-error`, `text-text-warning` (feedback)
-
-#### 1.1 Layout Principal
-
-- [x] **Container Component** - Wrapper com max-width 1200px e padding responsivo
+- [x] **Container Component** - Wrapper responsivo
 - [x] **Header Component** - Logo + navegação + busca + CTA
-- [x] **Footer Component** - Links + newsletter + redes sociais + copyright
-- [x] **Content Component** - Wrapper com breadcrumb manual + título + descrição
-- [x] **Content.Section Component** - Seções organizadas com espaçamento consistente
-- [x] **Aside Component** - Sidebar focada: E-book + Quem é a Lets + Categorias ✅
-- [x] **LayoutAside Configurável** - Componente unificado para todos os asides com seções configuráveis ✅
+- [x] **Footer Component** - Links + newsletter + redes sociais
+- [x] **Content Component** - Wrapper com breadcrumb + título + descrição
+- [x] **Content.Section Component** - Seções organizadas
+- [x] **LayoutAside Configurável** - Componente unificado para todos os asides
 
-#### 1.2 Configuração Parallel Routes
+#### 1.2 Configuração Parallel Routes ✅
 
-- [x] **Setup app/layout.tsx** - Layout principal com slots hero e aside ✅
-- [ ] **Criar @hero slot** - Estrutura de pastas para heroes contextuais
-- [x] **Criar @aside slot** - Estrutura de pastas para asides contextuais ✅
-- [x] **LayoutAside Unificado** - Todos os asides agora usam LayoutAside configurável ✅
-- [x] **default.tsx files** - Fallbacks para slots não utilizados (aside default implementado) ✅
-- [x] **Asides Unificados** - Todos os asides (@aside/page.tsx, @aside/ebooks/page.tsx, @aside/default.tsx) usam LayoutAside configurável ✅
+- [x] **Setup app/layout.tsx** - Layout principal com slots
+- [x] **Criar @aside slot** - Estrutura para asides contextuais
+- [x] **LayoutAside Unificado** - Todos os asides usam LayoutAside configurável
+- [x] **default.tsx files** - Fallbacks implementados
 
-#### 1.3 Componentes de Navegação
+### 🎨 **Fase 2: UI Components** ✅
 
-- [x] **Breadcrumb Component** - Navegação hierárquica com structured data e acessibilidade (integrado ao Content) ✅
-- [x] **HeaderNav Component** - Menu principal (5 itens)
-- [x] **HeaderSearch Component** - Busca expansível
-- [x] **SocialNav Component** - Links redes sociais
+#### 2.1 Componentes de Conversão ✅
 
-### 🎨 **Fase 2: UI Components**
+- [x] **LinkButton Component** - CTAs padronizados com centralização perfeita
+- [x] **EmailSubscription Component** - Newsletter com acessibilidade completa
+- [x] **RecipeEmailSubscription Component** - Newsletter contextual
+- [x] **Card Component** - Container flexível com variants
 
-#### 2.1 Componentes de Conversão
+#### 2.2 Componentes de Conteúdo ✅
 
-- [x] **LinkButton Component** - CTAs padronizados (44px+) com centralização perfeita de texto ✅
-- [x] **EmailSubscription Component** - Newsletter signup com JSDoc completo, acessibilidade e Fitts's Law (44px+ CTAs) ✅
-- [x] **RecipeEmailSubscription Component** - Newsletter contextual usando Card com background gradiente ✅
-- [ ] **CookingCTA Component** - Calls-to-action culinários
-- [x] **Card Component** - Container flexível com variants (usado em RecipeEmailSubscription e RecipeShare) ✅
+- [x] **RecipeCard Component** - Card com encapsulação e Fitts's Law
+- [x] **EbookCard Component** - Card com variants e formatação de preço
 
-#### 2.2 Componentes de Conteúdo
+#### 2.3 Componentes de Mídia ✅
 
-- [x] **RecipeCard Component** - Card de receita com encapsulação Card, JSDoc completo e Fitts's Law (44px+ CTAs) ✅
-- [x] **EbookCard Component** - Card de e-book com variants (default/featured/minimal), formatação de preço e encapsulação Card ✅
-- [ ] **RecipesList Component** - Grid responsivo de receitas
-- [ ] **EbooksList Component** - Grid comercial de e-books
-- [ ] **CategoriesList Component** - Grid de categorias
-- [ ] **CategoryTag Component** - Tags de categoria
-
-#### 2.3 Componentes de Mídia
-
-- [x] **RecipeImages Component** - Galeria otimizada para mobile com swipe/touch navigation ✅
-- [x] **RecipeShare Component** - Compartilhamento social com Card integrado e acessibilidade completa ✅
-- [ ] **RecipeInstagramLinks Component** - Links Instagram
-
-#### 2.4 Componentes Utilitários
-
-- [ ] **Loading Component** - Estados de loading
-- [ ] **Pagination Component** - Paginação de listas
-- [ ] **Search Component** - Busca com filtros
-- [ ] **Markdown Component** - Renderização de conteúdo
+- [x] **RecipeImages Component** - Galeria otimizada para mobile
+- [x] **RecipeShare Component** - Compartilhamento social completo
 
 ### 📄 **Fase 3: Páginas Principais**
 
-#### 3.1 Home Page
+#### 3.1 Home Page ❌
 
 - [ ] **app/page.tsx** - Content da home
 - [ ] **app/@hero/page.tsx** - Hero com e-book principal
-- [ ] **app/@aside/page.tsx** - Aside com categorias + autora
-- [ ] **Integração completa** - Testar layout responsivo
 
-#### 3.2 Receitas
+#### 3.2 Receitas ⏳
 
 - [ ] **app/receitas/page.tsx** - Lista de receitas com busca
-- [ ] **app/receitas/@aside/page.tsx** - Aside com e-book contextual + Quem é a Lets + Categorias
-- [x] **app/receitas/[slug]/page.tsx** - Página individual da receita com seções integradas na ordem ideal (Receita → Compartilhamento → Newsletter → E-book → Similares) ✅
-- [ ] **app/receitas/[slug]/@aside/page.tsx** - Aside com e-book relacionado + Quem é a Lets + Categorias
+- [x] **app/receitas/[slug]/page.tsx** - Página individual com seções otimizadas
 
-**✅ Melhorias Implementadas na Página de Receitas**:
-
-- **Ordem Otimizada**: Reorganizada seguindo psicologia do usuário e melhores práticas de conversão
-- **E-book Destacado**: Variant `featured` com título de seção para maior conversão
-- **Timing Perfeito**: Compartilhamento → Newsletter → E-book → Similares
-- **UX Laws**: Peak-End Rule, Reciprocidade e Commitment aplicados
-- **Copy Otimizado**: Título "Para você que ama cozinhar" (aspiracional e inclusivo)
-- **Texto Conciso**: Apresentação do e-book resumida para 12 palavras (52% redução)
-- **Conexão Contextual**: Texto liga diretamente a receita atual ao e-book recomendado
-
-#### 3.3 Categorias
+#### 3.3 Categorias ❌
 
 - [ ] **app/categorias/page.tsx** - Grid de categorias
 - [ ] **app/categorias/[slug]/page.tsx** - Receitas por categoria
-- [ ] **Banner de conversão** - E-book contextual por categoria
 
-#### 3.4 E-books
+#### 3.4 E-books ✅
 
-- [x] **app/ebooks/page.tsx** - Catálogo comercial com Content wrapper, EbookCard components e EmailSubscription ✅
-- [x] **app/ebooks/@aside/page.tsx** - Aside configurável sem featured ebook + newsletter específica para e-books ✅
-- [x] **app/ebooks/[slug]/page.tsx** - Página de vendas completa com Content.tsx, hero integrado e CTA com reforço visual ✅
-- [x] **app/ebooks/[slug]/@aside/page.tsx** - Aside minimal via parallel route com LayoutAside configurável ✅
+- [x] **app/ebooks/page.tsx** - Catálogo comercial
+- [x] **app/ebooks/@aside/page.tsx** - Aside configurável
+- [x] **app/ebooks/[slug]/page.tsx** - Página de vendas completa
+- [x] **app/ebooks/[slug]/@aside/page.tsx** - Aside minimal
 
-**✅ Implementações Completas**:
-
-- **Página Individual de E-book**: Layout otimizado seguindo todos os padrões do README.md
-- **Hero Componentizado**: EbookHero com imagem responsiva e aspect ratio natural
-- **CTA Duplo**: Hero principal + CTA final com reforço visual estratégico
-- **Laws of UX**: Fitts's Law, Peak-End Rule, Von Restorff Effect e Mere Exposure Effect
-- **Estratégia de Conversão**: Timing 1 (Hero) → Timing 2 (Benefícios) → Timing 3 (CTA final)
-- **Mobile Optimization**: w-full em mobile, larguras específicas desktop
-- **Performance**: priority na imagem hero, formato medium quando disponível
-- **SEO**: Product schema completo e breadcrumb navigation integrado
-
-### 🔧 **Fase 4: Funcionalidades**
-
-#### 4.1 Busca e Filtros
+### 🔧 **Fase 4: Funcionalidades** ❌
 
 - [ ] **Search functionality** - Busca em tempo real
 - [ ] **Category filters** - Filtros por categoria
-- [ ] **Advanced filters** - Ordenação e filtros avançados
-- [ ] **Search results** - Página de resultados
-
-#### 4.2 Conversão e Analytics
-
 - [ ] **Conversion tracking** - Tracking de CTAs
 - [ ] **Newsletter integration** - Integração com email service
-- [ ] **Social proof** - Receitas populares (analytics)
-- [ ] **A/B testing setup** - Testes de conversão
 
-#### 4.3 Performance
+### 📱 **Fase 5: Responsividade** ⏳
 
-- [ ] **Image optimization** - Next.js Image component
-- [ ] **Lazy loading** - Loading otimizado
-- [ ] **SEO optimization** - Meta tags e structured data
-- [ ] **Performance audit** - Lighthouse optimization
-
-### 📱 **Fase 5: Responsividade**
-
-#### 5.1 Mobile Optimization
-
-- [ ] **Mobile-first CSS** - Breakpoints Tailwind padrão (`sm`, `md`, `lg`, `xl`, `2xl`)
-- [ ] **Touch-friendly CTAs** - Botões grandes (44px+)
+- [x] **Mobile-first CSS** - Breakpoints Tailwind implementados
+- [x] **Touch-friendly CTAs** - Botões grandes (44px+) implementados
 - [ ] **Mobile navigation** - Menu hamburger
 - [ ] **Mobile search** - Busca em modal
 
-#### 5.2 Tablet Optimization
+### 🧪 **Fase 6: Testes e Qualidade** ⏳
 
-- [ ] **Tablet layouts** - Layouts intermediários
-- [ ] **Grid adjustments** - Ajustes de grid responsivo
-- [ ] **Touch interactions** - Otimização para touch
-
-### 🧪 **Fase 6: Testes e Qualidade**
-
-#### 6.1 Testes de UX
-
-- [x] **Fitts's Law compliance** - CTAs grandes e próximos (implementado em EmailSubscription, RecipeCard e LinkButton) ✅
+- [x] **Fitts's Law compliance** - CTAs grandes implementados
 - [ ] **Hick's Law compliance** - Máximo 5 opções por decisão
-- [ ] **Miller's Law compliance** - Máximo 7 itens por grupo
-- [ ] **Cognitive Load test** - Uma ação principal por página
-
-#### 6.2 Testes Técnicos
-
 - [ ] **Component testing** - Testes unitários
-- [ ] **Integration testing** - Testes de integração
 - [ ] **Performance testing** - Core Web Vitals
-- [ ] **Accessibility testing** - A11y compliance
 
-### 🚀 **Fase 7: Deploy e Monitoramento**
-
-#### 7.1 Preparação para Deploy
+### 🚀 **Fase 7: Deploy e Monitoramento** ❌
 
 - [ ] **Environment setup** - Configuração de ambientes
 - [ ] **Build optimization** - Otimização de build
-- [ ] **Error boundaries** - Tratamento de erros
-- [ ] **Monitoring setup** - Analytics e monitoramento
-
-#### 7.2 Launch
-
 - [ ] **Staging deployment** - Deploy de teste
 - [ ] **Production deployment** - Deploy de produção
-- [ ] **Post-launch monitoring** - Monitoramento pós-launch
-- [ ] **Conversion optimization** - Otimização baseada em dados
-
----
-
-### 🎯 **Encapsulação de Componentes - Padrão Implementado**
-
-**Princípio**: Componentes devem encapsular sua própria apresentação visual, incluindo Cards quando necessário.
-
-**Implementações Completas:**
-
-#### EmailSubscription ✅
-
-- **JSDoc Completo**: Documentação detalhada com propósito, features e exemplos de uso
-- **Acessibilidade**: ARIA labels, roles e live regions para feedback
-- **Fitts's Law**: CTAs com min-height 44px+ e min-width adequado
-- **Encapsulação**: Card integrado internalmente seguindo padrão do projeto
-- **UX Otimizada**: Estados de loading, feedback de sucesso/erro contextual
-
-#### RecipeEmailSubscription ✅
-
-- **Antes**: `<Card variant="newsletter"><RecipeEmailSubscription /></Card>`
-- **Depois**: `<RecipeEmailSubscription />` (Card encapsulado internamente)
-- **Benefício**: Página não precisa saber sobre implementação visual do componente
-
-#### RecipeShare ✅
-
-- **Antes**: `<Card variant="subtle"><RecipeShare recipe={recipe} /></Card>`
-- **Depois**: `<RecipeShare recipe={recipe} />` (Card encapsulado internamente)
-- **Benefício**: Componente auto-contido com responsabilidade visual própria
-
-#### LayoutAside Configurável ✅
-
-- **JSDoc Completo**: Documentação detalhada com propósito, configurações e exemplos de uso
-- **Interface Tipada**: `LayoutAsideProps` com configurações flexíveis para cada seção
-- **Seções Configuráveis**:
-  - `featuredEbook`: E-book em destaque (padrão: true)
-  - `whoIsLets`: Seção "Quem é a Lets" (padrão: true)
-  - `categories`: Lista de categorias (padrão: true)
-  - `newsletter`: Newsletter personalizada (padrão: null)
-- **Unificação Total**: Todos os asides agora usam um único componente base
-- **Flexibilidade**: Cada rota pode escolher quais seções mostrar
-- **Exemplo de Uso**: Aside de e-books sem featured ebook + newsletter específica
-
-**Implementações Específicas:**
-
-- **Aside Padrão**: Todas as seções ativas (featuredEbook + whoIsLets + categories)
-- **Aside E-books**: Newsletter personalizada + whoIsLets + categories (sem featuredEbook para evitar competição)
-- **Fallback Aside**: Comportamento padrão para rotas sem aside específico
-
-**Vantagens do Padrão:**
-
-- **Single Responsibility**: Cada componente é responsável por sua própria apresentação
-- **Encapsulação**: Detalhes de implementação não vazam para componentes pais
-- **Manutenibilidade**: Mudanças visuais ficam centralizadas no próprio componente
-- **Reutilização**: Componentes podem ser usados em qualquer contexto sem setup adicional
-- **Consistência**: Garantia de que o componente sempre terá a apresentação correta
-
-**Padrão para Novos Componentes:**
-
-Se um componente sempre precisa de um Card específico, o Card deve ser encapsulado internamente no componente, não requerido externamente.
-
----
-
-### 📊 **Ordem de Execução Recomendada**
-
-**Sequência lógica de desenvolvimento:**
-
-1. **Fundação primeiro** - Componentes base são pré-requisitos
-2. **UI Components** - Building blocks para as páginas
-3. **Páginas por complexidade** - Home → Receitas → Categorias → E-books
-4. **Funcionalidades incrementais** - Adicionar features conforme necessário
-5. **Otimização contínua** - Responsividade e performance ao longo do desenvolvimento
-6. **Testes e deploy** - Validação final
-
-**Dependências críticas:**
-
-- Container, Header, Footer devem ser criados antes das páginas
-- Parallel Routes setup necessário antes dos heroes contextuais
-- RecipeCard necessário antes de RecipesList
-- Layout base necessário antes de qualquer página
