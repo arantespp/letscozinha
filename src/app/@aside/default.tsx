@@ -19,4 +19,6 @@ import { LayoutAside } from 'src/components/LayoutAside';
  *
  * @returns JSX.Element - LayoutAside padrão
  */
-export default LayoutAside;
+export default function DefaultAside() {
+  return <LayoutAside />;
+}

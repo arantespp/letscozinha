@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { EbooksList } from 'src/components/EbooksList';
+import { Content } from 'src/components/Content';
+import { EbookCard } from 'src/components/EbookCard';
+import { EmailSubscription } from 'src/components/EmailSubscription';
 import { getAllEbooks } from 'src/cms/ebooks';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getUrl } from 'src/methods/getUrl';
@@ -9,7 +10,7 @@ import type { Metadata } from 'next';
 
 const title = getPageTitle('E-books');
 const description =
-  'Explore nossa coleção de e-books de culinária com receitas especiais, dicas e técnicas culinárias para aprimorar suas habilidades na cozinha.';
+  'Transforme sua cozinha com nossos e-books exclusivos. Receitas especiais, técnicas profissionais e dicas culinárias para elevar suas habilidades na cozinha.';
 
 export const metadata: Metadata = {
   title,
@@ -30,28 +31,48 @@ export default async function EbooksPage() {
   const { allEbooks } = await getAllEbooks();
 
   return (
-    <div className="py-lg">
-      <div className="mb-lg">
-        <Breadcrumbs
-          items={[
-            { name: 'Home', href: '/' },
-            { name: 'E-books', href: '/ebooks', current: true },
-          ]}
+    <Content
+      title="E-books Lets Cozinha"
+      description="Transforme sua cozinha com nossos e-books exclusivos. Receitas especiais, técnicas profissionais e dicas culinárias para elevar suas habilidades na cozinha."
+      breadcrumb={[
+        { name: 'Home', href: '/' },
+        { name: 'E-books', href: '/ebooks', current: true },
+      ]}
+    >
+      <Content.Section variant="list">
+        {allEbooks.length === 0 ? (
+          <div className="text-center py-xl">
+            <h2 className="text-2xl font-heading mb-md">
+              Nenhum e-book encontrado
+            </h2>
+            <p className="text-text-light">
+              Não há e-books disponíveis no momento. Volte em breve para
+              conferir nossos novos lançamentos!
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+            {allEbooks.map((ebook, index) => (
+              <EbookCard
+                key={ebook.documentId}
+                ebook={ebook}
+                priority={index < 3} // Priorize primeiros 3 e-books
+                variant={index === 0 ? 'featured' : 'default'} // Primeiro e-book em destaque
+                showPrice
+              />
+            ))}
+          </div>
+        )}
+      </Content.Section>
+
+      <Content.Section variant="content">
+        <EmailSubscription
+          title="Novos E-books em Primeira Mão"
+          description="Seja o primeiro a saber sobre nossos novos lançamentos e receba conteúdo exclusivo sobre culinária."
+          formLayout="row"
+          textAlignment="center"
         />
-      </div>
-
-      <header className="mb-xl text-center">
-        <h1 className="text-3xl md:text-4xl font-heading mb-md">
-          E-books Lets Cozinha
-        </h1>
-        <p className="text-text-light text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
-          Descubra nossa coleção de e-books exclusivos com receitas especiais,
-          dicas e técnicas culinárias para transformar sua experiência na
-          cozinha.
-        </p>
-      </header>
-
-      <EbooksList ebooks={allEbooks} />
-    </div>
+      </Content.Section>
+    </Content>
   );
 }

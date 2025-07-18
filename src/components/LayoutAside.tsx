@@ -2,6 +2,7 @@ import * as React from 'react';
 import { CategoriesList } from './CategoriesList';
 import { EbookCard } from './EbookCard';
 import { Card } from './Card';
+import { EmailSubscription } from './EmailSubscription';
 import { getLetsCozinhaLets, getLetsCozinha } from 'src/cms/singleTypes';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -56,6 +57,25 @@ async function WhoIsLets() {
   );
 }
 
+interface LayoutAsideProps {
+  /** Configurações das seções do aside */
+  sections?: {
+    /** Mostrar e-book em destaque */
+    featuredEbook?: boolean;
+    /** Mostrar seção "Quem é a Lets" */
+    whoIsLets?: boolean;
+    /** Mostrar lista de categorias */
+    categories?: boolean;
+    /** Mostrar newsletter personalizada */
+    newsletter?: {
+      title: string;
+      description: string;
+      formLayout?: 'row' | 'column';
+      textAlignment?: 'left' | 'center';
+    };
+  };
+}
+
 /**
  * Layout Aside Component - Sidebar de conversão com elementos estratégicos.
  *
@@ -83,29 +103,67 @@ async function WhoIsLets() {
  *
  * @example
  * ```tsx
- * // Uso padrão
+ * // Uso padrão (todas as seções)
  * <LayoutAside />
+ *
+ * // Página de e-books (sem featured ebook, com newsletter personalizada)
+ * <LayoutAside
+ *   sections={{
+ *     featuredEbook: false,
+ *     whoIsLets: true,
+ *     categories: true,
+ *     newsletter: {
+ *       title: "Novidades de E-books",
+ *       description: "Receba avisos sobre novos lançamentos e ofertas especiais dos nossos e-books.",
+ *       formLayout: "column",
+ *       textAlignment: "center"
+ *     }
+ *   }}
+ * />
  * ```
  */
-export async function LayoutAside() {
+export async function LayoutAside({ sections = {} }: LayoutAsideProps = {}) {
+  // Configurações padrão
+  const config = {
+    featuredEbook: true,
+    whoIsLets: true,
+    categories: true,
+    newsletter: null,
+    ...sections,
+  };
   return (
     <aside className="w-full md:w-72 flex flex-col gap-md mt-xl md:mt-md">
-      <React.Suspense fallback={null}>
-        <ShowFeaturedEbook />
-      </React.Suspense>
+      {config.newsletter && (
+        <EmailSubscription
+          title={config.newsletter.title}
+          description={config.newsletter.description}
+          formLayout={config.newsletter.formLayout}
+          textAlignment={config.newsletter.textAlignment}
+        />
+      )}
 
-      <React.Suspense fallback={null}>
-        <WhoIsLets />
-      </React.Suspense>
+      {config.featuredEbook && (
+        <React.Suspense fallback={null}>
+          <ShowFeaturedEbook />
+        </React.Suspense>
+      )}
 
-      <Card className="h-full">
-        <div className="flex flex-col gap-sm">
-          <h3 className="font-heading text-lg text-center">Categorias</h3>
-          <React.Suspense fallback={null}>
-            <CategoriesList />
-          </React.Suspense>
-        </div>
-      </Card>
+      {config.whoIsLets && (
+        <React.Suspense fallback={null}>
+          <WhoIsLets />
+        </React.Suspense>
+      )}
+
+      {config.categories && (
+        <Card className="h-full">
+          <div className="flex flex-col gap-sm">
+            <h3 className="font-heading text-lg text-center">Categorias</h3>
+            <React.Suspense fallback={null}>
+              <CategoriesList />
+            </React.Suspense>
+          </div>
+        </Card>
+      )}
     </aside>
   );
 }

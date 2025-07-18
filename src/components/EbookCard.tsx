@@ -68,7 +68,7 @@ export function EbookCard({
   showPrice = true,
 }: EbookCardProps) {
   const href = `/ebooks/${ebook.slug}`;
-  const image = ebook.imagem;
+  const image = ebook.imagem.formats.medium || ebook.imagem;
 
   // Formatação de preço brasileira
   const formatPrice = (price: number | null) => {

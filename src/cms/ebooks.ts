@@ -66,6 +66,7 @@ const getAllEbooksWithoutCache = async () => {
       filters: {
         ...ebookQueryFilters,
       },
+      sort: ['preco:desc'], // Ordenar por updatedAt (mais recente primeiro)
     });
 
     const response = await fetch(
