@@ -10,7 +10,7 @@ import type {
 } from './types';
 import type { Ebook } from './ebooks';
 
-export const RECIPES_PAGE_SIZE = 15;
+export const RECIPES_PAGE_SIZE = 10;
 
 export const RECIPES_POPULATE = [
   'categorias',

@@ -128,6 +128,7 @@ export default async function Page(props: {
             addCarouselSchema
             recipes={data}
             pagination={meta?.pagination}
+            variant="compact"
           />
         </section>
       </div>

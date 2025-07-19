@@ -42,6 +42,15 @@ export function Search() {
     }
   }, [params, pathname, router]);
 
+  const scrollToTop = React.useCallback(() => {
+    // Scroll para o topo para que o usuário veja os resultados da busca
+    // Posiciona abaixo do header que é sticky com classe "top-0"
+    window.scrollTo({
+      top: 140,
+      behavior: 'smooth',
+    });
+  }, []);
+
   React.useEffect(() => {
     if (debouncedTerm !== searchParams.get('search')) {
       handleSearch();
@@ -75,13 +84,16 @@ export function Search() {
         <input
           ref={inputRef}
           id="search"
-          className="flex-1 py-md px-xs text-base md:text-lg placeholder-text-light/70 outline-none bg-transparent"
-          placeholder="Digite um ingrediente, nome de receita ou técnica..."
+          className="flex-1 py-sm px-xs text-base md:text-lg placeholder-text-light/70 outline-none bg-transparent"
+          placeholder="Receitas, ingredientes..."
           value={term}
           onChange={(e) => {
             setTerm(e.target.value);
           }}
-          onFocus={() => setIsFocused(true)}
+          onFocus={() => {
+            setIsFocused(true);
+            scrollToTop();
+          }}
           onBlur={() => setIsFocused(false)}
           onKeyUp={(e) => {
             if (e.key === 'Enter') {
@@ -101,12 +113,6 @@ export function Search() {
           </button>
         )}
       </div>
-
-      {term && (
-        <div className="text-xs text-text-light mt-xs ml-sm">
-          <span className="opacity-75">Pressione Enter para buscar</span>
-        </div>
-      )}
     </div>
   );
 }

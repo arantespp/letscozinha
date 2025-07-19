@@ -86,7 +86,7 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
       <h2 className="text-2xl md:text-3xl font-playfair text-text-strong mb-sm">
         Confira também
       </h2>
-      <RecipesList recipes={similarRecipes} />
+      <RecipesList recipes={similarRecipes} variant="compact" />
     </div>
   );
 }

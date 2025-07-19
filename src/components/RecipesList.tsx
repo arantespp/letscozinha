@@ -12,6 +12,8 @@ type RecipesListProps = {
   pagination?: {
     pageCount: number;
   };
+  /** Variant of the recipe cards */
+  variant?: 'default' | 'compact';
 };
 
 export async function RecipesList(props: RecipesListProps) {
@@ -22,20 +24,34 @@ export async function RecipesList(props: RecipesListProps) {
     props.recipes
   );
 
+  const isCompact = props.variant === 'compact';
+
+  // Grid classes based on variant
+  const gridClasses = isCompact
+    ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-xs md:gap-sm lg:gap-md'
+    : 'grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-md';
+
   return (
     <section className="">
       {props.addCarouselSchema && <JsonLd schema={recipesCarouselSchema} />}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-md my-md">
+      <div className={gridClasses}>
         {props.recipes.map((recipe: Recipe, index) => {
           const priority = index === 0 && props.firstRecipePriority;
           return (
-            <RecipeCard priority={priority} key={recipe.id} recipe={recipe} />
+            <RecipeCard
+              priority={priority}
+              key={recipe.id}
+              recipe={recipe}
+              variant={props.variant}
+            />
           );
         })}
       </div>
-      <div className="my-md">
-        {props.pagination && <Pagination pagination={props.pagination} />}
-      </div>
+      {props.pagination && (
+        <div className="mt-lg">
+          <Pagination pagination={props.pagination} />
+        </div>
+      )}
     </section>
   );
 }

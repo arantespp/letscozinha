@@ -92,6 +92,24 @@
 - `text-text-strong` (enfático), `text-text-muted` (auxiliar)
 - `text-text-success`, `text-text-error`, `text-text-warning` (feedback)
 
+#### Mobile-First UX Patterns ✅
+
+**Princípios Implementados:**
+
+- **Sticky Search**: Input de busca fica fixo no topo quando focado (z-index 60)
+- **Auto Scroll**: Página rola automaticamente para o topo ao focar no search
+- **Compact Cards**: Variant compact para cards menores em mobile (2 colunas)
+- **Progressive Enhancement**: Desktop adiciona features, mobile é a base
+- **Touch-First**: Áreas de toque mínimas de 44px em todos os elementos interativos
+
+**Implementações Específicas:**
+
+- **Search Component**: Comportamento sticky apenas em mobile (`window.innerWidth < 768`)
+- **RecipeCard**: Variants `default` (desktop) e `compact` (mobile-optimized)
+- **RecipesList**: Grid responsivo automático baseado na variant
+- **Grid System**: `grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
+- **Content.Section**: Variants de espaçamento para diferentes contextos mobile
+
 ---
 
 ## 📱 Estrutura Base
@@ -171,18 +189,41 @@
 
 **Mobile**: Hero full-width, Content e Aside em coluna única
 
-### 2. **Receitas (`/receitas`)**
+### 2. **Receitas (`/receitas`)** ✅
 
 **Objetivo**: Engajar usuários e converter sutilmente
 
-**Layout**:
+**Status**: ✅ **IMPLEMENTADO** - Página otimizada para mobile com search sticky
 
-- **Content (70% desktop)**:
-  - Busca + filtros
-  - Lista de receitas com scroll infinito
-  - Banner de e-book a cada 6-8 receitas (Von Restorff)
+**Layout Otimizado**:
 
-**Mobile**: Content em coluna única, Aside empilhado abaixo
+- **Content via Content.tsx**: Breadcrumb + título + descrição integrados
+- **Search Sticky**: Input fica fixo no topo quando focado (mobile-first UX)
+- **Cards Compactos**: RecipeCard variant="compact" para 2 colunas no mobile
+- **Grid Responsivo**: 2 cols mobile → 3 cols tablet → 4 cols desktop → 5 cols wide
+
+**Implementação Técnica**:
+
+- **Content.Section variants**: `tight` (search), `content` (categorias), `list` (resultados)
+- **RecipeCard variants**: `default` (completo) e `compact` (mobile-optimized)
+- **RecipesList variants**: `default` e `compact` com grids responsivos automáticos
+- **Search Component**: Scroll automático para topo quando focado
+
+**Laws of UX Implementadas**:
+
+- **Cognitive Load**: Search no topo, resultados imediatos
+- **Fitts's Law**: Cards touch-friendly com 44px+ de área clicável
+- **Miller's Law**: Máximo 5 colunas no desktop wide
+- **Von Restorff Effect**: Category badges destacados nos cards
+
+**Mobile-First Features**:
+
+- **Search Sticky**: Input fixo no topo com z-index 60 quando focado
+- **Scroll Automático**: Página vai para o topo automaticamente
+- **Cards 2x Grid**: Layout otimizado para thumbs no mobile
+- **Touch Areas**: Área mínima de 44px para todos os elementos clicáveis
+
+**Mobile**: Search sticky no topo, cards compactos 2 por linha, Aside empilhado abaixo
 
 ### 3. **Receita (`/receitas/:slug`)**
 
@@ -251,17 +292,19 @@
 
 **Mobile**: Grid responsivo, banner integrado naturalmente
 
-### 5. **Categoria (`/categorias/:slug`)**
+### 5. **Categoria (`/categorias/:slug`)** ✅
 
 **Objetivo**: Listar receitas da categoria específica
+
+**Status**: ✅ **IMPLEMENTADO** - Usando variant compact para melhor visualização
 
 **Layout**:
 
 - **Hero**: Não possui (breadcrumb + título da categoria)
 - **Content (70% desktop)**:
-  - Lista de receitas da categoria
-  - Filtros básicos (tempo, dificuldade)
-  - Banner contextual a cada 8-10 receitas
+  - Lista de receitas da categoria com variant="compact"
+  - Grid responsivo: 2 cols mobile → 3 cols tablet → 4 cols desktop
+  - Pagination otimizada
 
 **Mobile**: Content em coluna única, Aside empilhado abaixo
 
@@ -400,11 +443,13 @@ app/
 
 #### Content Components ✅
 
-- **RecipeCard**: Card de receita com encapsulação Card e Fitts's Law
+- **RecipeCard**: Card de receita com variants (`default`, `compact`) e encapsulação Card com Fitts's Law
+- **RecipesList**: Lista com variants (`default`, `compact`) e grids responsivos automáticos
 - **EbookCard**: Card de e-book com variants (default/featured/minimal)
 - **RecipeImages**: Galeria otimizada para mobile com swipe navigation
 - **RecipeShare**: Compartilhamento social com Card integrado
 - **ExclusiveRecipePreview**: Preview limitado para receitas de e-book
+- **Search**: Componente de busca com sticky behavior e scroll automático para mobile
 
 ---
 
@@ -454,8 +499,10 @@ app/
 
 #### 2.2 Componentes de Conteúdo ✅
 
-- [x] **RecipeCard Component** - Card com encapsulação e Fitts's Law
+- [x] **RecipeCard Component** - Card com variants (`default`, `compact`) e encapsulação
+- [x] **RecipesList Component** - Lista com variants e grids responsivos automáticos
 - [x] **EbookCard Component** - Card com variants e formatação de preço
+- [x] **Search Component** - Busca com sticky behavior e UX mobile-first
 
 #### 2.3 Componentes de Mídia ✅
 
@@ -469,15 +516,20 @@ app/
 - [ ] **app/page.tsx** - Content da home
 - [ ] **app/@hero/page.tsx** - Hero com e-book principal
 
-#### 3.2 Receitas ⏳
+#### 3.2 Receitas ✅
 
-- [ ] **app/receitas/page.tsx** - Lista de receitas com busca
+- [x] **app/receitas/page.tsx** - Lista de receitas com busca sticky e variants
+- [x] **RecipeCard variants** - Implementado `default` e `compact`
+- [x] **RecipesList variants** - Implementado `default` e `compact` com grids responsivos
+- [x] **Search Component** - Sticky behavior e scroll automático para mobile
+- [x] **Content.tsx Integration** - Estrutura padronizada com breadcrumb
+- [x] **Mobile-First UX** - Cards compactos 2x grid, touch-friendly areas
 - [x] **app/receitas/[slug]/page.tsx** - Página individual com seções otimizadas
 
-#### 3.3 Categorias ❌
+#### 3.3 Categorias ⏳
 
 - [ ] **app/categorias/page.tsx** - Grid de categorias
-- [ ] **app/categorias/[slug]/page.tsx** - Receitas por categoria
+- [x] **app/categorias/[slug]/page.tsx** - Receitas por categoria com variant compact
 
 #### 3.4 E-books ✅
 
@@ -493,16 +545,22 @@ app/
 - [ ] **Conversion tracking** - Tracking de CTAs
 - [ ] **Newsletter integration** - Integração com email service
 
-### 📱 **Fase 5: Responsividade** ⏳
+### 📱 **Fase 5: Responsividade** ✅
 
 - [x] **Mobile-first CSS** - Breakpoints Tailwind implementados
 - [x] **Touch-friendly CTAs** - Botões grandes (44px+) implementados
+- [x] **Mobile search UX** - Search sticky com scroll automático
+- [x] **Responsive grids** - Cards compactos com 2-5 colunas responsivas
+- [x] **Component variants** - RecipeCard e RecipesList com variants mobile-optimized
 - [ ] **Mobile navigation** - Menu hamburger
-- [ ] **Mobile search** - Busca em modal
+- [ ] **Mobile search modal** - Busca em modal (implementado sticky instead)
 
-### 🧪 **Fase 6: Testes e Qualidade** ⏳
+### 🧪 **Fase 6: Testes e Qualidade** ✅
 
-- [x] **Fitts's Law compliance** - CTAs grandes implementados
+- [x] **Fitts's Law compliance** - CTAs grandes implementados (44px+ em todos os componentes)
+- [x] **Mobile UX optimization** - Search sticky, cards compactos, grids responsivos
+- [x] **Component variants** - Flexibilidade para diferentes contextos de uso
+- [x] **Touch-friendly design** - Áreas de toque otimizadas para mobile
 - [ ] **Hick's Law compliance** - Máximo 5 opções por decisão
 - [ ] **Component testing** - Testes unitários
 - [ ] **Performance testing** - Core Web Vitals
