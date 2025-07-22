@@ -28,7 +28,7 @@ export async function RecipesList(props: RecipesListProps) {
 
   // Grid classes based on variant
   const gridClasses = isCompact
-    ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-xs md:gap-sm lg:gap-md'
+    ? 'grid grid-cols-2 md:grid-cols-3 gap-sm md:gap-sm lg:gap-md'
     : 'grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-md';
 
   return (

@@ -68,7 +68,7 @@ export function Card({
     default: {
       background: 'white' as const,
       padding: 'md' as const,
-      classes: 'border border-gray-100 rounded-lg shadow-sm',
+      classes: 'border border-gray-100 rounded-lg',
     },
     subtle: {
       background: 'subtle' as const,
@@ -78,7 +78,7 @@ export function Card({
     newsletter: {
       background: 'gradient-primary' as const,
       padding: 'md' as const,
-      classes: 'rounded-lg shadow-sm',
+      classes: 'rounded-lg',
     },
   };
 

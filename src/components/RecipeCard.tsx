@@ -84,7 +84,7 @@ export default function RecipeCard({
   return (
     <Card
       variant="default"
-      className={`hover:shadow-${isCompact ? 'md' : 'lg'} transition-${isCompact ? 'shadow' : 'all'} duration-${isCompact ? '200' : '300'} h-full ${isCompact ? 'p-xs' : ''}`}
+      className={`hover:shadow-${isCompact ? 'md' : 'lg'} transition-${isCompact ? 'shadow' : 'all'} duration-${isCompact ? '200' : '300'} h-full ${isCompact ? 'p-none' : ''}`}
     >
       {isCompact ? (
         // Compact variant - only image and title
@@ -109,7 +109,7 @@ export default function RecipeCard({
                 </div>
               )}
             </div>
-            <h3 className="text-sm md:text-base font-medium line-clamp-2 leading-tight text-text-dark">
+            <h3 className="text-sm md:text-base font-medium line-clamp-2 leading-tight text-text-dark text-center py-xs mb-xs">
               {recipe.nome}
             </h3>
           </div>
