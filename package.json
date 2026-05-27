@@ -21,7 +21,7 @@
     "@google-analytics/data": "^5.1.0",
     "@next/third-parties": "^15.3.3",
     "meilisearch": "^0.51.0",
-    "next": "~15.3.3",
+    "next": "15.3.8",
     "next-mdx-remote-client": "^2.1.2",
     "qs": "^6.14.0",
     "react": "19.1.0",
