@@ -84,7 +84,11 @@ export default function RecipeCard({
   return (
     <Card
       variant="default"
-      className={`hover:shadow-${isCompact ? 'md' : 'lg'} transition-${isCompact ? 'shadow' : 'all'} duration-${isCompact ? '200' : '300'} h-full ${isCompact ? 'p-none' : ''}`}
+      className={
+        isCompact
+          ? 'hover:shadow-md transition-shadow duration-200 h-full p-none'
+          : 'hover:shadow-lg transition-all duration-300 h-full'
+      }
     >
       {isCompact ? (
         // Compact variant - only image and title

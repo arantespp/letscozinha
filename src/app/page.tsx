@@ -13,6 +13,8 @@ import { LinkButton } from 'src/components/LinkButton';
 import { getCategories } from 'src/cms/categories';
 import { CookingCTA } from 'src/components/CookingCTA';
 import { CategoriesList } from 'src/components/CategoriesList';
+import { EbookCard } from 'src/components/EbookCard';
+import { getAllEbooks } from 'src/cms/ebooks';
 
 export const metadata: Metadata = {
   alternates: {
@@ -32,7 +34,7 @@ async function FavoriteRecipes() {
           <h2 className="text-2xl md:text-3xl mb-0">Receitas Favoritas</h2>
           <Link
             href="/receitas"
-            className="text-primary font-medium hover:underline"
+            className="text-secondary font-medium hover:underline"
           >
             Ver mais
           </Link>
@@ -66,13 +68,51 @@ async function PopularCategories() {
           <h2 className="text-2xl md:text-3xl mb-0">Categorias Populares</h2>
           <Link
             href="/categorias"
-            className="text-primary font-medium hover:underline"
+            className="text-secondary font-medium hover:underline"
           >
             Ver todas
           </Link>
         </div>
 
         <CategoriesList displayStyle="featured" limit={6} />
+      </section>
+    );
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function FeaturedEbooks() {
+  try {
+    const { allEbooks } = await getAllEbooks();
+
+    // Choice Overload: máximo 3 e-books em destaque na home
+    const featuredEbooks = allEbooks.slice(0, 3);
+
+    if (!featuredEbooks.length) {
+      return null;
+    }
+
+    return (
+      <section className="mb-xl">
+        <div className="flex justify-between items-center mb-md">
+          <h2 className="text-2xl md:text-3xl mb-0">E-books da Lets</h2>
+          <Link
+            href="/ebooks"
+            className="text-secondary font-medium hover:underline"
+          >
+            Ver todos
+          </Link>
+        </div>
+        <p className="mb-lg">
+          Coleções exclusivas de receitas para você dominar a cozinha.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+          {featuredEbooks.map((ebook) => (
+            <EbookCard key={ebook.documentId} ebook={ebook} />
+          ))}
+        </div>
       </section>
     );
   } catch (error) {
@@ -121,7 +161,7 @@ async function MostVisitedRecipes() {
           <h2 className="text-2xl md:text-3xl mb-0">Receitas Populares</h2>
           <Link
             href="/receitas"
-            className="text-primary font-medium hover:underline"
+            className="text-secondary font-medium hover:underline"
           >
             Ver mais
           </Link>
@@ -163,6 +203,10 @@ export default async function Home() {
 
       <React.Suspense fallback={<Loading />}>
         <PopularCategories />
+      </React.Suspense>
+
+      <React.Suspense fallback={<Loading />}>
+        <FeaturedEbooks />
       </React.Suspense>
 
       <React.Suspense fallback={<Loading />}>

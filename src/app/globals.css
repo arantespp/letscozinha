@@ -23,7 +23,7 @@
   --color-text-muted: #9ca3af;
   --color-text-success: #059669;
   --color-text-error: #dc2626;
-  --color-text-warning: #eab308;
+  --color-text-warning: #d97706;
 
   --spacing-none: 0;
   --spacing-xs: 0.25rem;
@@ -102,8 +102,10 @@
     @apply mb-xs;
   }
 
+  /* Hover usa secondary (vermelho) em vez de primary (amarelo):
+     amarelo sobre branco não atinge contraste mínimo legível (WCAG) */
   a {
-    @apply hover:text-primary;
+    @apply hover:text-secondary;
     @apply underline;
   }
 

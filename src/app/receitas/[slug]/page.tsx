@@ -185,6 +185,16 @@ export default async function Page(props: Props) {
               instagram_posts={recipe.instagram_posts}
               slug={recipe.slug}
             />
+
+            {/* Jump to recipe - padrão conhecido de sites de receitas (Jakob's Law) */}
+            {!isExclusiveRecipe && images.length > 0 && (
+              <a
+                href="#receita"
+                className="inline-flex items-center min-h-[44px] text-secondary font-medium"
+              >
+                Ir para a receita
+              </a>
+            )}
           </div>
         </Content.Section>
 
@@ -197,6 +207,8 @@ export default async function Page(props: Props) {
 
         {/* Receita (Ingredientes + Modo de Preparo) - Conteúdo principal sem distrações */}
         <Content.Section variant="content">
+          {/* Âncora do link "Ir para a receita"; scroll-mt compensa headers fixos */}
+          <span id="receita" className="block scroll-mt-[80px]" />
           {isExclusiveRecipe && recipe.mostrar_ebook ? (
             <ExclusiveRecipePreview
               instructions={exclusiveInstructions}
