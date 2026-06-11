@@ -1,5 +1,5 @@
 import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
-import { MeiliSearch } from 'meilisearch';
+import { Meilisearch as MeiliSearch } from 'meilisearch';
 import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type {
@@ -270,30 +270,21 @@ export const searchRecipes = async (args: {
 
 export const searchSimilarRecipes = unstable_cache(
   async ({ recipe }: { recipe: Recipe }) => {
-    // Check if MeiliSearch is available
     if (!meiliRecipesIndex) {
-      console.warn(
-        'MeiliSearch is not configured. Similar recipes functionality is disabled.'
-      );
       return [];
     }
 
-    try {
-      const id = `lets-cozinha-receita-${recipe.id}`;
+    const id = `lets-cozinha-receita-${recipe.documentId}`;
 
-      const similars = await meiliRecipesIndex.searchSimilarDocuments({
-        id,
-        limit: 3,
-        embedder: 'lets-cozinha-receita-openai-embedder',
-      });
+    const similars = await meiliRecipesIndex.searchSimilarDocuments({
+      id,
+      limit: 3,
+      embedder: 'lets-cozinha-receita-openai-embedder',
+    });
 
-      const data = await getRecipesFromMeiliHits(similars.hits);
+    const data = await getRecipesFromMeiliHits(similars.hits);
 
-      return data;
-    } catch (err) {
-      console.error(err);
-      return [];
-    }
+    return data;
   },
   ['searchSimilarRecipes'],
   {
@@ -308,33 +299,21 @@ const meiliEbookIndex = meiliClient
 export const getRecommendedEbook = unstable_cache(
   async (recipe: Recipe): Promise<Ebook | null> => {
     if (!meiliEbookIndex) {
-      console.warn(
-        'MeiliSearch is not configured. Recommended eBook functionality is disabled.'
-      );
       return null;
     }
 
-    try {
-      // await meiliEbookIndex.updateSettings({
-      //   filterableAttributes: ['checkout_url'],
-      // });
+    const searchResults = await meiliEbookIndex.search(recipe.nome, {
+      limit: 1,
+      filter: 'NOT checkout_url IS NULL AND NOT checkout_url IS EMPTY',
+      hybrid: {
+        semanticRatio: 0.9,
+        embedder: 'lets-cozinha-ebook-openai-embedder',
+      },
+      showRankingScore: true,
+    });
 
-      const searchResults = await meiliEbookIndex.search(recipe.nome, {
-        limit: 1,
-        filter: 'NOT checkout_url IS NULL AND NOT checkout_url IS EMPTY',
-        hybrid: {
-          semanticRatio: 0.9,
-          embedder: 'lets-cozinha-ebook-openai-embedder',
-        },
-        showRankingScore: true,
-      });
-
-      const data = searchResults.hits;
-      return data[0] || null;
-    } catch (error) {
-      console.error('MeiliSearch error:', error);
-      return null;
-    }
+    const data = searchResults.hits;
+    return data[0] || null;
   },
   ['getRecommendedEbook'],
   {
