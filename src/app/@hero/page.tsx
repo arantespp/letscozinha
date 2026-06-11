@@ -33,7 +33,7 @@ async function HomeHero() {
 
     return (
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="container mx-auto py-xl">
+        <div className="container mx-auto py-lg md:py-xl">
           <div className="grid md:grid-cols-2 gap-lg md:gap-xl items-center">
             {/* Conteúdo Principal - Lado Esquerdo */}
             <div className="flex flex-col gap-lg">
@@ -69,10 +69,10 @@ async function HomeHero() {
                 )}
               </div>
 
-              {/* CTA Único - Fitts's Law (44px+), Cognitive Load (uma ação) */}
+              {/* CTA Único - Fitts's Law (44px+, largura total no mobile) */}
               <LinkButton
                 href={`/ebooks/${featuredEbook.slug}`}
-                className="font-semibold text-lg px-xl py-md min-h-[44px] self-start shadow-lg"
+                className="font-semibold text-lg px-xl py-md min-h-[44px] w-full sm:w-auto sm:self-start shadow-lg"
               >
                 Conhecer o E-book
               </LinkButton>
@@ -80,14 +80,14 @@ async function HomeHero() {
 
             {/* Imagem do E-book - Lado Direito */}
             <div className="relative flex justify-center md:justify-end">
-              <div className="relative w-full max-w-[300px] md:max-w-[400px]">
+              <div className="relative w-full max-w-[260px] md:max-w-[400px]">
                 {featuredEbook.imagem?.url ? (
                   <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
                     <Image
                       src={featuredEbook.imagem.url}
                       alt={featuredEbook.titulo}
                       fill
-                      sizes="(max-width: 768px) 300px, 400px"
+                      sizes="(max-width: 768px) 260px, 400px"
                       style={{ objectFit: 'cover' }}
                       priority
                     />

@@ -29,7 +29,7 @@ async function FavoriteRecipes() {
     const recipes = letsCozinha.receitas_favoritas;
 
     return (
-      <section className="mb-xl">
+      <section>
         <div className="flex justify-between items-center mb-md">
           <h2 className="text-2xl md:text-3xl mb-0">Receitas Favoritas</h2>
           <Link
@@ -44,7 +44,12 @@ async function FavoriteRecipes() {
           <Link href="/conheca-a-lets">Lets</Link>. Experimente fazer você
           também!
         </p>
-        <RecipesList addCarouselSchema recipes={recipes} firstRecipePriority />
+        <RecipesList
+          addCarouselSchema
+          recipes={recipes}
+          firstRecipePriority
+          variant="compact"
+        />
       </section>
     );
   } catch (error) {
@@ -63,7 +68,7 @@ async function PopularCategories() {
     }
 
     return (
-      <section className="mb-xl">
+      <section>
         <div className="flex justify-between items-center mb-md">
           <h2 className="text-2xl md:text-3xl mb-0">Categorias Populares</h2>
           <Link
@@ -95,7 +100,7 @@ async function FeaturedEbooks() {
     }
 
     return (
-      <section className="mb-xl">
+      <section>
         <div className="flex justify-between items-center mb-md">
           <h2 className="text-2xl md:text-3xl mb-0">E-books da Lets</h2>
           <Link
@@ -108,9 +113,16 @@ async function FeaturedEbooks() {
         <p className="mb-lg">
           Coleções exclusivas de receitas para você dominar a cozinha.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+        {/* Mobile: carrossel horizontal com scroll-snap sangrando até a borda
+            da tela (-mx-5 compensa o padding do container); desktop: grid */}
+        <div className="flex gap-md overflow-x-auto snap-x snap-mandatory -mx-5 px-5 pb-sm lg:mx-0 lg:px-0 lg:pb-0 lg:grid lg:grid-cols-3 lg:overflow-visible">
           {featuredEbooks.map((ebook) => (
-            <EbookCard key={ebook.documentId} ebook={ebook} />
+            <div
+              key={ebook.documentId}
+              className="w-[75%] sm:w-[45%] shrink-0 snap-start lg:w-auto lg:shrink"
+            >
+              <EbookCard ebook={ebook} />
+            </div>
           ))}
         </div>
       </section>
@@ -156,7 +168,7 @@ async function MostVisitedRecipes() {
     }
 
     return (
-      <section className="mb-xl">
+      <section>
         <div className="flex justify-between items-center mb-md">
           <h2 className="text-2xl md:text-3xl mb-0">Receitas Populares</h2>
           <Link
@@ -170,7 +182,7 @@ async function MostVisitedRecipes() {
           Confira as receitas mais acessadas nos últimos dias. Experimente fazer
           você também!
         </p>
-        <RecipesList recipes={mostVisitedRecipes} />
+        <RecipesList recipes={mostVisitedRecipes} variant="compact" />
       </section>
     );
   } catch (error) {
@@ -190,7 +202,7 @@ export default async function Home() {
   };
 
   return (
-    <div className="flex flex-col gap-xl flex-1">
+    <div className="flex flex-col gap-lg md:gap-xl flex-1">
       <JsonLd schema={websiteSchema} />
 
       <React.Suspense fallback={<Loading />}>
