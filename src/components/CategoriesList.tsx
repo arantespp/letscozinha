@@ -13,7 +13,12 @@ export async function CategoriesList({
   displayStyle?: 'default' | 'grid' | 'featured';
   limit?: number;
 }) {
-  const { allCategories } = await getAllCategories();
+  let allCategories;
+  try {
+    ({ allCategories } = await getAllCategories());
+  } catch {
+    return null;
+  }
 
   const allCategoriesThatHaveRecipes = (
     await Promise.all(
