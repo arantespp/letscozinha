@@ -144,10 +144,12 @@ const getFullRecipesPage = unstable_cache(
       sort: ['createdAt:asc'],
     });
 
-    // no-store: o unstable_cache é a única camada de cache desta busca
+    // force-cache (default do cmsFetch), como em getAllEbooks: fetch com
+    // no-store dentro de unstable_cache marca a rota como dinâmica e quebra
+    // a geração estática das páginas de receita
     return cmsFetch<CMSRecipesResponse>(
       `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
-      { cache: 'no-store' }
+      { next: { tags: [CMS_RECIPES_TAG] } }
     );
   },
   ['getFullRecipesPage'],
