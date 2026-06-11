@@ -1,5 +1,5 @@
 import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
-import { MeiliSearch } from 'meilisearch';
+import { Meilisearch as MeiliSearch } from 'meilisearch';
 import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type {
