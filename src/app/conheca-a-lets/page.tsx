@@ -22,6 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description: letsCozinhaLets.resumo,
+    alternates: {
+      canonical: getUrl('/conheca-a-lets'),
+    },
     openGraph: {
       title,
       description: letsCozinhaLets.resumo,

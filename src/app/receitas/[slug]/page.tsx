@@ -7,7 +7,7 @@ import {
   type Recipe,
   getRecommendedEbook,
   getRecipe,
-  getAllSimplifiedRecipes,
+  getAllRecipes,
   searchSimilarRecipes,
 } from 'src/cms/recipes';
 import { RecipeImages } from 'src/components/RecipeImages';
@@ -31,9 +31,12 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const { allSimplifiedRecipes } = await getAllSimplifiedRecipes();
+  // getAllRecipes (em vez de getAllSimplifiedRecipes) aquece o cache de
+  // receitas completas antes dos workers renderizarem as páginas, evitando
+  // que as primeiras páginas paguem o warm-up e estourem o timeout
+  const { allRecipes } = await getAllRecipes();
 
-  return allSimplifiedRecipes.map((recipe) => ({
+  return allRecipes.map((recipe) => ({
     slug: recipe.slug,
   }));
 }
@@ -58,6 +61,9 @@ export async function generateMetadata(
     title,
     description: recipe.meta_descricao,
     keywords: recipe.keywords,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title,
       description: recipe.meta_descricao,
@@ -185,6 +191,16 @@ export default async function Page(props: Props) {
               instagram_posts={recipe.instagram_posts}
               slug={recipe.slug}
             />
+
+            {/* Jump to recipe - padrão conhecido de sites de receitas (Jakob's Law) */}
+            {!isExclusiveRecipe && images.length > 0 && (
+              <a
+                href="#receita"
+                className="inline-flex items-center min-h-[44px] text-secondary font-medium"
+              >
+                Ir para a receita
+              </a>
+            )}
           </div>
         </Content.Section>
 
@@ -197,6 +213,8 @@ export default async function Page(props: Props) {
 
         {/* Receita (Ingredientes + Modo de Preparo) - Conteúdo principal sem distrações */}
         <Content.Section variant="content">
+          {/* Âncora do link "Ir para a receita"; scroll-mt compensa headers fixos */}
+          <span id="receita" className="block scroll-mt-[80px]" />
           {isExclusiveRecipe && recipe.mostrar_ebook ? (
             <ExclusiveRecipePreview
               instructions={exclusiveInstructions}

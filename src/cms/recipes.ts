@@ -1,5 +1,6 @@
-import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
+import { API_MAX_LIMIT, CMS_URL, cmsFetch } from './config';
 import { Meilisearch as MeiliSearch } from 'meilisearch';
+import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type {
@@ -19,6 +20,24 @@ export const RECIPES_POPULATE = [
   // 'mostrar_ebook',
   'mostrar_ebook.imagem',
 ];
+
+/**
+ * Perfil "card": campos e relações mínimos para renderizar RecipeCard,
+ * feeds e og-images de listas. Exclui o markdown completo da receita
+ * (campo mais pesado) e relações usadas apenas na página de detalhe.
+ */
+export const RECIPE_CARD_FIELDS = [
+  'nome',
+  'slug',
+  'meta_descricao',
+  'createdAt',
+  'updatedAt',
+];
+
+export const RECIPE_CARD_POPULATE = ['categorias', 'imagens'];
+
+/** Tag para purgar os caches de receitas via revalidateTag (/api/revalidate) */
+export const CMS_RECIPES_TAG = 'cms-recipes';
 
 export type RecipeAttributes = {
   nome: string;
@@ -45,6 +64,13 @@ export type CMSRecipesResponse = CMSDataArrayResponse<RecipeAttributes>;
 
 export type Recipe = CMSData<RecipeAttributes>;
 
+/**
+ * Busca receitas para contextos de LISTA (cards, feeds, og-images).
+ *
+ * Retorna apenas o perfil "card" (RECIPE_CARD_FIELDS/POPULATE): os objetos
+ * NÃO incluem `receita`, `instagram_posts` nem `mostrar_ebook`. Para a
+ * receita completa use `getRecipe`/`getAllRecipes`.
+ */
 export const getRecipes = async (args: {
   documentIds?: string[];
   slugs?: string[];
@@ -89,30 +115,90 @@ export const getRecipes = async (args: {
         pageSize: args.pagination?.pageSize || RECIPES_PAGE_SIZE,
       },
       filters,
-      populate: RECIPES_POPULATE,
+      fields: RECIPE_CARD_FIELDS,
+      populate: RECIPE_CARD_POPULATE,
     })}`;
   })();
 
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${CMS_TOKEN}`,
-    },
-    cache: 'force-cache',
-  }).then((res) => res.json() as Promise<CMSRecipesResponse>);
+  const response = await cmsFetch<CMSRecipesResponse>(url);
 
   return response;
 };
 
+/**
+ * Páginas de 50 receitas COMPLETAS (com markdown) cacheadas individualmente.
+ *
+ * pageSize 50 mantém cada entrada abaixo do limite de ~2MB do data cache.
+ * Sort por createdAt:asc evita que itens mudem de página entre requisições.
+ * revalidate de 1h garante atualização mesmo sem revalidateTag; o webhook
+ * do CMS pode purgar imediatamente via /api/revalidate com CMS_RECIPES_TAG.
+ */
+const getFullRecipesPage = unstable_cache(
+  async (page: number) => {
+    const query = qs.stringify({
+      pagination: {
+        page,
+        pageSize: 50,
+      },
+      populate: RECIPES_POPULATE,
+      sort: ['createdAt:asc'],
+    });
+
+    // force-cache (default do cmsFetch), como em getAllEbooks: fetch com
+    // no-store dentro de unstable_cache marca a rota como dinâmica e quebra
+    // a geração estática das páginas de receita
+    return cmsFetch<CMSRecipesResponse>(
+      `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
+      { next: { tags: [CMS_RECIPES_TAG] } }
+    );
+  },
+  ['getFullRecipesPage'],
+  {
+    revalidate: 3600,
+    tags: [CMS_RECIPES_TAG],
+  }
+);
+
+/**
+ * Todas as receitas completas em ~N/50 requisições cacheadas.
+ *
+ * React cache() deduplica chamadas dentro do mesmo render; o unstable_cache
+ * das páginas compartilha o resultado entre páginas e builds. Substitui o
+ * padrão anterior de uma requisição ao CMS por receita durante o build.
+ */
+export const getAllRecipes = cache(async () => {
+  // Página 1 informa o pageCount; as demais são buscadas em paralelo para
+  // não estourar o timeout de geração estática no primeiro warm-up do cache
+  const firstPage = await getFullRecipesPage(1);
+  const pageCount = firstPage.meta?.pagination.pageCount || 1;
+
+  const remainingPages = await Promise.all(
+    Array.from({ length: pageCount - 1 }, (_, index) =>
+      getFullRecipesPage(index + 2)
+    )
+  );
+
+  const allRecipes = [firstPage, ...remainingPages].flatMap(
+    (response) => response.data
+  );
+
+  return { allRecipes };
+});
+
+/**
+ * Receita completa por slug ou documentId, via lookup em memória sobre
+ * getAllRecipes — não dispara uma requisição ao CMS por receita.
+ */
 export const getRecipe = async (
   args: { documentId: string } | { slug: string }
 ) => {
+  const { allRecipes } = await getAllRecipes();
+
   if ('documentId' in args) {
-    const response = getRecipes({ documentIds: [args.documentId] });
-    return (await response).data[0];
+    return allRecipes.find((recipe) => recipe.documentId === args.documentId);
   }
 
-  const response = getRecipes({ slugs: [args.slug] });
-  return (await response).data[0];
+  return allRecipes.find((recipe) => recipe.slug === args.slug);
 };
 
 export const getRecipesWithPagination = async ({
@@ -122,24 +208,20 @@ export const getRecipesWithPagination = async ({
   page?: number | string;
   pageSize?: number;
 }) => {
+  // Perfil "card": consumido apenas por listas (RecipesList)
   const query = qs.stringify({
     pagination: {
       page,
       pageSize,
     },
-    populate: RECIPES_POPULATE,
+    fields: RECIPE_CARD_FIELDS,
+    populate: RECIPE_CARD_POPULATE,
     sort: ['updatedAt:desc'],
   });
 
-  const response = await fetch(
-    `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
-    {
-      headers: {
-        Authorization: `Bearer ${CMS_TOKEN}`,
-      },
-      cache: 'force-cache',
-    }
-  ).then((res) => res.json() as Promise<CMSRecipesResponse>);
+  const response = await cmsFetch<CMSRecipesResponse>(
+    `${CMS_URL}/api/lets-cozinha-receitas?${query}`
+  );
 
   return response;
 };
@@ -164,16 +246,8 @@ export const getAllSimplifiedRecipes = async () => {
       sort: ['updatedAt:desc'],
     });
 
-    const response = await fetch(
-      `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
-      {
-        headers: {
-          Authorization: `Bearer ${CMS_TOKEN}`,
-        },
-        cache: 'force-cache',
-      }
-    ).then(
-      (res) => res.json() as Promise<CMSDataArrayResponse<SimplifiedRecipe>>
+    const response = await cmsFetch<CMSDataArrayResponse<SimplifiedRecipe>>(
+      `${CMS_URL}/api/lets-cozinha-receitas?${query}`
     );
 
     return response;

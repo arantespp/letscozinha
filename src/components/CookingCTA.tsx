@@ -18,16 +18,17 @@ export async function CookingCTA() {
               Explore nossa coleção de receitas deliciosas e transforme sua
               cozinha em um espaço de criatividade e sabor.
             </p>
-            <div className="flex flex-wrap gap-sm justify-center md:justify-start">
+            {/* Botões em coluna no mobile (largura total, toque fácil) */}
+            <div className="flex flex-col sm:flex-row gap-sm justify-center md:justify-start">
               <LinkButton
                 href="/receitas"
-                className="bg-primary hover:bg-primary/80 text-text-dark font-medium transition-colors"
+                className="bg-primary hover:bg-primary/80 text-text-dark font-medium transition-colors min-h-[44px] w-full sm:w-auto"
               >
                 Explorar Receitas
               </LinkButton>
               <LinkButton
                 href="/conheca-a-lets"
-                className="bg-transparent border border-primary text-text-dark hover:bg-primary/10 transition-colors"
+                className="bg-transparent border border-primary text-text-dark hover:bg-primary/10 transition-colors min-h-[44px] w-full sm:w-auto"
               >
                 Sobre a Lets
               </LinkButton>

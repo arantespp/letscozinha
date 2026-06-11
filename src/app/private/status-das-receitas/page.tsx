@@ -1,10 +1,16 @@
 import { LinkIcon } from 'src/icons/icons';
 import { getAllCategories } from 'src/cms/categories';
-import { getAllSimplifiedRecipes, getRecipe } from 'src/cms/recipes';
+import { getAllRecipes } from 'src/cms/recipes';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import Link from 'next/link';
 
-export const revalidate = 1;
+/**
+ * Página privada de administração: renderiza apenas sob demanda.
+ * Não pode ser pré-renderizada no build — ela dispara uma requisição ao CMS
+ * por receita (N+1) e o pico de conexões derruba o deploy com
+ * UND_ERR_CONNECT_TIMEOUT quando o CMS demora a responder.
+ */
+export const dynamic = 'force-dynamic';
 
 const checkIfBadSlug = (slug: string) => {
   return (
@@ -17,15 +23,11 @@ const checkIfBadSlug = (slug: string) => {
 };
 
 export default async function StatusDasReceitas() {
-  const { allSimplifiedRecipes } = await getAllSimplifiedRecipes();
+  const { allRecipes } = await getAllRecipes();
 
   const recipesWithStatus = (
     await Promise.all(
-      allSimplifiedRecipes.map(async (simplifiedRecipe) => {
-        const recipe = await getRecipe({
-          documentId: simplifiedRecipe.documentId,
-        });
-
+      allRecipes.map(async (recipe) => {
         const schema = await getRecipeSchema(recipe);
 
         const noFormatted = (() => {
@@ -102,7 +104,7 @@ export default async function StatusDasReceitas() {
       return a.nome.localeCompare(b.nome);
     });
 
-  const allRecipesCount = allSimplifiedRecipes.length;
+  const allRecipesCount = allRecipes.length;
 
   const incompleteRecipesCount = recipesWithStatus.reduce((acc, recipe) => {
     return acc + (recipe.isComplete ? 0 : 1);
@@ -170,7 +172,8 @@ export default async function StatusDasReceitas() {
     0
   );
 
-  const tableClasses = 'border-separate border-spacing-xs my-lg';
+  const tableClasses =
+    'border-separate border-spacing-xs my-lg block max-w-full overflow-x-auto';
 
   return (
     <div>

@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   description,
   keywords:
     'ebooks, livros de receitas, culinária digital, receitas especiais, técnicas culinárias, livros digitais',
+  alternates: {
+    canonical: getUrl('/ebooks'),
+  },
   openGraph: {
     title,
     description,

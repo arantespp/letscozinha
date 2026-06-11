@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: getPageTitle('Categorias'),
   description: 'Veja todas as categorias disponíveis no Lets Cozinha.',
   keywords: 'categorias, tipos de receitas, categorias de receitas',
+  alternates: {
+    canonical: getUrl('/categorias'),
+  },
   openGraph: {
     url: getUrl('/categorias'),
     type: 'website',

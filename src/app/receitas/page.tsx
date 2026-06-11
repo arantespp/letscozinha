@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   description,
   keywords:
     'todas as receitas, buscar receitas, receitas por ingredientes, receitas rápidas, receitas detalhadas, receitas favoritas',
+  alternates: {
+    canonical: getUrl('/receitas'),
+  },
   openGraph: {
     url: getUrl('/receitas'),
     type: 'website',

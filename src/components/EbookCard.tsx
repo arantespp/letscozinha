@@ -165,7 +165,7 @@ export function EbookCard({
 
           {showPrice && ebook.preco && (
             <div className="flex items-center justify-between mt-2">
-              <span className="text-primary font-bold text-lg">
+              <span className="text-text-strong font-bold text-lg">
                 {formatPrice(ebook.preco)}
               </span>
             </div>

@@ -1,4 +1,4 @@
-import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
+import { API_MAX_LIMIT, CMS_URL, cmsFetch } from './config';
 
 import { unstable_cache } from 'next/cache';
 import qs from 'qs';
@@ -69,16 +69,8 @@ const getAllEbooksWithoutCache = async () => {
       sort: ['preco:desc'], // Ordenar por updatedAt (mais recente primeiro)
     });
 
-    const response = await fetch(
-      `${CMS_URL}/api/lets-cozinha-ebooks?${query}`,
-      {
-        headers: {
-          Authorization: `Bearer ${CMS_TOKEN}`,
-        },
-        cache: 'force-cache',
-      }
-    ).then(
-      (res) => res.json() as Promise<CMSDataArrayResponse<EbookAttributes>>
+    const response = await cmsFetch<CMSDataArrayResponse<EbookAttributes>>(
+      `${CMS_URL}/api/lets-cozinha-ebooks?${query}`
     );
 
     return response;

@@ -18,10 +18,12 @@ export async function CategoriesList({
   const allCategoriesThatHaveRecipes = (
     await Promise.all(
       allCategories.map(async (category) => {
+        // pageSize 1: só o total (meta.pagination.total) é usado aqui
         const { data: recipes, meta } = await getRecipes({
           categoryDocumentId: category.documentId,
           pagination: {
             page: 1,
+            pageSize: 1,
           },
         });
 
