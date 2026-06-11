@@ -18,7 +18,13 @@ function extractKeywordsFromPath(path: string): string {
 }
 
 async function NotFoundRecipes() {
-  const { letsCozinha } = await getLetsCozinha();
+  let letsCozinha;
+  try {
+    ({ letsCozinha } = await getLetsCozinha());
+  } catch {
+    return null;
+  }
+
   const headersList = await headers();
   const pathname = headersList.get('x-pathname') || '';
 
@@ -26,11 +32,15 @@ async function NotFoundRecipes() {
 
   let relatedRecipes: any[] = [];
   if (searchTerm) {
-    const searchResults = await searchRecipes({
-      search: searchTerm,
-      limit: 3,
-    });
-    relatedRecipes = searchResults.data;
+    try {
+      const searchResults = await searchRecipes({
+        search: searchTerm,
+        limit: 3,
+      });
+      relatedRecipes = searchResults.data;
+    } catch {
+      // fall through to favorites
+    }
   }
 
   const recipesToShow =
