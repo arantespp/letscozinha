@@ -8,31 +8,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 async function ShowFeaturedEbook() {
-  try {
-    const { letsCozinha } = await getLetsCozinha();
+  const { letsCozinha } = await getLetsCozinha();
 
-    if (
-      !letsCozinha.ebooks_favoritos ||
-      letsCozinha.ebooks_favoritos.length === 0
-    ) {
-      return null;
-    }
-
-    const featuredEbook = letsCozinha.ebooks_favoritos[0];
-
-    return <EbookCard ebook={featuredEbook} variant="minimal" priority />;
-  } catch {
+  if (
+    !letsCozinha.ebooks_favoritos ||
+    letsCozinha.ebooks_favoritos.length === 0
+  ) {
     return null;
   }
+
+  const featuredEbook = letsCozinha.ebooks_favoritos[0];
+
+  return <EbookCard ebook={featuredEbook} variant="minimal" priority />;
 }
 
 async function WhoIsLets() {
-  let letsCozinhaLets;
-  try {
-    ({ letsCozinhaLets } = await getLetsCozinhaLets());
-  } catch {
-    return null;
-  }
+  const { letsCozinhaLets } = await getLetsCozinhaLets();
 
   const summary = `"${letsCozinhaLets.resumo}"`;
 

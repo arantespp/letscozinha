@@ -13,41 +13,31 @@ export async function CategoriesList({
   displayStyle?: 'default' | 'grid' | 'featured';
   limit?: number;
 }) {
-  let allCategories;
-  try {
-    ({ allCategories } = await getAllCategories());
-  } catch {
-    return null;
-  }
+  const { allCategories } = await getAllCategories();
 
-  let allCategoriesThatHaveRecipes: (Category & { recipeCount: number })[];
-  try {
-    allCategoriesThatHaveRecipes = (
-      await Promise.all(
-        allCategories.map(async (category) => {
-          const { data: recipes, meta } = await getRecipes({
-            categoryDocumentId: category.documentId,
-            pagination: {
-              page: 1,
-            },
-          });
+  const allCategoriesThatHaveRecipes = (
+    await Promise.all(
+      allCategories.map(async (category) => {
+        const { data: recipes, meta } = await getRecipes({
+          categoryDocumentId: category.documentId,
+          pagination: {
+            page: 1,
+          },
+        });
 
-          if (recipes.length > 0) {
-            return {
-              ...category,
-              recipeCount: meta?.pagination.total || recipes.length,
-            };
-          }
+        if (recipes.length > 0) {
+          return {
+            ...category,
+            recipeCount: meta?.pagination.total || recipes.length,
+          };
+        }
 
-          return null;
-        })
-      )
-    ).filter((category): category is Category & { recipeCount: number } => {
-      return !!category;
-    });
-  } catch {
-    return null;
-  }
+        return null;
+      })
+    )
+  ).filter((category): category is Category & { recipeCount: number } => {
+    return !!category;
+  });
 
   if (displayStyle === 'grid') {
     const categoriesToShow = limit
