@@ -1,6 +1,16 @@
 import * as React from 'react';
-import { BASE_URL, FB_APP_ID } from 'src/constants';
+import {
+  BASE_URL,
+  FACEBOOK_USERNAME,
+  FB_APP_ID,
+  INSTAGRAM_USERNAME,
+  PINTEREST_USERNAME,
+  TIKTOK_USERNAME,
+  WEBSITE_NAME,
+} from 'src/constants';
 import { Footer } from 'src/components/Footer';
+import { JsonLd } from 'src/components/JsonLd';
+import type { Organization } from 'schema-dts';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Header } from 'src/components/Header';
 import { Lora, Playfair_Display } from 'next/font/google';
@@ -31,6 +41,7 @@ export const metadata: Metadata = {
   /**
    * https://developers.google.com/search/docs/appearance/title-link
    */
+  metadataBase: new URL(BASE_URL),
   title: getPageTitle('Receitas deliciosas para todas as ocasiões'),
   description:
     'Descubra todos os tipos de receitas. Encontre pratos deliciosos para todas as ocasiões, desde sobremesas até refeições completas.',
@@ -40,7 +51,12 @@ export const metadata: Metadata = {
     url: BASE_URL,
     siteName: getWebsiteName(),
     type: 'website',
+    locale: 'pt_BR',
     images: ['https://www.letscozinha.com.br/opengraph-image.jpg'],
+  },
+  // Herdado por todas as páginas; imagens caem nas do openGraph
+  twitter: {
+    card: 'summary_large_image',
   },
   alternates: {
     types: {
@@ -59,6 +75,22 @@ export const viewport: Viewport = {
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+/**
+ * https://developers.google.com/search/docs/appearance/structured-data/organization
+ */
+const organizationSchema: Organization = {
+  '@type': 'Organization',
+  name: WEBSITE_NAME,
+  url: BASE_URL,
+  logo: `${BASE_URL}/logo.png`,
+  sameAs: [
+    `https://www.facebook.com/${FACEBOOK_USERNAME}`,
+    `https://www.instagram.com/${INSTAGRAM_USERNAME}`,
+    `https://www.tiktok.com/${TIKTOK_USERNAME}`,
+    `https://br.pinterest.com/${PINTEREST_USERNAME}`,
+  ],
+};
+
 export default function RootLayout({
   children,
   hero,
@@ -74,6 +106,7 @@ export default function RootLayout({
       className={`${playfairDisplay.variable} ${lora.variable}`}
     >
       <body>
+        <JsonLd schema={organizationSchema} />
         <Header />
         <main className="pb-xl md:pb-2xl">
           <React.Suspense fallback={<div className="h-[200px]"></div>}>

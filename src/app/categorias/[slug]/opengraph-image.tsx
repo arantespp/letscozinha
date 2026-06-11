@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { OgTitleBar } from 'src/components/OgTitleBar';
 import { getCategory } from 'src/cms/categories';
 import { getFontData } from 'src/methods/getFontData';
 import { getRecipes } from 'src/cms/recipes';
@@ -56,12 +57,14 @@ export default async function OpenGraphImage({
 
   if (category?.imagens) {
     const imageUrl = category?.imagens?.[id]?.url;
+    const fontData = await getFontData();
 
     return new ImageResponse(
       (
         <div
           style={{
             display: 'flex',
+            position: 'relative',
             width: '100%',
             height: '100%',
             backgroundColor: 'white',
@@ -70,15 +73,23 @@ export default async function OpenGraphImage({
           <img
             src={imageUrl}
             style={{
-              objectFit: 'contain',
+              objectFit: 'cover',
               width: '100%',
               height: '100%',
             }}
           />
+          <OgTitleBar title={category?.nome} />
         </div>
       ),
       {
         ...size,
+        fonts: [
+          {
+            name: 'PlayFair Display',
+            data: fontData,
+            style: 'normal',
+          },
+        ],
       }
     );
   }
@@ -96,13 +107,14 @@ export default async function OpenGraphImage({
       .slice(0, 4);
 
     if (recipeImages.length > 0) {
-      const objectFit = recipeImages.length === 1 ? 'contain' : 'cover';
+      const fontData = await getFontData();
 
       return new ImageResponse(
         (
           <div
             style={{
               display: 'flex',
+              position: 'relative',
               width: '100%',
               height: '100%',
               backgroundColor: 'white',
@@ -113,16 +125,24 @@ export default async function OpenGraphImage({
                 key={idx}
                 src={imageUrl}
                 style={{
-                  objectFit,
+                  objectFit: 'cover',
                   height: size.height,
                   width: size.width / recipeImages.length,
                 }}
               />
             ))}
+            <OgTitleBar title={category?.nome} />
           </div>
         ),
         {
           ...size,
+          fonts: [
+            {
+              name: 'PlayFair Display',
+              data: fontData,
+              style: 'normal',
+            },
+          ],
         }
       );
     }

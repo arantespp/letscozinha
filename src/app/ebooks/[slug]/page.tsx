@@ -41,6 +41,9 @@ export async function generateMetadata(
     title,
     description: ebook.meta_descricao,
     keywords: ebook.keywords,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title,
       description: ebook.meta_descricao,

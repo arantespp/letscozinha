@@ -61,6 +61,9 @@ export async function generateMetadata(
     title,
     description: recipe.meta_descricao,
     keywords: recipe.keywords,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title,
       description: recipe.meta_descricao,
