@@ -279,7 +279,7 @@ export const searchSimilarRecipes = unstable_cache(
     }
 
     try {
-      const id = `lets-cozinha-receita-${recipe.id}`;
+      const id = `lets-cozinha-receita-${recipe.documentId}`;
 
       const similars = await meiliRecipesIndex.searchSimilarDocuments({
         id,
