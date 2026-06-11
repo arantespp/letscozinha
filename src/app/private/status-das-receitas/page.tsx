@@ -172,7 +172,8 @@ export default async function StatusDasReceitas() {
     0
   );
 
-  const tableClasses = 'border-separate border-spacing-xs my-lg';
+  const tableClasses =
+    'border-separate border-spacing-xs my-lg block max-w-full overflow-x-auto';
 
   return (
     <div>

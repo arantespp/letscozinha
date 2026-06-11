@@ -62,6 +62,13 @@
 }
 
 @layer base {
+  html {
+    /* Impede scroll horizontal no mobile causado por conteúdo mais largo
+       que o viewport. `clip` (e não `hidden`) não cria scroll container,
+       então position: sticky/fixed continuam funcionando */
+    overflow-x: clip;
+  }
+
   body {
     @apply font-body;
     @apply bg-neutral;
