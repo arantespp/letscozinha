@@ -1,4 +1,8 @@
-import { type Recipe, RECIPES_POPULATE } from './recipes';
+import {
+  type Recipe,
+  RECIPE_CARD_FIELDS,
+  RECIPE_CARD_POPULATE,
+} from './recipes';
 import { CMS_URL, cmsFetch } from './config';
 import qs from 'qs';
 import type { CMSImage, CMSSingleDataResponse } from './types';
@@ -16,8 +20,10 @@ type LetsCozinhaCMSResponse = CMSSingleDataResponse<{
 export const getLetsCozinha = async () => {
   const query = qs.stringify({
     populate: {
+      // Favoritas são renderizadas como cards na home: perfil "card" basta
       receitas_favoritas: {
-        populate: RECIPES_POPULATE,
+        fields: RECIPE_CARD_FIELDS,
+        populate: RECIPE_CARD_POPULATE,
       },
       ebooks_favoritos: {
         populate: EBOOK_POPULATE,

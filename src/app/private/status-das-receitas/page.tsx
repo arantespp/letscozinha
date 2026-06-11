@@ -1,11 +1,6 @@
 import { LinkIcon } from 'src/icons/icons';
 import { getAllCategories } from 'src/cms/categories';
-import {
-  getAllSimplifiedRecipes,
-  getRecipes,
-  type Recipe,
-} from 'src/cms/recipes';
-import { API_MAX_LIMIT } from 'src/cms/config';
+import { getAllRecipes } from 'src/cms/recipes';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import Link from 'next/link';
 
@@ -28,21 +23,7 @@ const checkIfBadSlug = (slug: string) => {
 };
 
 export default async function StatusDasReceitas() {
-  const { allSimplifiedRecipes } = await getAllSimplifiedRecipes();
-
-  // Busca em lotes via filtro $in (N/100 requisições) em vez de uma
-  // requisição por receita: o N+1 anterior abria centenas de conexões
-  // simultâneas com o CMS e causava UND_ERR_CONNECT_TIMEOUT
-  const allRecipes: Recipe[] = [];
-
-  for (let i = 0; i < allSimplifiedRecipes.length; i += API_MAX_LIMIT) {
-    const chunk = allSimplifiedRecipes.slice(i, i + API_MAX_LIMIT);
-    const response = await getRecipes({
-      documentIds: chunk.map((recipe) => recipe.documentId),
-      pagination: { pageSize: API_MAX_LIMIT },
-    });
-    allRecipes.push(...response.data);
-  }
+  const { allRecipes } = await getAllRecipes();
 
   const recipesWithStatus = (
     await Promise.all(
@@ -123,7 +104,7 @@ export default async function StatusDasReceitas() {
       return a.nome.localeCompare(b.nome);
     });
 
-  const allRecipesCount = allSimplifiedRecipes.length;
+  const allRecipesCount = allRecipes.length;
 
   const incompleteRecipesCount = recipesWithStatus.reduce((acc, recipe) => {
     return acc + (recipe.isComplete ? 0 : 1);

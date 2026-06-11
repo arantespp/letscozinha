@@ -1,5 +1,6 @@
 import { API_MAX_LIMIT, CMS_URL, cmsFetch } from './config';
 import { Meilisearch as MeiliSearch } from 'meilisearch';
+import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type {
@@ -19,6 +20,24 @@ export const RECIPES_POPULATE = [
   // 'mostrar_ebook',
   'mostrar_ebook.imagem',
 ];
+
+/**
+ * Perfil "card": campos e relações mínimos para renderizar RecipeCard,
+ * feeds e og-images de listas. Exclui o markdown completo da receita
+ * (campo mais pesado) e relações usadas apenas na página de detalhe.
+ */
+export const RECIPE_CARD_FIELDS = [
+  'nome',
+  'slug',
+  'meta_descricao',
+  'createdAt',
+  'updatedAt',
+];
+
+export const RECIPE_CARD_POPULATE = ['categorias', 'imagens'];
+
+/** Tag para purgar os caches de receitas via revalidateTag (/api/revalidate) */
+export const CMS_RECIPES_TAG = 'cms-recipes';
 
 export type RecipeAttributes = {
   nome: string;
@@ -45,6 +64,13 @@ export type CMSRecipesResponse = CMSDataArrayResponse<RecipeAttributes>;
 
 export type Recipe = CMSData<RecipeAttributes>;
 
+/**
+ * Busca receitas para contextos de LISTA (cards, feeds, og-images).
+ *
+ * Retorna apenas o perfil "card" (RECIPE_CARD_FIELDS/POPULATE): os objetos
+ * NÃO incluem `receita`, `instagram_posts` nem `mostrar_ebook`. Para a
+ * receita completa use `getRecipe`/`getAllRecipes`.
+ */
 export const getRecipes = async (args: {
   documentIds?: string[];
   slugs?: string[];
@@ -89,7 +115,8 @@ export const getRecipes = async (args: {
         pageSize: args.pagination?.pageSize || RECIPES_PAGE_SIZE,
       },
       filters,
-      populate: RECIPES_POPULATE,
+      fields: RECIPE_CARD_FIELDS,
+      populate: RECIPE_CARD_POPULATE,
     })}`;
   })();
 
@@ -98,23 +125,74 @@ export const getRecipes = async (args: {
   return response;
 };
 
+/**
+ * Páginas de 50 receitas COMPLETAS (com markdown) cacheadas individualmente.
+ *
+ * pageSize 50 mantém cada entrada abaixo do limite de ~2MB do data cache.
+ * Sort por createdAt:asc evita que itens mudem de página entre requisições.
+ * revalidate de 1h garante atualização mesmo sem revalidateTag; o webhook
+ * do CMS pode purgar imediatamente via /api/revalidate com CMS_RECIPES_TAG.
+ */
+const getFullRecipesPage = unstable_cache(
+  async (page: number) => {
+    const query = qs.stringify({
+      pagination: {
+        page,
+        pageSize: 50,
+      },
+      populate: RECIPES_POPULATE,
+      sort: ['createdAt:asc'],
+    });
+
+    // no-store: o unstable_cache é a única camada de cache desta busca
+    return cmsFetch<CMSRecipesResponse>(
+      `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
+      { cache: 'no-store' }
+    );
+  },
+  ['getFullRecipesPage'],
+  {
+    revalidate: 3600,
+    tags: [CMS_RECIPES_TAG],
+  }
+);
+
+/**
+ * Todas as receitas completas em ~N/50 requisições cacheadas.
+ *
+ * React cache() deduplica chamadas dentro do mesmo render; o unstable_cache
+ * das páginas compartilha o resultado entre páginas e builds. Substitui o
+ * padrão anterior de uma requisição ao CMS por receita durante o build.
+ */
+export const getAllRecipes = cache(async () => {
+  const allRecipes: Recipe[] = [];
+  let page = 1;
+  let pageCount = 1;
+
+  do {
+    const response = await getFullRecipesPage(page);
+    allRecipes.push(...response.data);
+    pageCount = response.meta?.pagination.pageCount || 1;
+    page++;
+  } while (page <= pageCount);
+
+  return { allRecipes };
+});
+
+/**
+ * Receita completa por slug ou documentId, via lookup em memória sobre
+ * getAllRecipes — não dispara uma requisição ao CMS por receita.
+ */
 export const getRecipe = async (
   args: { documentId: string } | { slug: string }
 ) => {
-  // pageSize 1: busca de um único registro não precisa pedir uma página de 10
+  const { allRecipes } = await getAllRecipes();
+
   if ('documentId' in args) {
-    const response = getRecipes({
-      documentIds: [args.documentId],
-      pagination: { pageSize: 1 },
-    });
-    return (await response).data[0];
+    return allRecipes.find((recipe) => recipe.documentId === args.documentId);
   }
 
-  const response = getRecipes({
-    slugs: [args.slug],
-    pagination: { pageSize: 1 },
-  });
-  return (await response).data[0];
+  return allRecipes.find((recipe) => recipe.slug === args.slug);
 };
 
 export const getRecipesWithPagination = async ({
@@ -124,12 +202,14 @@ export const getRecipesWithPagination = async ({
   page?: number | string;
   pageSize?: number;
 }) => {
+  // Perfil "card": consumido apenas por listas (RecipesList)
   const query = qs.stringify({
     pagination: {
       page,
       pageSize,
     },
-    populate: RECIPES_POPULATE,
+    fields: RECIPE_CARD_FIELDS,
+    populate: RECIPE_CARD_POPULATE,
     sort: ['updatedAt:desc'],
   });
 
