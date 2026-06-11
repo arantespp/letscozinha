@@ -2,6 +2,9 @@ import bundleAnalyzer from '@next/bundle-analyzer';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    staticGenerationMaxConcurrency: 4,
+  },
   images: {
     unoptimized: true, // Disable Next.js image optimization
     minimumCacheTTL: 31536000, // 1 year
