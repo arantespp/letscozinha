@@ -1,4 +1,4 @@
-import { CMS_TOKEN, CMS_URL } from './config';
+import { CMS_URL, cmsFetch } from './config';
 import { RECIPES_POPULATE, Recipe } from './recipes';
 
 import qs from 'qs';
@@ -23,14 +23,11 @@ export const getPosters = async ({ limit = 20 }: { limit: number }) => {
     sort: ['createdAt:desc'],
   });
 
-  const response: CMSPostersResponse = await fetch(
+  // Sem cache: o fetch original não usava force-cache (dados sempre frescos)
+  const response = await cmsFetch<CMSPostersResponse>(
     `${CMS_URL}/api/lets-cozinha-posters?${query}`,
-    {
-      headers: {
-        Authorization: `Bearer ${CMS_TOKEN}`,
-      },
-    }
-  ).then((res) => res.json());
+    { cache: 'no-store' }
+  );
 
   return { posters: response.data };
 };

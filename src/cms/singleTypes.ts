@@ -1,5 +1,5 @@
 import { type Recipe, RECIPES_POPULATE } from './recipes';
-import { CMS_TOKEN, CMS_URL } from './config';
+import { CMS_URL, cmsFetch } from './config';
 import qs from 'qs';
 import type { CMSImage, CMSSingleDataResponse } from './types';
 import { EBOOK_POPULATE, type Ebook, ebookQueryFilters } from './ebooks';
@@ -30,15 +30,9 @@ export const getLetsCozinha = async () => {
     },
   });
 
-  const response: LetsCozinhaCMSResponse = await fetch(
-    `${CMS_URL}/api/lets-cozinha?${query}`,
-    {
-      headers: {
-        Authorization: `Bearer ${CMS_TOKEN}`,
-      },
-      cache: 'force-cache',
-    }
-  ).then((res) => res.json());
+  const response = await cmsFetch<LetsCozinhaCMSResponse>(
+    `${CMS_URL}/api/lets-cozinha?${query}`
+  );
 
   return { letsCozinha: response.data };
 };
@@ -55,15 +49,9 @@ export const getLetsCozinhaLets = async () => {
     populate: ['imagem'],
   });
 
-  const response: LetsCozinhaLetsCMSResponse = await fetch(
-    `${CMS_URL}/api/lets-cozinha-lets?${query}`,
-    {
-      headers: {
-        Authorization: `Bearer ${CMS_TOKEN}`,
-      },
-      cache: 'force-cache',
-    }
-  ).then((res) => res.json());
+  const response = await cmsFetch<LetsCozinhaLetsCMSResponse>(
+    `${CMS_URL}/api/lets-cozinha-lets?${query}`
+  );
 
   return { letsCozinhaLets: response.data };
 };
@@ -74,15 +62,9 @@ type LetsCozinhaPoliticasCMSResponse = CMSSingleDataResponse<{
 }>;
 
 export const getLetsCozinhaPoliticas = async () => {
-  const response: LetsCozinhaPoliticasCMSResponse = await fetch(
-    `${CMS_URL}/api/lets-cozinha-politicas`,
-    {
-      headers: {
-        Authorization: `Bearer ${CMS_TOKEN}`,
-      },
-      cache: 'force-cache',
-    }
-  ).then((res) => res.json());
+  const response = await cmsFetch<LetsCozinhaPoliticasCMSResponse>(
+    `${CMS_URL}/api/lets-cozinha-politicas`
+  );
 
   return { letsCozinhaPoliticas: response.data };
 };

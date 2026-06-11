@@ -1,4 +1,4 @@
-import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
+import { API_MAX_LIMIT, CMS_URL, cmsFetch } from './config';
 import { Meilisearch as MeiliSearch } from 'meilisearch';
 import { unstable_cache } from 'next/cache';
 import qs from 'qs';
@@ -93,12 +93,7 @@ export const getRecipes = async (args: {
     })}`;
   })();
 
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${CMS_TOKEN}`,
-    },
-    cache: 'force-cache',
-  }).then((res) => res.json() as Promise<CMSRecipesResponse>);
+  const response = await cmsFetch<CMSRecipesResponse>(url);
 
   return response;
 };
@@ -138,15 +133,9 @@ export const getRecipesWithPagination = async ({
     sort: ['updatedAt:desc'],
   });
 
-  const response = await fetch(
-    `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
-    {
-      headers: {
-        Authorization: `Bearer ${CMS_TOKEN}`,
-      },
-      cache: 'force-cache',
-    }
-  ).then((res) => res.json() as Promise<CMSRecipesResponse>);
+  const response = await cmsFetch<CMSRecipesResponse>(
+    `${CMS_URL}/api/lets-cozinha-receitas?${query}`
+  );
 
   return response;
 };
@@ -171,16 +160,8 @@ export const getAllSimplifiedRecipes = async () => {
       sort: ['updatedAt:desc'],
     });
 
-    const response = await fetch(
-      `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
-      {
-        headers: {
-          Authorization: `Bearer ${CMS_TOKEN}`,
-        },
-        cache: 'force-cache',
-      }
-    ).then(
-      (res) => res.json() as Promise<CMSDataArrayResponse<SimplifiedRecipe>>
+    const response = await cmsFetch<CMSDataArrayResponse<SimplifiedRecipe>>(
+      `${CMS_URL}/api/lets-cozinha-receitas?${query}`
     );
 
     return response;

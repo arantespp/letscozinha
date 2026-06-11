@@ -1,4 +1,4 @@
-import { API_MAX_LIMIT, CMS_TOKEN, CMS_URL } from './config';
+import { API_MAX_LIMIT, CMS_URL, cmsFetch } from './config';
 import qs from 'qs';
 import type { CMSDataArrayResponse, CMSImages, CMSData } from './types';
 
@@ -28,15 +28,9 @@ export const getCategories = async ({
     populate: ['imagens'],
   });
 
-  const response = await fetch(
-    `${CMS_URL}/api/lets-cozinha-categorias?${query}`,
-    {
-      headers: {
-        Authorization: `Bearer ${CMS_TOKEN}`,
-      },
-      cache: 'force-cache',
-    }
-  ).then((res) => res.json() as Promise<CMSCategoriesResponse>);
+  const response = await cmsFetch<CMSCategoriesResponse>(
+    `${CMS_URL}/api/lets-cozinha-categorias?${query}`
+  );
 
   return response;
 };
