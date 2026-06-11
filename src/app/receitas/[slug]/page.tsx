@@ -7,7 +7,7 @@ import {
   type Recipe,
   getRecommendedEbook,
   getRecipe,
-  getAllSimplifiedRecipes,
+  getAllRecipes,
   searchSimilarRecipes,
 } from 'src/cms/recipes';
 import { RecipeImages } from 'src/components/RecipeImages';
@@ -31,9 +31,12 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const { allSimplifiedRecipes } = await getAllSimplifiedRecipes();
+  // getAllRecipes (em vez de getAllSimplifiedRecipes) aquece o cache de
+  // receitas completas antes dos workers renderizarem as páginas, evitando
+  // que as primeiras páginas paguem o warm-up e estourem o timeout
+  const { allRecipes } = await getAllRecipes();
 
-  return allSimplifiedRecipes.map((recipe) => ({
+  return allRecipes.map((recipe) => ({
     slug: recipe.slug,
   }));
 }

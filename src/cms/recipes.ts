@@ -167,16 +167,20 @@ const getFullRecipesPage = unstable_cache(
  * padrão anterior de uma requisição ao CMS por receita durante o build.
  */
 export const getAllRecipes = cache(async () => {
-  const allRecipes: Recipe[] = [];
-  let page = 1;
-  let pageCount = 1;
+  // Página 1 informa o pageCount; as demais são buscadas em paralelo para
+  // não estourar o timeout de geração estática no primeiro warm-up do cache
+  const firstPage = await getFullRecipesPage(1);
+  const pageCount = firstPage.meta?.pagination.pageCount || 1;
 
-  do {
-    const response = await getFullRecipesPage(page);
-    allRecipes.push(...response.data);
-    pageCount = response.meta?.pagination.pageCount || 1;
-    page++;
-  } while (page <= pageCount);
+  const remainingPages = await Promise.all(
+    Array.from({ length: pageCount - 1 }, (_, index) =>
+      getFullRecipesPage(index + 2)
+    )
+  );
+
+  const allRecipes = [firstPage, ...remainingPages].flatMap(
+    (response) => response.data
+  );
 
   return { allRecipes };
 });
