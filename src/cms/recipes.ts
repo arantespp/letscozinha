@@ -106,12 +106,19 @@ export const getRecipes = async (args: {
 export const getRecipe = async (
   args: { documentId: string } | { slug: string }
 ) => {
+  // pageSize 1: busca de um único registro não precisa pedir uma página de 10
   if ('documentId' in args) {
-    const response = getRecipes({ documentIds: [args.documentId] });
+    const response = getRecipes({
+      documentIds: [args.documentId],
+      pagination: { pageSize: 1 },
+    });
     return (await response).data[0];
   }
 
-  const response = getRecipes({ slugs: [args.slug] });
+  const response = getRecipes({
+    slugs: [args.slug],
+    pagination: { pageSize: 1 },
+  });
   return (await response).data[0];
 };
 

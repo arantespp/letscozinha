@@ -1,10 +1,21 @@
 import { LinkIcon } from 'src/icons/icons';
 import { getAllCategories } from 'src/cms/categories';
-import { getAllSimplifiedRecipes, getRecipe } from 'src/cms/recipes';
+import {
+  getAllSimplifiedRecipes,
+  getRecipes,
+  type Recipe,
+} from 'src/cms/recipes';
+import { API_MAX_LIMIT } from 'src/cms/config';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import Link from 'next/link';
 
-export const revalidate = 1;
+/**
+ * Página privada de administração: renderiza apenas sob demanda.
+ * Não pode ser pré-renderizada no build — ela dispara uma requisição ao CMS
+ * por receita (N+1) e o pico de conexões derruba o deploy com
+ * UND_ERR_CONNECT_TIMEOUT quando o CMS demora a responder.
+ */
+export const dynamic = 'force-dynamic';
 
 const checkIfBadSlug = (slug: string) => {
   return (
@@ -19,13 +30,23 @@ const checkIfBadSlug = (slug: string) => {
 export default async function StatusDasReceitas() {
   const { allSimplifiedRecipes } = await getAllSimplifiedRecipes();
 
+  // Busca em lotes via filtro $in (N/100 requisições) em vez de uma
+  // requisição por receita: o N+1 anterior abria centenas de conexões
+  // simultâneas com o CMS e causava UND_ERR_CONNECT_TIMEOUT
+  const allRecipes: Recipe[] = [];
+
+  for (let i = 0; i < allSimplifiedRecipes.length; i += API_MAX_LIMIT) {
+    const chunk = allSimplifiedRecipes.slice(i, i + API_MAX_LIMIT);
+    const response = await getRecipes({
+      documentIds: chunk.map((recipe) => recipe.documentId),
+      pagination: { pageSize: API_MAX_LIMIT },
+    });
+    allRecipes.push(...response.data);
+  }
+
   const recipesWithStatus = (
     await Promise.all(
-      allSimplifiedRecipes.map(async (simplifiedRecipe) => {
-        const recipe = await getRecipe({
-          documentId: simplifiedRecipe.documentId,
-        });
-
+      allRecipes.map(async (recipe) => {
         const schema = await getRecipeSchema(recipe);
 
         const noFormatted = (() => {
