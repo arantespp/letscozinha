@@ -2,6 +2,7 @@ import { ImageResponse } from 'next/og';
 import { OgTitleBar } from 'src/components/OgTitleBar';
 import { getRecipe } from 'src/cms/recipes';
 import { getFontData } from 'src/methods/getFontData';
+import { BASE_URL } from 'src/constants';
 
 type Params = {
   slug: string;
@@ -60,7 +61,7 @@ export default async function Image({
   const imageUrl = recipe?.imagens?.[id]?.url;
 
   if (!imageUrl) {
-    const fontData = await getFontData();
+    const fontData = getFontData();
 
     return new ImageResponse(
       (
@@ -77,7 +78,7 @@ export default async function Image({
             backgroundColor: 'white',
           }}
         >
-          <img width="500" src="https://letscozinha.com.br/logo-texto.png" />
+          <img width="500" src={`${BASE_URL}/logo-texto.png`} />
           <p
             style={{
               fontFamily: '"PlayFair Display", serif',
@@ -103,7 +104,7 @@ export default async function Image({
     );
   }
 
-  const fontData = await getFontData();
+  const fontData = getFontData();
 
   // Foto em cover (sem barras brancas) + barra de marca com o nome da
   // receita: og-images com título legível performam melhor em compartilhamentos

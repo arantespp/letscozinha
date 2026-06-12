@@ -3,6 +3,7 @@ import { OgTitleBar } from 'src/components/OgTitleBar';
 import { getCategory } from 'src/cms/categories';
 import { getFontData } from 'src/methods/getFontData';
 import { getRecipes } from 'src/cms/recipes';
+import { BASE_URL } from 'src/constants';
 
 type Params = {
   slug: string;
@@ -57,7 +58,7 @@ export default async function OpenGraphImage({
 
   if (category?.imagens) {
     const imageUrl = category?.imagens?.[id]?.url;
-    const fontData = await getFontData();
+    const fontData = getFontData();
 
     return new ImageResponse(
       (
@@ -107,7 +108,7 @@ export default async function OpenGraphImage({
       .slice(0, 4);
 
     if (recipeImages.length > 0) {
-      const fontData = await getFontData();
+      const fontData = getFontData();
 
       return new ImageResponse(
         (
@@ -148,7 +149,7 @@ export default async function OpenGraphImage({
     }
   }
 
-  const fontData = await getFontData();
+  const fontData = getFontData();
 
   return new ImageResponse(
     (
@@ -165,7 +166,7 @@ export default async function OpenGraphImage({
           backgroundColor: 'white',
         }}
       >
-        <img width="500" src="https://letscozinha.com.br/logo-texto.png" />
+        <img width="500" src={`${BASE_URL}/logo-texto.png`} />
         <p
           style={{
             fontFamily: '"PlayFair Display", serif',

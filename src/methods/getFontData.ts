@@ -1,6 +1,12 @@
-export const getFontData = async (): Promise<ArrayBuffer> => {
-  const response = await fetch(
-    new URL('../assets/PlayfairDisplay-Regular.ttf', import.meta.url)
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+export const getFontData = (): ArrayBuffer => {
+  const buffer = readFileSync(
+    join(process.cwd(), 'public/assets/PlayfairDisplay-Regular.ttf')
   );
-  return response.arrayBuffer();
+  return buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength
+  ) as ArrayBuffer;
 };
