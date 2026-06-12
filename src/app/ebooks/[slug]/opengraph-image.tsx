@@ -25,7 +25,7 @@ export default async function OpenGraphImage({
   params: Promise<Params>;
 }) {
   const ebook = await getEbook({ slug: (await params).slug });
-  const fontData = await getFontData();
+  const fontData = getFontData();
 
   const formattedPrice = ebook?.preco
     ? new Intl.NumberFormat('pt-BR', {
