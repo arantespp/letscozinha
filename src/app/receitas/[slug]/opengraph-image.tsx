@@ -88,6 +88,20 @@ export default async function Image({
           >
             {recipe?.nome}
           </p>
+          <div
+            style={{
+              display: 'flex',
+              backgroundColor: '#fab200',
+              color: '#333333',
+              fontFamily: '"PlayFair Display", serif',
+              fontSize: 36,
+              padding: '12px 40px',
+              borderRadius: 9999,
+              marginTop: 8,
+            }}
+          >
+            Ver receita →
+          </div>
         </div>
       ),
       {

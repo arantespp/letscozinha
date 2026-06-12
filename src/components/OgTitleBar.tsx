@@ -39,11 +39,26 @@ export function OgTitleBar({ title }: { title?: string }) {
           fontSize: 52,
           color: 'white',
           margin: 0,
-          maxWidth: 1000,
+          flex: 1,
         }}
       >
         {title}
       </p>
+      <div
+        style={{
+          display: 'flex',
+          backgroundColor: '#fab200',
+          color: '#333333',
+          fontFamily: '"PlayFair Display", serif',
+          fontSize: 28,
+          padding: '10px 24px',
+          borderRadius: 9999,
+          whiteSpace: 'nowrap',
+          flexShrink: 0,
+        }}
+      >
+        Ver receita →
+      </div>
     </div>
   );
 }
