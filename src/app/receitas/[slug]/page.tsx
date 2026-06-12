@@ -46,12 +46,16 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params = await props.params;
-  const recipe = await getRecipe({ slug: params.slug });
-  const { letsCozinhaLets } = await getLetsCozinhaLets();
+  const [recipe, letsResult] = await Promise.all([
+    getRecipe({ slug: params.slug }).catch(() => null),
+    getLetsCozinhaLets().catch(() => null),
+  ]);
 
   if (!recipe) {
     return {};
   }
+
+  const { letsCozinhaLets } = letsResult ?? { letsCozinhaLets: { nome: '' } };
 
   const url = getUrl(`/receitas/${recipe.slug}`);
 
@@ -121,7 +125,7 @@ async function RecommendedEbook({ recipe }: { recipe: Recipe }) {
 
 export default async function Page(props: Props) {
   const params = await props.params;
-  const recipe = await getRecipe({ slug: params.slug });
+  const recipe = await getRecipe({ slug: params.slug }).catch(() => null);
 
   if (!recipe) {
     notFound();
@@ -133,7 +137,7 @@ export default async function Page(props: Props) {
   /**
    * https://developers.google.com/search/docs/appearance/structured-data/recipe
    */
-  const recipeSchema = await getRecipeSchema(recipe);
+  const recipeSchema = await getRecipeSchema(recipe).catch(() => null);
 
   const images =
     recipe.imagens?.map((cmsImage) => {

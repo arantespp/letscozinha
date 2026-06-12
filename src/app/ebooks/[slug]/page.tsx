@@ -28,7 +28,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params = await props.params;
-  const ebook = await getEbook({ slug: params.slug });
+  const ebook = await getEbook({ slug: params.slug }).catch(() => null);
 
   if (!ebook) {
     return {};
@@ -177,7 +177,7 @@ function EbookHero({ ebook }: { ebook: Ebook }) {
  */
 export default async function Page(props: Props) {
   const params = await props.params;
-  const ebook = await getEbook({ slug: params.slug });
+  const ebook = await getEbook({ slug: params.slug }).catch(() => null);
 
   if (!ebook) {
     notFound();
