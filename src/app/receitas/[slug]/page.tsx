@@ -16,13 +16,12 @@ import { RecipeShare } from 'src/components/RecipeShare';
 import { RecipesList } from 'src/components/RecipesList';
 import { EmailSubscription } from 'src/components/EmailSubscription';
 import { getLetsCozinhaLets } from 'src/cms/singleTypes';
-import { getPageTitle } from 'src/methods/getPageTitle';
 import { getRecipeSchema } from 'src/methods/getRecipeSchema';
 import { getUrl } from 'src/methods/getUrl';
 import { getWebsiteName } from 'src/methods/getWebsiteName';
 import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
-import { FB_APP_ID } from 'src/constants';
+import { FB_APP_ID, WEBSITE_NAME } from 'src/constants';
 import { EbookCard } from 'src/components/EbookCard';
 import { ExclusiveRecipePreview } from 'src/components/ExclusiveRecipePreview';
 
@@ -59,18 +58,21 @@ export async function generateMetadata(
 
   const url = getUrl(`/receitas/${recipe.slug}`);
 
-  const title = getPageTitle(recipe.nome);
+  const title = `Receita de ${recipe.nome} | ${WEBSITE_NAME}`;
+
+  const rawDesc = recipe.meta_descricao ?? '';
+  const description = rawDesc.length > 125 ? rawDesc.slice(0, 122) + '...' : rawDesc;
 
   return {
     title,
-    description: recipe.meta_descricao,
+    description,
     keywords: recipe.keywords,
     alternates: {
       canonical: url,
     },
     openGraph: {
       title,
-      description: recipe.meta_descricao,
+      description,
       url,
       type: 'article',
       publishedTime: recipe.createdAt,
