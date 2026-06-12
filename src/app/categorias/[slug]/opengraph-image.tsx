@@ -48,10 +48,10 @@ export default async function OpenGraphImage({
   params,
   id,
 }: {
-  params: Params;
+  params: Promise<Params>;
   id: number;
 }) {
-  const slug = params.slug;
+  const slug = (await params).slug;
 
   const category = await getCategory({ slug });
 

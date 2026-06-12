@@ -19,8 +19,12 @@ export const alt = 'E-book Lets Cozinha';
  * proporção de livro (retrato) e ficaria distorcida/cortada se usada
  * diretamente como og-image 1200x630.
  */
-export default async function OpenGraphImage({ params }: { params: Params }) {
-  const ebook = await getEbook({ slug: params.slug });
+export default async function OpenGraphImage({
+  params,
+}: {
+  params: Promise<Params>;
+}) {
+  const ebook = await getEbook({ slug: (await params).slug });
   const fontData = await getFontData();
 
   const formattedPrice = ebook?.preco
