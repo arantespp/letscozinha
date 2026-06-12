@@ -1,4 +1,5 @@
 import { API_MAX_LIMIT, CMS_URL, cmsFetch } from './config';
+import { withStaleFallback } from './staleCache';
 import { Meilisearch as MeiliSearch } from 'meilisearch';
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
@@ -133,7 +134,7 @@ export const getRecipes = async (args: {
  * revalidate de 1h garante atualização mesmo sem revalidateTag; o webhook
  * do CMS pode purgar imediatamente via /api/revalidate com CMS_RECIPES_TAG.
  */
-const getFullRecipesPage = unstable_cache(
+const getFullRecipesPage = withStaleFallback(
   async (page: number) => {
     const query = qs.stringify({
       pagination: {
@@ -152,11 +153,9 @@ const getFullRecipesPage = unstable_cache(
       { next: { tags: [CMS_RECIPES_TAG] } }
     );
   },
-  ['getFullRecipesPage'],
-  {
-    revalidate: 3600,
-    tags: [CMS_RECIPES_TAG],
-  }
+  'getFullRecipesPage',
+  { revalidate: 3600, tags: [CMS_RECIPES_TAG] },
+  'getFullRecipesPage-fallback'
 );
 
 /**

@@ -17,7 +17,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const params = await props.params;
-  const category = await getCategory({ slug: params.slug });
+  const category = await getCategory({ slug: params.slug }).catch(() => null);
 
   if (!category) {
     return {};
@@ -58,7 +58,7 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const params = await props.params;
-  const category = await getCategory({ slug: params.slug });
+  const category = await getCategory({ slug: params.slug }).catch(() => null);
 
   if (!category) {
     notFound();
@@ -69,7 +69,7 @@ export default async function Page(props: {
     pagination: {
       page: searchParams.page,
     },
-  });
+  }).catch(() => ({ data: [], meta: undefined }));
 
   return (
     <div className="flex flex-col">

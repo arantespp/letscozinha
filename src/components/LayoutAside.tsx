@@ -39,10 +39,11 @@ async function WhoIsLets() {
         >
           <div className="size-image-sm relative">
             <Image
-              className="size-image-sm rounded-full object-cover"
+              className="rounded-full object-cover"
               src={src}
               alt="Foto da Lets"
               fill
+              sizes="128px"
             />
           </div>
         </Link>
