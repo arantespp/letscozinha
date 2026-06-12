@@ -4,7 +4,7 @@ import { LinkButton } from './LinkButton';
 import { getOptimizedImageProps } from 'src/methods/generateNextImageSizesString';
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from '../../public/logo.png';
+import logo from '../../public/logo.webp';
 import type { Recipe } from 'src/cms/recipes';
 
 // Configurações de tamanho específicas para cards de receitas (padrão)
