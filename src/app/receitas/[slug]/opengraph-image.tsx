@@ -50,10 +50,10 @@ export default async function Image({
   params,
   id,
 }: {
-  params: Params;
+  params: Promise<Params>;
   id: number;
 }) {
-  const slug = params.slug;
+  const slug = (await params).slug;
 
   const recipe = await getRecipe({ slug });
 
