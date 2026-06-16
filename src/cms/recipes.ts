@@ -121,7 +121,9 @@ export const getRecipes = async (args: {
     })}`;
   })();
 
-  const response = await cmsFetch<CMSRecipesResponse>(url);
+  const response = await cmsFetch<CMSRecipesResponse>(url, {
+    next: { tags: [CMS_RECIPES_TAG] },
+  });
 
   return response;
 };
@@ -219,7 +221,8 @@ export const getRecipesWithPagination = async ({
   });
 
   const response = await cmsFetch<CMSRecipesResponse>(
-    `${CMS_URL}/api/lets-cozinha-receitas?${query}`
+    `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
+    { next: { tags: [CMS_RECIPES_TAG] } }
   );
 
   return response;
@@ -246,7 +249,8 @@ export const getAllSimplifiedRecipes = async () => {
     });
 
     const response = await cmsFetch<CMSDataArrayResponse<SimplifiedRecipe>>(
-      `${CMS_URL}/api/lets-cozinha-receitas?${query}`
+      `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
+      { next: { tags: [CMS_RECIPES_TAG] } }
     );
 
     return response;
