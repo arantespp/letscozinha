@@ -109,11 +109,18 @@ export default function RootLayout({
         <JsonLd schema={organizationSchema} />
         <Header />
         <main className="pb-xl md:pb-2xl">
-          <React.Suspense fallback={<div className="h-[200px]"></div>}>
-            {hero}
-          </React.Suspense>
+          <React.Suspense fallback={null}>{hero}</React.Suspense>
           <Container>
-            <div className="mx-auto my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl">
+            {/*
+              `min-h-screen` reserva a altura do conteúdo principal enquanto ele
+              faz streaming. Sem essa reserva, o fallback de altura zero faz o
+              Footer renderizar dentro do viewport e depois ser empurrado para
+              baixo quando o conteúdo chega — gerando um CLS catastrófico
+              (~0.69). Reservando uma tela inteira, o Footer permanece abaixo da
+              dobra durante o carregamento e o deslocamento ocorre fora da tela,
+              sem contar para o CLS.
+            */}
+            <div className="mx-auto my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl min-h-screen">
               <div className="w-full md:w-[70%]">
                 <React.Suspense fallback={null}>{children}</React.Suspense>
               </div>
