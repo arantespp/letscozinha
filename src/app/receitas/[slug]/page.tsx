@@ -61,7 +61,8 @@ export async function generateMetadata(
   const title = `Receita de ${recipe.nome} | ${WEBSITE_NAME}`;
 
   const rawDesc = recipe.meta_descricao ?? '';
-  const description = rawDesc.length > 125 ? rawDesc.slice(0, 122) + '...' : rawDesc;
+  const description =
+    rawDesc.length > 125 ? rawDesc.slice(0, 122) + '...' : rawDesc;
 
   return {
     title,
@@ -193,10 +194,7 @@ export default async function Page(props: Props) {
             )}
 
             {/* Link para Instagram */}
-            <RecipeInstagramLinks
-              instagram_posts={recipe.instagram_posts}
-              slug={recipe.slug}
-            />
+            <RecipeInstagramLinks instagram_posts={recipe.instagram_posts} />
 
             {/* Jump to recipe - padrão conhecido de sites de receitas (Jakob's Law) */}
             {!isExclusiveRecipe && images.length > 0 && (

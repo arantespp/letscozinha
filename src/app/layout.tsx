@@ -11,7 +11,6 @@ import {
 import { Footer } from 'src/components/Footer';
 import { JsonLd } from 'src/components/JsonLd';
 import type { Organization } from 'schema-dts';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { Header } from 'src/components/Header';
 import { Lora, Playfair_Display } from 'next/font/google';
 import { getPageTitle } from 'src/methods/getPageTitle';
@@ -73,8 +72,6 @@ export const viewport: Viewport = {
   width: 'device-width',
 };
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 /**
  * https://developers.google.com/search/docs/appearance/structured-data/organization
  */
@@ -132,7 +129,6 @@ export default function RootLayout({
         </main>
         <Footer />
       </body>
-      {isProduction && <GoogleAnalytics gaId="G-KBBBK8ZDJG" />}
     </html>
   );
 }

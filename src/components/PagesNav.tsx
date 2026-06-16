@@ -1,8 +1,5 @@
-'use client';
-
 import { INSTAGRAM_USERNAME } from 'src/constants';
 import { InstagramIcon } from 'src/icons/icons';
-import { sendGAEvent } from '@next/third-parties/google';
 import Link from 'next/link';
 
 const navs = [
@@ -31,9 +28,6 @@ const navs = [
     href: `https://www.instagram.com/${INSTAGRAM_USERNAME}/`,
     label: <InstagramIcon className="text-[1.5em]" />,
     'aria-label': 'Instagram',
-    onClick: () => {
-      sendGAEvent('event', 'instagram_click');
-    },
   },
 ];
 
@@ -67,7 +61,6 @@ export const PagesNav = ({
                 aria-label={nav['aria-label']}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={nav.onClick}
                 className={linkClassName}
               >
                 {nav.label}

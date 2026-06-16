@@ -1,5 +1,3 @@
-'use client';
-
 import {
   EMAIL,
   FACEBOOK_USERNAME,
@@ -14,7 +12,6 @@ import {
   PinterestIcon,
   TiktokIcon,
 } from 'src/icons/icons';
-import { sendGAEvent } from '@next/third-parties/google';
 
 const socialNavs = [
   {
@@ -22,35 +19,30 @@ const socialNavs = [
     label: `@${INSTAGRAM_USERNAME}`,
     href: `https://www.instagram.com/${INSTAGRAM_USERNAME}`,
     'aria-label': 'Instagram',
-    event: 'instagram_click',
   },
   {
     icon: <FacebookIcon />,
     label: `/${FACEBOOK_USERNAME}`,
     href: `https://www.facebook.com/${FACEBOOK_USERNAME}`,
     'aria-label': 'Facebook',
-    event: 'facebook_click',
   },
   {
     icon: <TiktokIcon />,
     label: `${TIKTOK_USERNAME}`,
     href: `https://www.tiktok.com/${TIKTOK_USERNAME}`,
     'aria-label': 'TikTok',
-    event: 'tiktok_click',
   },
   {
     icon: <PinterestIcon />,
     label: `/${PINTEREST_USERNAME}`,
     href: `https://www.pinterest.com/${PINTEREST_USERNAME}`,
     'aria-label': 'Pinterest',
-    event: 'pinterest_click',
   },
   {
     icon: <EnvelopeIcon />,
     label: `${EMAIL}`,
     href: `mailto:${EMAIL}`,
     'aria-label': 'Email',
-    event: 'email_click',
   },
 ];
 
@@ -75,9 +67,6 @@ export const SocialNav = ({
           rel="noopener noreferrer"
           aria-label={link.label}
           className={linkClassName}
-          onClick={() => {
-            sendGAEvent('event', link.event);
-          }}
         >
           <span className={iconClassName}>{link.icon}</span>
           {!noLabel && <span>{link.label}</span>}
