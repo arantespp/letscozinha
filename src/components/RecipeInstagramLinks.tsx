@@ -1,15 +1,10 @@
-'use client';
-
 import * as React from 'react';
 import { InstagramIcon } from 'src/icons/icons';
-import { sendGAEvent } from '@next/third-parties/google';
 
 export function RecipeInstagramLinks({
   instagram_posts = [],
-  slug,
 }: {
   instagram_posts?: { url: string }[];
-  slug: string;
 }) {
   if (!instagram_posts.length) {
     return null;
@@ -26,9 +21,6 @@ export function RecipeInstagramLinks({
             href={post.url}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => {
-              sendGAEvent('event', 'instagram_click', { value: slug });
-            }}
             className="no-underline"
           >
             <span className="text-[1.5em] mr-xs align-[-3px]">
