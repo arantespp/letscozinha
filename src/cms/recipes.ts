@@ -188,9 +188,11 @@ export const getAllRecipes = cache(async () => {
  * Receita completa por slug ou documentId, via lookup em memória sobre
  * getAllRecipes — não dispara uma requisição ao CMS por receita.
  *
- * Usada principalmente pelo `generateStaticParams` e em contextos onde o
- * corpus inteiro já está em memória. Para renderização on-demand de páginas
- * individuais, prefira `getRecipeBySlug`, que busca apenas um documento.
+ * Importante: NÃO buscar por slug individualmente no CMS aqui. A página de
+ * receita é pré-renderizada para todas as receitas (generateStaticParams), e
+ * uma busca por receita dispararia centenas de conexões ao CMS durante o build
+ * (UND_ERR_CONNECT_TIMEOUT no EC2 sob carga). O lookup em memória reaproveita
+ * o cache de getAllRecipes já aquecido pelo generateStaticParams.
  */
 export const getRecipe = async (
   args: { documentId: string } | { slug: string }
@@ -203,40 +205,6 @@ export const getRecipe = async (
 
   return allRecipes.find((recipe) => recipe.slug === args.slug);
 };
-
-/**
- * Busca uma única receita completa por slug, cacheada individualmente com
- * `unstable_cache`.
- *
- * Motivo: `getRecipe` faz lookup em `getAllRecipes`, que carrega todo o corpus
- * de receitas do CMS. Na rota de página e og-image, isso significa que
- * qualquer render on-demand (receita nova fora do `generateStaticParams`, ou
- * qualquer receita após o webhook purgar `cms-recipes`) precisava recarregar
- * centenas de receitas com markdown completo — caminho pesado o suficiente
- * para estourar o timeout de 15s da Vercel.
- *
- * Com esta função, a página busca apenas um documento pequeno; builds e
- * revalidações completas ainda usam `getAllRecipes`/`getRecipe` como antes.
- */
-export const getRecipeBySlug = withStaleFallback(
-  async (slug: string): Promise<Recipe | undefined> => {
-    const query = qs.stringify({
-      filters: { slug: { $eq: slug } },
-      populate: RECIPES_POPULATE,
-      pagination: { pageSize: 1 },
-    });
-
-    const response = await cmsFetch<CMSRecipesResponse>(
-      `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
-      { next: { tags: [CMS_RECIPES_TAG] } }
-    );
-
-    return response.data[0];
-  },
-  'getRecipeBySlug',
-  { revalidate: 3600, tags: [CMS_RECIPES_TAG] },
-  'getRecipeBySlug-fallback'
-);
 
 export const getRecipesWithPagination = async ({
   page = 1,

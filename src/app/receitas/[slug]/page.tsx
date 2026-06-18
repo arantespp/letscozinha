@@ -6,7 +6,7 @@ import { Markdown } from 'src/components/Markdown';
 import {
   type Recipe,
   getRecommendedEbook,
-  getRecipeBySlug,
+  getRecipe,
   getAllRecipes,
   searchSimilarRecipes,
 } from 'src/cms/recipes';
@@ -33,8 +33,11 @@ type Props = {
  * Orçamento da função serverless. O default da Vercel (15s) era estourado
  * quando uma receita renderiza on-demand com o cache frio (receita nova fora
  * do generateStaticParams, ou logo após o webhook do CMS purgar o cache via
- * revalidateTag), pois o warm-up recarrega todas as receitas. 60s dá margem
- * para o primeiro render concluir e popular o cache; os próximos são rápidos.
+ * revalidateTag): getRecipe recarrega todo o corpus de receitas via
+ * getAllRecipes, e com o CMS lento isso passava de 15s, gerando 504 e — como
+ * a função morria antes de cachear — o mesmo URL repetia o caminho frio.
+ * 60s dá margem para o primeiro render concluir e popular o cache; os
+ * próximos requests servem do cache e são rápidos.
  */
 export const maxDuration = 60;
 
@@ -55,7 +58,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const params = await props.params;
   const [recipe, letsResult] = await Promise.all([
-    getRecipeBySlug(params.slug).catch(() => null),
+    getRecipe({ slug: params.slug }).catch(() => null),
     getLetsCozinhaLets().catch(() => null),
   ]);
 
@@ -141,7 +144,7 @@ async function RecommendedEbook({ recipe }: { recipe: Recipe }) {
 
 export default async function Page(props: Props) {
   const params = await props.params;
-  const recipe = await getRecipeBySlug(params.slug).catch(() => null);
+  const recipe = await getRecipe({ slug: params.slug }).catch(() => null);
 
   if (!recipe) {
     notFound();
