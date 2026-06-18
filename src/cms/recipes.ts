@@ -271,6 +271,9 @@ export const getAllSimplifiedRecipes = async () => {
 const MEILISEARCH_HOST = process.env.MEILISEARCH_HOST || '';
 const MEILISEARCH_API_KEY = process.env.MEILISEARCH_API_KEY || '';
 
+/** Tag para purgar os caches do MeiliSearch via revalidateTag (/api/revalidate) */
+export const MEILISEARCH_TAG = 'meilisearch';
+
 // Initialize MeiliSearch client only if host is provided
 const meiliClient = MEILISEARCH_HOST
   ? new MeiliSearch({
@@ -322,29 +325,24 @@ const withTimeout = async <T>(promise: Promise<T>, ms: number): Promise<T> => {
   }
 };
 
-export const searchRecipes = async (args: {
-  search: string;
-  limit?: number;
-}) => {
-  // Check if MeiliSearch is available
-  if (!meiliRecipesIndex) {
-    console.warn(
-      'MeiliSearch is not configured. Search functionality is disabled.'
-    );
-    return {
-      data: [],
-      meta: {
-        pagination: {
-          page: 1,
-          pageSize: args.limit || RECIPES_PAGE_SIZE,
-          pageCount: 1,
-          total: 0,
+const _searchRecipesCached = unstable_cache(
+  async (args: { search: string; limit?: number }) => {
+    if (!meiliRecipesIndex) {
+      return {
+        data: [] as Recipe[],
+        meta: {
+          pagination: {
+            page: 1,
+            pageSize: args.limit || RECIPES_PAGE_SIZE,
+            pageCount: 1,
+            total: 0,
+          },
         },
-      },
-    };
-  }
+      };
+    }
 
-  try {
+    // No try/catch: errors propagate so unstable_cache does not store a
+    // failed result. The public wrapper below catches and returns empty.
     const searchResults = await meiliRecipesIndex.search(args.search, {
       limit: args.limit || RECIPES_PAGE_SIZE,
     });
@@ -361,6 +359,17 @@ export const searchRecipes = async (args: {
     };
 
     return { data, meta };
+  },
+  ['searchRecipes'],
+  { revalidate: 3600, tags: [MEILISEARCH_TAG] }
+);
+
+export const searchRecipes = async (args: {
+  search: string;
+  limit?: number;
+}) => {
+  try {
+    return await _searchRecipesCached(args);
   } catch (error) {
     console.error('MeiliSearch error:', error);
     return {
@@ -401,6 +410,7 @@ export const searchSimilarRecipes = unstable_cache(
   ['searchSimilarRecipes'],
   {
     revalidate: false,
+    tags: [MEILISEARCH_TAG],
   }
 );
 
@@ -433,5 +443,6 @@ export const getRecommendedEbook = unstable_cache(
   ['getRecommendedEbook'],
   {
     revalidate: false,
+    tags: [MEILISEARCH_TAG],
   }
 );
