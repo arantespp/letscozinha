@@ -322,29 +322,24 @@ const withTimeout = async <T>(promise: Promise<T>, ms: number): Promise<T> => {
   }
 };
 
-export const searchRecipes = async (args: {
-  search: string;
-  limit?: number;
-}) => {
-  // Check if MeiliSearch is available
-  if (!meiliRecipesIndex) {
-    console.warn(
-      'MeiliSearch is not configured. Search functionality is disabled.'
-    );
-    return {
-      data: [],
-      meta: {
-        pagination: {
-          page: 1,
-          pageSize: args.limit || RECIPES_PAGE_SIZE,
-          pageCount: 1,
-          total: 0,
+const _searchRecipesCached = unstable_cache(
+  async (args: { search: string; limit?: number }) => {
+    if (!meiliRecipesIndex) {
+      return {
+        data: [] as Recipe[],
+        meta: {
+          pagination: {
+            page: 1,
+            pageSize: args.limit || RECIPES_PAGE_SIZE,
+            pageCount: 1,
+            total: 0,
+          },
         },
-      },
-    };
-  }
+      };
+    }
 
-  try {
+    // No try/catch: errors propagate so unstable_cache does not store a
+    // failed result. The public wrapper below catches and returns empty.
     const searchResults = await meiliRecipesIndex.search(args.search, {
       limit: args.limit || RECIPES_PAGE_SIZE,
     });
@@ -361,6 +356,17 @@ export const searchRecipes = async (args: {
     };
 
     return { data, meta };
+  },
+  ['searchRecipes'],
+  { revalidate: 86400 }
+);
+
+export const searchRecipes = async (args: {
+  search: string;
+  limit?: number;
+}) => {
+  try {
+    return await _searchRecipesCached(args);
   } catch (error) {
     console.error('MeiliSearch error:', error);
     return {
@@ -399,9 +405,7 @@ export const searchSimilarRecipes = unstable_cache(
     return data;
   },
   ['searchSimilarRecipes'],
-  {
-    revalidate: false,
-  }
+  { revalidate: 86400 }
 );
 
 const meiliEbookIndex = meiliClient
@@ -431,7 +435,5 @@ export const getRecommendedEbook = unstable_cache(
     return data[0] || null;
   },
   ['getRecommendedEbook'],
-  {
-    revalidate: false,
-  }
+  { revalidate: 86400 }
 );
