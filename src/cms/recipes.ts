@@ -271,9 +271,6 @@ export const getAllSimplifiedRecipes = async () => {
 const MEILISEARCH_HOST = process.env.MEILISEARCH_HOST || '';
 const MEILISEARCH_API_KEY = process.env.MEILISEARCH_API_KEY || '';
 
-/** Tag para purgar os caches do MeiliSearch via revalidateTag (/api/revalidate) */
-export const MEILISEARCH_TAG = 'meilisearch';
-
 // Initialize MeiliSearch client only if host is provided
 const meiliClient = MEILISEARCH_HOST
   ? new MeiliSearch({
@@ -361,7 +358,7 @@ const _searchRecipesCached = unstable_cache(
     return { data, meta };
   },
   ['searchRecipes'],
-  { revalidate: 3600, tags: [MEILISEARCH_TAG] }
+  { revalidate: 86400 }
 );
 
 export const searchRecipes = async (args: {
@@ -408,10 +405,7 @@ export const searchSimilarRecipes = unstable_cache(
     return data;
   },
   ['searchSimilarRecipes'],
-  {
-    revalidate: false,
-    tags: [MEILISEARCH_TAG],
-  }
+  { revalidate: 86400 }
 );
 
 const meiliEbookIndex = meiliClient
@@ -441,8 +435,5 @@ export const getRecommendedEbook = unstable_cache(
     return data[0] || null;
   },
   ['getRecommendedEbook'],
-  {
-    revalidate: false,
-    tags: [MEILISEARCH_TAG],
-  }
+  { revalidate: 86400 }
 );
