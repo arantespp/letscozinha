@@ -29,6 +29,15 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+/**
+ * Orçamento da função serverless. O default da Vercel (15s) era estourado
+ * quando uma receita renderiza on-demand com o cache frio (receita nova fora
+ * do generateStaticParams, ou logo após o webhook do CMS purgar o cache via
+ * revalidateTag), pois o warm-up recarrega todas as receitas. 60s dá margem
+ * para o primeiro render concluir e popular o cache; os próximos são rápidos.
+ */
+export const maxDuration = 60;
+
 export async function generateStaticParams() {
   // getAllRecipes (em vez de getAllSimplifiedRecipes) aquece o cache de
   // receitas completas antes dos workers renderizarem as páginas, evitando
@@ -88,7 +97,9 @@ export async function generateMetadata(
 }
 
 async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
-  const similarRecipes = await searchSimilarRecipes({ recipe });
+  // Degrada graciosamente: se a busca por similaridade (embedder OpenAI)
+  // expirar/falhar, a seção é omitida em vez de derrubar a página inteira
+  const similarRecipes = await searchSimilarRecipes({ recipe }).catch(() => []);
 
   if (similarRecipes.length === 0) {
     return null;
@@ -105,7 +116,9 @@ async function SimilarRecipes({ recipe }: { recipe: Recipe }) {
 }
 
 async function RecommendedEbook({ recipe }: { recipe: Recipe }) {
-  const ebook = await getRecommendedEbook(recipe);
+  // Degrada graciosamente: se a recomendação (embedder OpenAI) expirar/falhar,
+  // a seção é omitida em vez de derrubar a página inteira
+  const ebook = await getRecommendedEbook(recipe).catch(() => null);
 
   if (!ebook) {
     return null;

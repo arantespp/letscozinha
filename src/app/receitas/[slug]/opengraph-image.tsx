@@ -9,6 +9,13 @@ type Params = {
 };
 
 /**
+ * Mesma justificativa da página de receita: gerar a og-image on-demand com o
+ * cache frio recarrega todas as receitas, estourando o default de 15s da
+ * Vercel. 60s dá margem para o warm-up concluir.
+ */
+export const maxDuration = 60;
+
+/**
  * https://nextjs.org/docs/app/api-reference/functions/generate-image-metadata
  */
 export async function generateImageMetadata({
