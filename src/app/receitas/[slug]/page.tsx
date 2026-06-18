@@ -6,7 +6,7 @@ import { Markdown } from 'src/components/Markdown';
 import {
   type Recipe,
   getRecommendedEbook,
-  getRecipe,
+  getRecipeBySlug,
   getAllRecipes,
   searchSimilarRecipes,
 } from 'src/cms/recipes';
@@ -55,7 +55,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const params = await props.params;
   const [recipe, letsResult] = await Promise.all([
-    getRecipe({ slug: params.slug }).catch(() => null),
+    getRecipeBySlug(params.slug).catch(() => null),
     getLetsCozinhaLets().catch(() => null),
   ]);
 
@@ -141,7 +141,7 @@ async function RecommendedEbook({ recipe }: { recipe: Recipe }) {
 
 export default async function Page(props: Props) {
   const params = await props.params;
-  const recipe = await getRecipe({ slug: params.slug }).catch(() => null);
+  const recipe = await getRecipeBySlug(params.slug).catch(() => null);
 
   if (!recipe) {
     notFound();

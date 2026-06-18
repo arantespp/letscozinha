@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { OgTitleBar } from 'src/components/OgTitleBar';
-import { getRecipe } from 'src/cms/recipes';
+import { getRecipeBySlug } from 'src/cms/recipes';
 import { getFontData } from 'src/methods/getFontData';
 import { BASE_URL } from 'src/constants';
 
@@ -25,7 +25,7 @@ export async function generateImageMetadata({
 }) {
   const slug = (await params).slug;
 
-  const recipe = await getRecipe({ slug });
+  const recipe = await getRecipeBySlug(slug);
 
   const images = recipe?.imagens;
 
@@ -63,7 +63,7 @@ export default async function Image({
 }) {
   const slug = (await params).slug;
 
-  const recipe = await getRecipe({ slug });
+  const recipe = await getRecipeBySlug(slug);
 
   const imageUrl = recipe?.imagens?.[id]?.url;
 
