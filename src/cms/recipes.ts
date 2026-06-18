@@ -187,6 +187,12 @@ export const getAllRecipes = cache(async () => {
 /**
  * Receita completa por slug ou documentId, via lookup em memória sobre
  * getAllRecipes — não dispara uma requisição ao CMS por receita.
+ *
+ * Importante: NÃO buscar por slug individualmente no CMS aqui. A página de
+ * receita é pré-renderizada para todas as receitas (generateStaticParams), e
+ * uma busca por receita dispararia centenas de conexões ao CMS durante o build
+ * (UND_ERR_CONNECT_TIMEOUT no EC2 sob carga). O lookup em memória reaproveita
+ * o cache de getAllRecipes já aquecido pelo generateStaticParams.
  */
 export const getRecipe = async (
   args: { documentId: string } | { slug: string }
@@ -286,6 +292,36 @@ const getRecipesFromMeiliHits = async (hits: MeiliRecipe[]) => {
   return hits as Recipe[];
 };
 
+/**
+ * Timeout das buscas que dependem de embedders OpenAI (similaridade e
+ * recomendação de e-book). Essas chamadas geram embeddings em tempo de
+ * requisição e podem ficar lentas/penduradas sob rate limit. Sem limite, elas
+ * seguram a função serverless até o timeout de 15s da Vercel (504).
+ *
+ * O timeout REJEITA (em vez de retornar vazio) de propósito: o resultado vazio
+ * não pode ser cacheado pelo unstable_cache, senão um soluço transitório
+ * congelaria seções vazias para sempre. Quem chama trata o erro renderizando
+ * a seção como ausente (Suspense fallback={null}).
+ */
+const MEILI_EMBEDDER_TIMEOUT_MS = 6000;
+
+const withTimeout = async <T>(promise: Promise<T>, ms: number): Promise<T> => {
+  let timer: ReturnType<typeof setTimeout>;
+
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error(`Operation timed out after ${ms}ms`)),
+      ms
+    );
+  });
+
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timer!);
+  }
+};
+
 export const searchRecipes = async (args: {
   search: string;
   limit?: number;
@@ -349,11 +385,14 @@ export const searchSimilarRecipes = unstable_cache(
 
     const id = `lets-cozinha-receita-${recipe.documentId}`;
 
-    const similars = await meiliRecipesIndex.searchSimilarDocuments({
-      id,
-      limit: 3,
-      embedder: 'lets-cozinha-receita-openai-embedder',
-    });
+    const similars = await withTimeout(
+      meiliRecipesIndex.searchSimilarDocuments({
+        id,
+        limit: 3,
+        embedder: 'lets-cozinha-receita-openai-embedder',
+      }),
+      MEILI_EMBEDDER_TIMEOUT_MS
+    );
 
     const data = await getRecipesFromMeiliHits(similars.hits);
 
@@ -375,15 +414,18 @@ export const getRecommendedEbook = unstable_cache(
       return null;
     }
 
-    const searchResults = await meiliEbookIndex.search(recipe.nome, {
-      limit: 1,
-      filter: 'NOT checkout_url IS NULL AND NOT checkout_url IS EMPTY',
-      hybrid: {
-        semanticRatio: 0.9,
-        embedder: 'lets-cozinha-ebook-openai-embedder',
-      },
-      showRankingScore: true,
-    });
+    const searchResults = await withTimeout(
+      meiliEbookIndex.search(recipe.nome, {
+        limit: 1,
+        filter: 'NOT checkout_url IS NULL AND NOT checkout_url IS EMPTY',
+        hybrid: {
+          semanticRatio: 0.9,
+          embedder: 'lets-cozinha-ebook-openai-embedder',
+        },
+        showRankingScore: true,
+      }),
+      MEILI_EMBEDDER_TIMEOUT_MS
+    );
 
     const data = searchResults.hits;
     return data[0] || null;
