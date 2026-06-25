@@ -1,38 +1,42 @@
-import { unstable_cache } from 'next/cache';
+const cacheStore = new Map<string, { data: unknown; expires: number }>();
 
 /**
- * Dois níveis de cache para resiliência a quedas do CMS.
+ * Cache em memória com TTL e fallback para dado stale.
  *
- * Problema: quando o cache primário expira (TTL) ou é purgado via
- * revalidateTag, a próxima requisição tenta buscar dado novo. Se o CMS
- * estiver fora nesse momento, a requisição falha.
- *
- * Solução:
- * - Primary: TTL normal + tags (purgável pelo webhook do CMS)
- * - Fallback: revalidate: false, sem tags (nunca expira, nunca é purgado)
- *
- * Quando o primary falha (cache miss + CMS indisponível), o fallback
- * retorna o último dado conhecido em vez de propagar o erro. O fallback
- * só falha no primeiro request de todo o histórico (sem dado anterior).
+ * Substitui unstable_cache (App Router) no Pages Router.
+ * Mesmo comportamento: TTL primário + dado stale em caso de falha do CMS.
  */
 export function withStaleFallback<Args extends unknown[], Result>(
   fn: (...args: Args) => Promise<Result>,
   primaryKey: string,
   primaryOpts: { revalidate: number; tags?: string[] },
-  fallbackKey: string
+  _fallbackKey: string
 ): (...args: Args) => Promise<Result> {
-  const primary = unstable_cache(fn, [primaryKey], primaryOpts);
-  const fallback = unstable_cache(fn, [fallbackKey], { revalidate: false });
-
   return async (...args: Args): Promise<Result> => {
+    const key = `${primaryKey}-${JSON.stringify(args)}`;
+    const now = Date.now();
+    const cached = cacheStore.get(key);
+
+    if (cached && cached.expires > now) {
+      return cached.data as Result;
+    }
+
     try {
-      return await primary(...args);
+      const result = await fn(...args);
+      cacheStore.set(key, {
+        data: result,
+        expires: now + primaryOpts.revalidate * 1000,
+      });
+      return result;
     } catch (error) {
-      console.warn(
-        `[cms] primary cache indisponível para "${primaryKey}", servindo dado stale`,
-        error instanceof Error ? error.message : error
-      );
-      return fallback(...args);
+      if (cached) {
+        console.warn(
+          `[cms] stale fallback for "${primaryKey}"`,
+          error instanceof Error ? error.message : error
+        );
+        return cached.data as Result;
+      }
+      throw error;
     }
   };
 }

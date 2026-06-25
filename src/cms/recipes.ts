@@ -1,8 +1,6 @@
 import { API_MAX_LIMIT, CMS_URL, cmsFetch } from './config';
 import { withStaleFallback } from './staleCache';
 import { Meilisearch as MeiliSearch } from 'meilisearch';
-import { cache } from 'react';
-import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type {
   CMSDataArrayResponse,
@@ -149,8 +147,7 @@ const getFullRecipesPage = withStaleFallback(
     // no-store dentro de unstable_cache marca a rota como dinâmica e quebra
     // a geração estática das páginas de receita
     return cmsFetch<CMSRecipesResponse>(
-      `${CMS_URL}/api/lets-cozinha-receitas?${query}`,
-      { next: { tags: [CMS_RECIPES_TAG] } }
+      `${CMS_URL}/api/lets-cozinha-receitas?${query}`
     );
   },
   'getFullRecipesPage',
@@ -165,7 +162,7 @@ const getFullRecipesPage = withStaleFallback(
  * das páginas compartilha o resultado entre páginas e builds. Substitui o
  * padrão anterior de uma requisição ao CMS por receita durante o build.
  */
-export const getAllRecipes = cache(async () => {
+export const getAllRecipes = async () => {
   // Página 1 informa o pageCount; as demais são buscadas em paralelo para
   // não estourar o timeout de geração estática no primeiro warm-up do cache
   const firstPage = await getFullRecipesPage(1);
@@ -182,7 +179,7 @@ export const getAllRecipes = cache(async () => {
   );
 
   return { allRecipes };
-});
+};
 
 /**
  * Receita completa por slug ou documentId, via lookup em memória sobre
@@ -322,8 +319,11 @@ const withTimeout = async <T>(promise: Promise<T>, ms: number): Promise<T> => {
   }
 };
 
-const _searchRecipesCached = unstable_cache(
-  async (args: { search: string; limit?: number }) => {
+export const searchRecipes = async (args: {
+  search: string;
+  limit?: number;
+}) => {
+  try {
     if (!meiliRecipesIndex) {
       return {
         data: [] as Recipe[],
@@ -338,8 +338,6 @@ const _searchRecipesCached = unstable_cache(
       };
     }
 
-    // No try/catch: errors propagate so unstable_cache does not store a
-    // failed result. The public wrapper below catches and returns empty.
     const searchResults = await meiliRecipesIndex.search(args.search, {
       limit: args.limit || RECIPES_PAGE_SIZE,
     });
@@ -356,17 +354,6 @@ const _searchRecipesCached = unstable_cache(
     };
 
     return { data, meta };
-  },
-  ['searchRecipes'],
-  { revalidate: 86400 }
-);
-
-export const searchRecipes = async (args: {
-  search: string;
-  limit?: number;
-}) => {
-  try {
-    return await _searchRecipesCached(args);
   } catch (error) {
     console.error('MeiliSearch error:', error);
     return {
@@ -383,57 +370,52 @@ export const searchRecipes = async (args: {
   }
 };
 
-export const searchSimilarRecipes = unstable_cache(
-  async ({ recipe }: { recipe: Recipe }) => {
-    if (!meiliRecipesIndex) {
-      return [];
-    }
+export const searchSimilarRecipes = async ({
+  recipe,
+}: {
+  recipe: Recipe;
+}): Promise<Recipe[]> => {
+  if (!meiliRecipesIndex) {
+    return [];
+  }
 
-    const id = `lets-cozinha-receita-${recipe.documentId}`;
+  const id = `lets-cozinha-receita-${recipe.documentId}`;
 
-    const similars = await withTimeout(
-      meiliRecipesIndex.searchSimilarDocuments({
-        id,
-        limit: 3,
-        embedder: 'lets-cozinha-receita-openai-embedder',
-      }),
-      MEILI_EMBEDDER_TIMEOUT_MS
-    );
+  const similars = await withTimeout(
+    meiliRecipesIndex.searchSimilarDocuments({
+      id,
+      limit: 3,
+      embedder: 'lets-cozinha-receita-openai-embedder',
+    }),
+    MEILI_EMBEDDER_TIMEOUT_MS
+  );
 
-    const data = await getRecipesFromMeiliHits(similars.hits);
-
-    return data;
-  },
-  ['searchSimilarRecipes'],
-  { revalidate: 86400 }
-);
+  return getRecipesFromMeiliHits(similars.hits);
+};
 
 const meiliEbookIndex = meiliClient
   ? meiliClient.index<Ebook>('lets-cozinha-ebook')
   : null;
 
-export const getRecommendedEbook = unstable_cache(
-  async (recipe: Recipe): Promise<Ebook | null> => {
-    if (!meiliEbookIndex) {
-      return null;
-    }
+export const getRecommendedEbook = async (
+  recipe: Recipe
+): Promise<Ebook | null> => {
+  if (!meiliEbookIndex) {
+    return null;
+  }
 
-    const searchResults = await withTimeout(
-      meiliEbookIndex.search(recipe.nome, {
-        limit: 1,
-        filter: 'NOT checkout_url IS NULL AND NOT checkout_url IS EMPTY',
-        hybrid: {
-          semanticRatio: 0.9,
-          embedder: 'lets-cozinha-ebook-openai-embedder',
-        },
-        showRankingScore: true,
-      }),
-      MEILI_EMBEDDER_TIMEOUT_MS
-    );
+  const searchResults = await withTimeout(
+    meiliEbookIndex.search(recipe.nome, {
+      limit: 1,
+      filter: 'NOT checkout_url IS NULL AND NOT checkout_url IS EMPTY',
+      hybrid: {
+        semanticRatio: 0.9,
+        embedder: 'lets-cozinha-ebook-openai-embedder',
+      },
+      showRankingScore: true,
+    }),
+    MEILI_EMBEDDER_TIMEOUT_MS
+  );
 
-    const data = searchResults.hits;
-    return data[0] || null;
-  },
-  ['getRecommendedEbook'],
-  { revalidate: 86400 }
-);
+  return searchResults.hits[0] || null;
+};

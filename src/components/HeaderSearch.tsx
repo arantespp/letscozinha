@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { SearchIcon } from 'src/icons/icons';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export function HeaderSearch() {
   const router = useRouter();

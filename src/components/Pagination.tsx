@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 type Props = {
   pagination: {
@@ -10,28 +10,17 @@ type Props = {
 };
 
 export function Pagination({ pagination }: Props) {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
 
-  const currentPage = Number(searchParams.get('page')) || 1;
-
-  const createPageURL = (pageNumber: number | string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', pageNumber.toString());
-    return `${pathname}?${params.toString()}`;
-  };
+  const currentPage = Number(router.query.page) || 1;
 
   const setPage = (page: number) => {
-    if (page < 1) {
-      return;
-    }
+    if (page < 1 || page > pagination.pageCount) return;
 
-    if (page > pagination.pageCount) {
-      return;
-    }
-
-    router.replace(createPageURL(page), { scroll: false });
+    const query = { ...router.query, page: page.toString() };
+    router.replace({ pathname: router.pathname, query }, undefined, {
+      scroll: false,
+    });
   };
 
   if (pagination.pageCount <= 1) {
@@ -42,18 +31,14 @@ export function Pagination({ pagination }: Props) {
     <div className="flex gap-sm">
       <button
         disabled={currentPage === 1}
-        onClick={() => {
-          setPage(currentPage - 1);
-        }}
+        onClick={() => setPage(currentPage - 1)}
         className="disabled:opacity-50"
       >
         Anterior
       </button>
       <button
         disabled={currentPage === pagination.pageCount}
-        onClick={() => {
-          setPage(currentPage + 1);
-        }}
+        onClick={() => setPage(currentPage + 1)}
         className="disabled:opacity-50"
       >
         Próxima

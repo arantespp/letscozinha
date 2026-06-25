@@ -1,7 +1,7 @@
 import { ItemList } from 'schema-dts';
 import { JsonLd } from './JsonLd';
 import { Pagination } from './Pagination';
-import { getRecipesListSchema } from 'src/methods/getRecipesListSchema';
+import { getRecipeUrl } from 'src/methods/getRecipeUrl';
 import RecipeCard from './RecipeCard';
 import type { Recipe } from 'src/cms/recipes';
 
@@ -16,13 +16,15 @@ type RecipesListProps = {
   variant?: 'default' | 'compact';
 };
 
-export async function RecipesList(props: RecipesListProps) {
-  /**
-   * https://developers.google.com/search/docs/appearance/structured-data/carousel
-   */
-  const recipesCarouselSchema: ItemList = await getRecipesListSchema(
-    props.recipes
-  );
+export function RecipesList(props: RecipesListProps) {
+  const recipesCarouselSchema: ItemList = {
+    '@type': 'ItemList',
+    itemListElement: props.recipes.map((recipe, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: getRecipeUrl(recipe),
+    })),
+  };
 
   const isCompact = props.variant === 'compact';
 
