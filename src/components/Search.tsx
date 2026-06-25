@@ -3,59 +3,57 @@
 import * as React from 'react';
 import { SearchIcon, SpinnerIcon, XMarkIcon } from 'src/icons/icons';
 import { useDebounce } from 'use-debounce';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export function Search() {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const [term, setTerm] = React.useState(searchParams.get('search') || '');
+  const initialSearch =
+    typeof router.query.search === 'string' ? router.query.search : '';
+
+  const [term, setTerm] = React.useState(initialSearch);
   const [isFocused, setIsFocused] = React.useState(false);
   const [isSearching, setIsSearching] = React.useState(false);
 
   const [debouncedTerm] = useDebounce(term, 800);
   const [debouncedIsSearching] = useDebounce(isSearching, 500);
 
-  const params = React.useMemo(() => {
-    return new URLSearchParams(searchParams);
-  }, [searchParams]);
-
-  const handleSearch = React.useCallback(() => {
-    setIsSearching(true);
-    if (term) {
-      params.set('search', term);
-    } else {
-      params.delete('search');
-    }
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    setTimeout(() => setIsSearching(false), 600);
-  }, [params, pathname, router, term]);
+  const handleSearch = React.useCallback(
+    (value: string) => {
+      setIsSearching(true);
+      const query = { ...router.query };
+      if (value) {
+        query.search = value;
+      } else {
+        delete query.search;
+      }
+      delete query.page;
+      router.replace({ pathname: router.pathname, query }, undefined, {
+        scroll: false,
+      });
+      setTimeout(() => setIsSearching(false), 600);
+    },
+    [router]
+  );
 
   const clearSearch = React.useCallback(() => {
     setTerm('');
-    params.delete('search');
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    handleSearch('');
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [params, pathname, router]);
+  }, [handleSearch]);
 
   const scrollToTop = React.useCallback(() => {
-    // Scroll para o topo para que o usuário veja os resultados da busca
-    // Posiciona abaixo do header que é sticky com classe "top-0"
-    window.scrollTo({
-      top: 140,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: 140, behavior: 'smooth' });
   }, []);
 
   React.useEffect(() => {
-    if (debouncedTerm !== searchParams.get('search')) {
-      handleSearch();
+    if (debouncedTerm !== (router.query.search || '')) {
+      handleSearch(debouncedTerm);
     }
-  }, [debouncedTerm, handleSearch, searchParams]);
+  }, [debouncedTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const focusClasses = isFocused
     ? 'ring-2 ring-primary/30 border-primary'
@@ -87,9 +85,7 @@ export function Search() {
           className="flex-1 py-sm px-xs text-base md:text-lg placeholder-text-light/70 outline-none bg-transparent"
           placeholder="Receitas, ingredientes..."
           value={term}
-          onChange={(e) => {
-            setTerm(e.target.value);
-          }}
+          onChange={(e) => setTerm(e.target.value)}
           onFocus={() => {
             setIsFocused(true);
             scrollToTop();
@@ -97,7 +93,7 @@ export function Search() {
           onBlur={() => setIsFocused(false)}
           onKeyUp={(e) => {
             if (e.key === 'Enter') {
-              handleSearch();
+              handleSearch(term);
             }
           }}
         />

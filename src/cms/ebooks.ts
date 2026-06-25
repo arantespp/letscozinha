@@ -1,6 +1,5 @@
 import { API_MAX_LIMIT, CMS_URL, cmsFetch } from './config';
 
-import { unstable_cache } from 'next/cache';
 import qs from 'qs';
 import type { CMSDataArrayResponse, CMSImage, CMSData } from './types';
 
@@ -86,13 +85,7 @@ const getAllEbooksWithoutCache = async () => {
   return { allEbooks };
 };
 
-export const getAllEbooks = unstable_cache(
-  getAllEbooksWithoutCache,
-  ['getAllEbooks'],
-  {
-    revalidate: false,
-  }
-);
+export const getAllEbooks = getAllEbooksWithoutCache;
 
 export const getEbook = async (args: { slug?: string }) => {
   const { allEbooks } = await getAllEbooks();

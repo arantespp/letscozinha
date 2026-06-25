@@ -1,24 +1,26 @@
 import { PagesNav } from './PagesNav';
 import { SocialNav } from './SocialNav';
-import { getLetsCozinha } from 'src/cms/singleTypes';
 import { FooterNewsletterSection } from './FooterNewsletterSection';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from 'public/logo-texto.png';
 import { Container } from './Container';
 
-const ImageSection = async () => {
-  const { letsCozinha } = await getLetsCozinha();
-  const descricao = letsCozinha.descricao;
+type FooterProps = {
+  descricao?: string;
+};
 
+const ImageSection = ({ descricao }: { descricao?: string }) => {
   return (
     <section className="flex flex-col items-center lg:items-start gap-sm">
       <Link href="/" className="transition-opacity hover:opacity-90">
         <Image src={logo} alt="Lets Cozinha" height={60} quality={100} />
       </Link>
-      <p className="text-text-dark/80 max-w-[320px] text-center lg:text-left text-sm leading-relaxed">
-        {descricao}
-      </p>
+      {descricao && (
+        <p className="text-text-dark/80 max-w-[320px] text-center lg:text-left text-sm leading-relaxed">
+          {descricao}
+        </p>
+      )}
 
       <div className="mt-sm">
         <SocialNav className="flex flex-row gap-sm text-xl" noLabel />
@@ -36,7 +38,7 @@ const PageNavSection = () => {
   );
 };
 
-export async function Footer() {
+export function Footer({ descricao }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -44,7 +46,7 @@ export async function Footer() {
       <Container>
         <div className="py-xl gap-lg grid grid-cols-1 md:grid-cols-12 items-start">
           <div className="md:col-span-6 lg:col-span-5 xl:col-span-4">
-            <ImageSection />
+            <ImageSection descricao={descricao} />
           </div>
           <div className="md:col-span-6 lg:col-span-3 xl:col-span-3">
             <PageNavSection />

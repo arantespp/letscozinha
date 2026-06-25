@@ -1,50 +1,29 @@
 import { CategoryTag } from 'src/components/CategoryTag';
-import { getAllCategories, type Category } from 'src/cms/categories';
-import { getRecipes } from 'src/cms/recipes';
+import { type Category } from 'src/cms/categories';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export async function CategoriesList({
+export type CategoryWithCount = Category & { recipeCount: number };
+
+export function CategoriesList({
   direction = 'column',
   displayStyle = 'default',
   limit,
+  categories,
 }: {
   direction?: 'row' | 'column';
   displayStyle?: 'default' | 'grid' | 'featured';
   limit?: number;
+  categories: CategoryWithCount[];
 }) {
-  const { allCategories } = await getAllCategories();
-
-  const allCategoriesThatHaveRecipes = (
-    await Promise.all(
-      allCategories.map(async (category) => {
-        // pageSize 1: só o total (meta.pagination.total) é usado aqui
-        const { data: recipes, meta } = await getRecipes({
-          categoryDocumentId: category.documentId,
-          pagination: {
-            page: 1,
-            pageSize: 1,
-          },
-        });
-
-        if (recipes.length > 0) {
-          return {
-            ...category,
-            recipeCount: meta?.pagination.total || recipes.length,
-          };
-        }
-
-        return null;
-      })
-    )
-  ).filter((category): category is Category & { recipeCount: number } => {
-    return !!category;
-  });
+  const sortedByCount = [...categories].sort(
+    (a, b) => b.recipeCount - a.recipeCount
+  );
 
   if (displayStyle === 'grid') {
     const categoriesToShow = limit
-      ? allCategoriesThatHaveRecipes.slice(0, limit)
-      : allCategoriesThatHaveRecipes;
+      ? sortedByCount.slice(0, limit)
+      : sortedByCount;
 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-md">
@@ -68,13 +47,9 @@ export async function CategoriesList({
   }
 
   if (displayStyle === 'featured') {
-    const categoriesWithMoreRecipes = allCategoriesThatHaveRecipes.sort(
-      (a, b) => b.recipeCount - a.recipeCount
-    );
-
     const categoriesToShow = limit
-      ? categoriesWithMoreRecipes.slice(0, limit)
-      : categoriesWithMoreRecipes;
+      ? sortedByCount.slice(0, limit)
+      : sortedByCount;
 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-lg">
@@ -117,15 +92,12 @@ export async function CategoriesList({
     );
   }
 
-  // Default list style
   const className =
     direction === 'column'
       ? 'flex flex-col gap-[14px]'
       : 'flex flex-row flex-wrap gap-sm';
 
-  const categoriesToShow = limit
-    ? allCategoriesThatHaveRecipes.slice(0, limit)
-    : allCategoriesThatHaveRecipes;
+  const categoriesToShow = limit ? categories.slice(0, limit) : categories;
 
   return (
     <div className={className}>

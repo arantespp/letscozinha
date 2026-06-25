@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { usePathname } from 'next/navigation';
-import { LayoutAside } from './LayoutAside';
+import { useRouter } from 'next/router';
 
-// Check if the current path is a recipe detail page
 const isRecipePage = (pathname: string) => {
   return (
     pathname.startsWith('/receitas/') &&
@@ -11,10 +9,9 @@ const isRecipePage = (pathname: string) => {
 };
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const router = useRouter();
 
-  // Determine if sidebar should be shown
-  const showSidebar = !isRecipePage(pathname || '');
+  const showSidebar = !isRecipePage(router.pathname || '');
 
   return (
     <div
@@ -28,12 +25,6 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         >
           {children}
         </div>
-
-        {showSidebar && (
-          <aside className="md:w-[30%] md:min-w-[250px] md:sticky md:top-4 self-start">
-            <LayoutAside />
-          </aside>
-        )}
       </div>
     </div>
   );
