@@ -215,8 +215,14 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     getAsideData(),
   ]);
 
+  // O schema é construído em código e pode conter campos `undefined`
+  // (description, keywords, recipeCategory...). No App Router ele só era
+  // serializado via JSON.stringify no <script>; aqui ele vira prop e o
+  // Next.js rejeita `undefined`. O round-trip por JSON remove esses campos.
   const recipeSchema =
-    recipeSchemaResult.status === 'fulfilled' ? recipeSchemaResult.value : null;
+    recipeSchemaResult.status === 'fulfilled' && recipeSchemaResult.value
+      ? JSON.parse(JSON.stringify(recipeSchemaResult.value))
+      : null;
 
   let exclusiveInstructions: string[] = [];
   if (recipe.mostrar_ebook && Array.isArray(recipeSchema?.recipeInstructions)) {

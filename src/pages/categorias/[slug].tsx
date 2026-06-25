@@ -15,7 +15,7 @@ import { getAsideData, type AsideData } from 'src/methods/getAsideData';
 type Props = {
   category: Category;
   recipes: Recipe[];
-  pagination?: CMSMeta['pagination'];
+  pagination?: CMSMeta['pagination'] | null;
   asideData: AsideData;
 };
 
@@ -81,7 +81,7 @@ export default function CategoryPage({ category, recipes, pagination }: Props) {
           <RecipesList
             addCarouselSchema
             recipes={recipes}
-            pagination={pagination}
+            pagination={pagination ?? undefined}
             variant="compact"
           />
         </section>
@@ -131,7 +131,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     props: {
       category,
       recipes: data,
-      pagination: meta?.pagination,
+      pagination: meta?.pagination ?? null,
       asideData,
     },
     revalidate: 3600,

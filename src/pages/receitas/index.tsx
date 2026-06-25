@@ -19,7 +19,7 @@ const description =
 
 type Props = {
   recipes: Recipe[];
-  pagination?: CMSMeta['pagination'];
+  pagination?: CMSMeta['pagination'] | null;
   searchQuery: string;
   asideData: AsideData;
   error: boolean;
@@ -103,7 +103,7 @@ export default function ReceitasPage({
           ) : (
             <RecipesList
               recipes={recipes}
-              pagination={pagination}
+              pagination={pagination ?? undefined}
               firstRecipePriority
               addCarouselSchema
               variant="compact"
@@ -149,7 +149,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   return {
     props: {
       recipes: dataResult.value.data,
-      pagination: dataResult.value.meta?.pagination,
+      pagination: dataResult.value.meta?.pagination ?? null,
       searchQuery: search,
       error: false,
       asideData,

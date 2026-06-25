@@ -140,8 +140,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       letsProfile,
       favoriteRecipes,
       letsSchema:
-        letsSchemaResult.status === 'fulfilled'
-          ? letsSchemaResult.value
+        letsSchemaResult.status === 'fulfilled' && letsSchemaResult.value
+          ? JSON.parse(JSON.stringify(letsSchemaResult.value))
           : null,
       asideData,
     },
