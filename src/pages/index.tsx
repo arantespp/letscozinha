@@ -10,7 +10,7 @@ import { getLetsCozinha } from 'src/cms/singleTypes';
 import { getMostVisitedPages } from 'src/ga4/getMostVisitedPages';
 import { getRecipes } from 'src/cms/recipes';
 import type { Recipe } from 'src/cms/recipes';
-import { CategoriesList } from 'src/components/CategoriesList';
+import { CategoriesList, type CategoryWithCount } from 'src/components/CategoriesList';
 import { EbookCard } from 'src/components/EbookCard';
 import { getAllEbooks, pickEbookForCard, type EbookForCard } from 'src/cms/ebooks';
 import { CookingCTA } from 'src/components/CookingCTA';
@@ -23,6 +23,8 @@ type Props = {
   favoriteRecipes: Recipe[];
   mostVisitedRecipes: Recipe[];
   featuredEbooks: EbookForCard[];
+  categoriesWithCounts: CategoryWithCount[];
+  letsProfileImageUrl: string | null;
   asideData: AsideData;
 };
 
@@ -30,10 +32,10 @@ export default function Home({
   favoriteRecipes,
   mostVisitedRecipes,
   featuredEbooks,
-  asideData,
+  categoriesWithCounts,
+  letsProfileImageUrl,
 }: Props) {
   const heroEbook = featuredEbooks[0] ?? null;
-  const categoriesWithCounts = asideData.categoriesWithCounts;
   const websiteSchema: WebSite = {
     '@type': 'WebSite',
     url: BASE_URL,
@@ -161,7 +163,7 @@ export default function Home({
           </section>
         )}
 
-        <CookingCTA imageUrl={asideData?.letsProfile?.imagem?.url} />
+        <CookingCTA imageUrl={letsProfileImageUrl ?? undefined} />
 
         {categoriesWithCounts.length > 0 && (
           <section>
@@ -288,6 +290,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       favoriteRecipes,
       mostVisitedRecipes,
       featuredEbooks,
+      categoriesWithCounts: asideData.categoriesWithCounts,
+      letsProfileImageUrl: asideData.letsProfile?.imagem?.url ?? null,
       asideData,
     },
     revalidate: 3600,
