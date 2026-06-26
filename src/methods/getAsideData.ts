@@ -1,12 +1,12 @@
 import { getAllCategories, type Category } from 'src/cms/categories';
 import { getLetsCozinha, getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { getRecipes } from 'src/cms/recipes';
-import type { Ebook } from 'src/cms/ebooks';
+import { pickEbookForCard, type EbookForCard } from 'src/cms/ebooks';
 
 export type CategoryWithCount = Category & { recipeCount: number };
 
 export type AsideData = {
-  featuredEbook: Ebook | null;
+  featuredEbook: EbookForCard | null;
   letsProfile: {
     nome: string;
     resumo: string;
@@ -47,7 +47,9 @@ export async function getAsideData(): Promise<AsideData> {
   return {
     featuredEbook:
       letsCozinhaResult.status === 'fulfilled'
-        ? (letsCozinhaResult.value.letsCozinha.ebooks_favoritos?.[0] ?? null)
+        ? letsCozinhaResult.value.letsCozinha.ebooks_favoritos?.[0]
+          ? pickEbookForCard(letsCozinhaResult.value.letsCozinha.ebooks_favoritos[0])
+          : null
         : null,
     letsProfile:
       letsCozinhaLetsResult.status === 'fulfilled'
