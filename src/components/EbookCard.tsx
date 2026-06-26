@@ -4,7 +4,7 @@ import { getOptimizedImageProps } from 'src/methods/generateNextImageSizesString
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '../../public/logo.webp';
-import type { Ebook } from 'src/cms/ebooks';
+import type { EbookForCard } from 'src/cms/ebooks';
 
 // Configurações de tamanho específicas para cards de e-books
 const ebookCardSizes = [
@@ -16,7 +16,7 @@ const ebookCardSizes = [
 
 type EbookCardProps = {
   /** E-book data to display */
-  ebook: Ebook;
+  ebook: EbookForCard;
   /** Whether to prioritize image loading (for above-the-fold content) */
   priority?: boolean;
   /** Variant for different contexts */

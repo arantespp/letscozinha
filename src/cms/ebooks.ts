@@ -32,6 +32,26 @@ export type CMSEbooksResponse = CMSDataArrayResponse<EbookAttributes>;
 
 export type Ebook = CMSData<EbookAttributes>;
 
+/** Minimal ebook data needed to render an EbookCard in any variant. */
+export type EbookForCard = Pick<
+  Ebook,
+  'id' | 'documentId' | 'slug' | 'titulo' | 'subtitulo' | 'meta_descricao' | 'descricao' | 'preco' | 'imagem'
+>;
+
+export function pickEbookForCard(ebook: Ebook): EbookForCard {
+  return {
+    id: ebook.id,
+    documentId: ebook.documentId,
+    slug: ebook.slug,
+    titulo: ebook.titulo,
+    subtitulo: ebook.subtitulo,
+    meta_descricao: ebook.meta_descricao,
+    descricao: ebook.descricao,
+    preco: ebook.preco,
+    imagem: ebook.imagem,
+  };
+}
+
 export const ebookQueryFilters = {
   imagem: {
     $notNull: true,

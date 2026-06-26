@@ -10,11 +10,9 @@ import { getLetsCozinha } from 'src/cms/singleTypes';
 import { getMostVisitedPages } from 'src/ga4/getMostVisitedPages';
 import { getRecipes } from 'src/cms/recipes';
 import type { Recipe } from 'src/cms/recipes';
-import { getCategories } from 'src/cms/categories';
-import { CategoriesList, type CategoryWithCount } from 'src/components/CategoriesList';
+import { CategoriesList } from 'src/components/CategoriesList';
 import { EbookCard } from 'src/components/EbookCard';
-import { getAllEbooks } from 'src/cms/ebooks';
-import type { Ebook } from 'src/cms/ebooks';
+import { getAllEbooks, pickEbookForCard, type EbookForCard } from 'src/cms/ebooks';
 import { CookingCTA } from 'src/components/CookingCTA';
 import { LinkButton } from 'src/components/LinkButton';
 import { getPageTitle } from 'src/methods/getPageTitle';
@@ -24,9 +22,7 @@ import type { WebSite } from 'schema-dts';
 type Props = {
   favoriteRecipes: Recipe[];
   mostVisitedRecipes: Recipe[];
-  featuredEbooks: Ebook[];
-  heroEbook: Ebook | null;
-  categoriesWithCounts: CategoryWithCount[];
+  featuredEbooks: EbookForCard[];
   asideData: AsideData;
 };
 
@@ -34,10 +30,10 @@ export default function Home({
   favoriteRecipes,
   mostVisitedRecipes,
   featuredEbooks,
-  heroEbook,
-  categoriesWithCounts,
   asideData,
 }: Props) {
+  const heroEbook = featuredEbooks[0] ?? null;
+  const categoriesWithCounts = asideData.categoriesWithCounts;
   const websiteSchema: WebSite = {
     '@type': 'WebSite',
     url: BASE_URL,
@@ -258,8 +254,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       ? allEbooksResult.value.allEbooks
       : [];
 
-  const heroEbook = allEbooks[0] || null;
-  const featuredEbooks = allEbooks.slice(0, 3);
+  const featuredEbooks = allEbooks.slice(0, 3).map(pickEbookForCard);
 
   const mostVisitedPages =
     mostVisitedPagesResult.status === 'fulfilled'
@@ -288,15 +283,11 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       ? asideDataResult.value
       : { featuredEbook: null, letsProfile: null, categoriesWithCounts: [], siteDescricao: null };
 
-  const categoriesWithCounts = asideData.categoriesWithCounts;
-
   return {
     props: {
       favoriteRecipes,
       mostVisitedRecipes,
       featuredEbooks,
-      heroEbook,
-      categoriesWithCounts,
       asideData,
     },
     revalidate: 3600,
