@@ -70,7 +70,6 @@
   }
 
   body {
-    @apply font-body;
     @apply bg-neutral;
     @apply text-text-dark;
     @apply leading-relaxed;
