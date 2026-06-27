@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { Playfair_Display, Lora } from 'next/font/google';
 import { Header } from 'src/components/Header';
 import { Footer } from 'src/components/Footer';
 import { Container } from 'src/components/Container';
@@ -21,16 +20,6 @@ import { getWebsiteName } from 'src/methods/getWebsiteName';
 import type { AsideData } from 'src/methods/getAsideData';
 import '../styles/fa.css';
 import '../styles/globals.css';
-
-const playfairDisplay = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair-display',
-});
-
-const lora = Lora({
-  subsets: ['latin'],
-  variable: '--font-lora',
-});
 
 const organizationSchema: Organization = {
   '@type': 'Organization',
@@ -53,8 +42,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const { asideData, ...componentProps } = pageProps as CommonPageProps &
     Record<string, unknown>;
 
-  const fontClasses = `${playfairDisplay.variable} ${lora.variable}`;
-
   return (
     <>
       <Head>
@@ -69,7 +56,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <JsonLd schema={organizationSchema} />
       <Header />
 
-      <main className={`pb-xl md:pb-2xl ${fontClasses}`}>
+      <main className="pb-xl md:pb-2xl">
         <Container>
           <div className="mx-auto my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl min-h-screen">
             <div className={asideData ? 'w-full md:w-[70%]' : 'w-full'}>
