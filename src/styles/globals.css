@@ -2,12 +2,6 @@
 
 @theme {
   --font-*: initial;
-  --font-heading:
-    var(--font-playfair-display), ui-serif, Georgia, Cambria, 'Times New Roman',
-    Times, serif;
-  --font-body:
-    var(--font-lora), ui-serif, Georgia, Cambria, 'Times New Roman', Times,
-    serif;
 
   --radius: 4px;
 
@@ -35,6 +29,15 @@
   --spacing-image-sm: 8rem;
   --spacing-image-lg: 42rem;
   --spacing-article: 800px;
+}
+
+@theme inline {
+  --font-heading:
+    var(--font-playfair-display), ui-serif, Georgia, Cambria, 'Times New Roman',
+    Times, serif;
+  --font-body:
+    var(--font-lora), ui-serif, Georgia, Cambria, 'Times New Roman', Times,
+    serif;
 }
 
 @utility container {

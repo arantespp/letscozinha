@@ -66,25 +66,27 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <JsonLd schema={organizationSchema} />
-      <Header />
+      <div className={`${fontClasses} font-body`}>
+        <JsonLd schema={organizationSchema} />
+        <Header />
 
-      <main className={`pb-xl md:pb-2xl ${fontClasses}`}>
-        <Container>
-          <div className="mx-auto my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl min-h-screen">
-            <div className={asideData ? 'w-full md:w-[70%]' : 'w-full'}>
-              <Component {...componentProps} />
-            </div>
-            {asideData && (
-              <div className="w-full md:w-[30%]">
-                <LayoutAside data={asideData} />
+        <main className="pb-xl md:pb-2xl">
+          <Container>
+            <div className="mx-auto my-lg md:my-xl flex flex-col md:flex-row gap-sm md:gap-xl min-h-screen">
+              <div className={asideData ? 'w-full md:w-[70%]' : 'w-full'}>
+                <Component {...componentProps} />
               </div>
-            )}
-          </div>
-        </Container>
-      </main>
+              {asideData && (
+                <div className="w-full md:w-[30%]">
+                  <LayoutAside data={asideData} />
+                </div>
+              )}
+            </div>
+          </Container>
+        </main>
 
-      <Footer descricao={asideData?.siteDescricao ?? undefined} />
+        <Footer descricao={asideData?.siteDescricao ?? undefined} />
+      </div>
     </>
   );
 }
