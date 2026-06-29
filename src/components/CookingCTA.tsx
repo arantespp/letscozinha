@@ -4,9 +4,10 @@ import Link from 'next/link';
 
 type CookingCTAProps = {
   imageUrl?: string;
+  priority?: boolean;
 };
 
-export function CookingCTA({ imageUrl }: CookingCTAProps) {
+export function CookingCTA({ imageUrl, priority = false }: CookingCTAProps) {
   return (
     <section className="my-lg md:my-xl overflow-hidden md:px-0">
       <div className="bg-gradient-to-r from-primary/20 to-accent/20 rounded-xl p-md md:p-xl relative">
@@ -47,7 +48,7 @@ export function CookingCTA({ imageUrl }: CookingCTAProps) {
                     fill
                     sizes="(max-width: 640px) 208px, (max-width: 768px) 256px, 320px"
                     className="object-cover"
-                    priority={false}
+                    priority={priority}
                   />
                 </div>
               </Link>

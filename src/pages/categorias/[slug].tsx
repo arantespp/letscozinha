@@ -58,6 +58,7 @@ export default function CategoryPage({ category, recipes, pagination }: Props) {
                       src={category.imagens[0].url}
                       alt={category.nome}
                       fill
+                      priority
                       className="object-cover"
                     />
                   </div>
@@ -83,6 +84,7 @@ export default function CategoryPage({ category, recipes, pagination }: Props) {
             recipes={recipes}
             pagination={pagination ?? undefined}
             variant="compact"
+            firstRecipePriority
           />
         </section>
       </div>
