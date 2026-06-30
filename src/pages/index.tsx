@@ -163,7 +163,7 @@ export default function Home({
           </section>
         )}
 
-        <CookingCTA imageUrl={letsProfileImageUrl ?? undefined} />
+        <CookingCTA imageUrl={letsProfileImageUrl ?? undefined} priority={!heroEbook} />
 
         {categoriesWithCounts.length > 0 && (
           <section>

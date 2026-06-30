@@ -4,6 +4,7 @@ import type { GetStaticProps } from 'next';
 import { JsonLd } from 'src/components/JsonLd';
 import { Markdown } from 'src/components/Markdown';
 import { RecipesList } from 'src/components/RecipesList';
+import { markdownToHtml } from 'src/methods/markdownToHtml';
 import { getLetsCozinha, getLetsCozinhaLets } from 'src/cms/singleTypes';
 import { getLetsSchema } from 'src/methods/getLetsSchema';
 import { getPageTitle } from 'src/methods/getPageTitle';
@@ -22,6 +23,7 @@ type LetsProfile = {
 
 type Props = {
   letsProfile: LetsProfile;
+  textoCompletoHtml: string;
   favoriteRecipes: Recipe[];
   letsSchema: any;
   asideData: AsideData;
@@ -29,6 +31,7 @@ type Props = {
 
 export default function ConhecaALets({
   letsProfile,
+  textoCompletoHtml,
   favoriteRecipes,
   letsSchema,
 }: Props) {
@@ -88,7 +91,7 @@ export default function ConhecaALets({
 
         <section className="max-w-4xl mx-auto">
           <div className="prose prose-lg prose-headings:font-heading prose-headings:text-text-dark prose-p:text-text-light prose-a:text-primary">
-            <Markdown source={letsProfile.texto_completo} />
+            <Markdown html={textoCompletoHtml} />
           </div>
         </section>
 
@@ -138,6 +141,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   return {
     props: {
       letsProfile,
+      textoCompletoHtml: await markdownToHtml(letsProfile.texto_completo ?? ''),
       favoriteRecipes,
       letsSchema:
         letsSchemaResult.status === 'fulfilled' && letsSchemaResult.value

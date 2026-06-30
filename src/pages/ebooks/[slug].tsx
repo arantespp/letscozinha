@@ -7,6 +7,7 @@ import { JsonLd } from 'src/components/JsonLd';
 import { LinkButton } from 'src/components/LinkButton';
 import { Markdown } from 'src/components/Markdown';
 import { getEbook, getAllEbooks, type Ebook } from 'src/cms/ebooks';
+import { markdownToHtml } from 'src/methods/markdownToHtml';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getUrl } from 'src/methods/getUrl';
 import { getWebsiteName } from 'src/methods/getWebsiteName';
@@ -14,17 +15,19 @@ import { getAsideData, type AsideData } from 'src/methods/getAsideData';
 
 type Props = {
   ebook: Ebook;
+  descricaoHtml: string;
+  paginaWebsiteHtml: string;
   asideData: AsideData;
 };
 
-function EbookHero({ ebook }: { ebook: Ebook }) {
+function EbookHero({ ebook, descricaoHtml }: { ebook: Ebook; descricaoHtml: string }) {
   const imageSrc = ebook.imagem.formats.medium?.url || ebook.imagem.url;
 
   return (
     <div className="grid lg:grid-cols-2 gap-xl items-center">
       <div className="order-2 lg:order-1">
         <div className="text-text-light text-lg mb-lg leading-relaxed">
-          <Markdown source={ebook.descricao} />
+          <Markdown html={descricaoHtml} />
         </div>
         <div className="space-y-sm">
           {ebook.preco && (
@@ -65,7 +68,7 @@ function EbookHero({ ebook }: { ebook: Ebook }) {
   );
 }
 
-export default function EbookPage({ ebook }: Props) {
+export default function EbookPage({ ebook, descricaoHtml, paginaWebsiteHtml }: Props) {
   const url = getUrl(`/ebooks/${ebook.slug}`);
   const title = getPageTitle(ebook.titulo);
 
@@ -114,12 +117,12 @@ export default function EbookPage({ ebook }: Props) {
         ]}
       >
         <Content.Section variant="content">
-          <EbookHero ebook={ebook} />
+          <EbookHero ebook={ebook} descricaoHtml={descricaoHtml} />
         </Content.Section>
 
         <Content.Section variant="content">
           <article className="prose prose-lg">
-            <Markdown source={ebook.pagina_website} />
+            <Markdown html={paginaWebsiteHtml} />
           </article>
         </Content.Section>
 
@@ -198,7 +201,12 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       : { featuredEbook: null, letsProfile: null, categoriesWithCounts: [], siteDescricao: null };
 
   return {
-    props: { ebook, asideData },
+    props: {
+      ebook,
+      descricaoHtml: await markdownToHtml(ebook.descricao ?? ''),
+      paginaWebsiteHtml: await markdownToHtml(ebook.pagina_website ?? ''),
+      asideData,
+    },
     revalidate: 3600,
   };
 };

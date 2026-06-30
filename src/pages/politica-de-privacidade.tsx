@@ -2,6 +2,7 @@ import Head from 'next/head';
 import type { GetStaticProps } from 'next';
 import { Markdown } from 'src/components/Markdown';
 import { getLetsCozinhaPoliticas } from 'src/cms/singleTypes';
+import { markdownToHtml } from 'src/methods/markdownToHtml';
 import { getPageTitle } from 'src/methods/getPageTitle';
 import { getUrl } from 'src/methods/getUrl';
 import { getAsideData, type AsideData } from 'src/methods/getAsideData';
@@ -22,7 +23,7 @@ export default function PoliticaDePrivacidade({ content }: Props) {
         />
         <link rel="canonical" href={getUrl('/politica-de-privacidade')} />
       </Head>
-      <Markdown source={content} />
+      <Markdown html={content} />
     </>
   );
 }
@@ -44,7 +45,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   return {
     props: {
-      content: politicasResult.value.letsCozinhaPoliticas.politica_de_privacidade,
+      content: await markdownToHtml(politicasResult.value.letsCozinhaPoliticas.politica_de_privacidade),
       asideData,
     },
     revalidate: 3600,
