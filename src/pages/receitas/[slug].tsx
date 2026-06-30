@@ -5,6 +5,7 @@ import { Content } from 'src/components/Content';
 import { CategoryTag } from 'src/components/CategoryTag';
 import { JsonLd } from 'src/components/JsonLd';
 import { Markdown } from 'src/components/Markdown';
+import { markdownToHtml } from 'src/methods/markdownToHtml';
 import {
   type Recipe,
   getRecommendedEbook,
@@ -29,6 +30,7 @@ import { getAsideData, type AsideData } from 'src/methods/getAsideData';
 
 type Props = {
   recipe: Recipe;
+  receitaHtml: string;
   recipeSchema: ReturnType<typeof getRecipeSchema> extends Promise<infer T>
     ? T
     : never;
@@ -41,6 +43,7 @@ type Props = {
 
 export default function RecipePage({
   recipe,
+  receitaHtml,
   recipeSchema,
   similarRecipes,
   recommendedEbook,
@@ -133,7 +136,7 @@ export default function RecipePage({
               recipeName={recipe.nome}
             />
           ) : (
-            <Markdown source={recipe.receita} />
+            <Markdown html={receitaHtml} />
           )}
         </Content.Section>
 
@@ -239,6 +242,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   return {
     props: {
       recipe,
+      receitaHtml: await markdownToHtml(recipe.receita ?? ''),
       recipeSchema,
       letsNome:
         letsResult.status === 'fulfilled'
